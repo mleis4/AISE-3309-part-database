@@ -29,4 +29,4 @@ The work was done in one session, following the agent specs in `.claude/agents/`
 - task7.sql and task8.sql end with ROLLBACK so they can be rerun and the database stays equal to the dump.
 - `explanation.md` and `ai_log.md` are not in the zip by default (the handout's list does not include them); `python package.py --with-explanation` adds them.
 
-**Not done (only a person can do it):** Workbench screenshots (79 names in `screenshots/README.md`), a Workbench Data Export to replace the mysqldump stand-in, team contributions in the report, and rewriting the AI-drafted text in the group's own words.
+**Not done (only a person can do it):** Workbench screenshots (21, checklist in `screenshots/README.md`; reduced from 79 per-statement placeholders on 2026-11-25), a Workbench Data Export to replace the mysqldump stand-in, team contributions in the report, and rewriting the AI-drafted text in the group's own words.

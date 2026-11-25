@@ -50,7 +50,9 @@ pre.err { color: #a00000; }
 .stmt { break-inside: avoid; margin: 8px 0 12px; }
 .shotlabel { font-size: 7.5pt; color: #806000; margin: 2px 0 0; }
 .shotlabel.ok { color: #2e7d32; }
-.stmt img { max-width: 100%; border: 1px solid #999; }
+.shot { break-inside: avoid; margin: 6px 0 14px; }
+.shot img { max-width: 100%; border: 1px solid #999; display: block; margin: 4px 0; }
+.shot.missing { border: 2px dashed #c62828; background: #fdecea; color: #8e1b1b; padding: 10px 12px; font-size: 9pt; }
 .note { background: #fff8e1; border-left: 3px solid #f9a825; padding: 5px 9px; margin: 8px 0; font-size: 9pt; }
 code { font-family: Consolas, 'Courier New', monospace; font-size: 8.5pt; }
 td code { font-size: 8pt; }
@@ -146,31 +148,85 @@ def md_section(md, start, stop=None):
 # ------------------------------------------------------------------------------
 # Statement blocks
 # ------------------------------------------------------------------------------
-def response_html(record, shot):
-    path = os.path.join(SHOTS, shot + ".png")
-    if os.path.exists(path):
-        uri = "file:///" + path.replace("\\", "/")
-        return ('<img src="%s"><p class="shotlabel ok">Workbench screenshot %s.png</p>' % (uri, shot))
-    MISSING.append(shot + ".png")
-    text = record["response"] or "(no output)"
+# The Workbench screenshots the report needs: about one per handout requirement.
+# Every statement also shows its response as text (recorded by
+# capture_responses.py), so these screenshots are the evidence that the
+# statements were run in MySQL Workbench, not one picture per statement.
+# Workbench's Action Output panel lists the response of every statement in a
+# script, so one screenshot covers a whole file. If the panel needs scrolling,
+# add <name>_2.png, <name>_3.png ...; they are embedded after the first one.
+SHOT_PLAN = [
+    ("t1_create", "Task 1",
+     "Run task3.sql on an empty database. Action Output panel showing every CREATE TABLE and CREATE INDEX "
+     "with its response (0 row(s) affected)."),
+    ("t2_select1", "Task 2", "task4.sql: result grid of the 1st SELECT * FROM BOMLine (after INSERT 1)."),
+    ("t2_select2", "Task 2", "task4.sql: result grid of the 2nd SELECT * FROM BOMLine (after INSERT 2)."),
+    ("t2_select3", "Task 2", "task4.sql: result grid of the 3rd SELECT * FROM BOMLine (after INSERT 3)."),
+    ("t2_output", "Task 2", "task4.sql: Action Output panel with the response of each INSERT."),
+    ("t3_counts", "Task 3", "check_data.sql: result grid of the final row-count query (tuples per relation)."),
+    ("t4_q1", "Task 4", "task6.sql: Q1 with its result grid."),
+    ("t4_q2", "Task 4", "task6.sql: Q2 with its result grid."),
+    ("t4_q3", "Task 4", "task6.sql: Q3 with its result grid."),
+    ("t4_q4", "Task 4", "task6.sql: Q4 with its result grid."),
+    ("t4_q5", "Task 4", "task6.sql: Q5 with its result grid."),
+    ("t4_q6", "Task 4", "task6.sql: Q6 with its result grid."),
+    ("t4_q7", "Task 4", "task6.sql: Q7 with its result grid."),
+    ("t5_m1", "Task 5", "task7.sql: result grid of the SELECT after M1 (Jordan's 5 copied lines)."),
+    ("t5_m2", "Task 5", "task7.sql: result grid of the SELECT after M2 (129 listings, higher average price)."),
+    ("t5_m3", "Task 5", "task7.sql: result grid of the SELECT after M3 (182 carts, 1110 cart lines)."),
+    ("t5_output", "Task 5",
+     "task7.sql: Action Output panel for the whole file, showing the M1-M3 responses (rows affected) and the "
+     "M2b/M3b errors 3819 and 1451."),
+    ("t6_create", "Task 6", "task8.sql: Action Output panel with the two CREATE VIEW responses."),
+    ("t6_v1_query", "Task 6", "task8.sql: result grid of the query on BOMTotals."),
+    ("t6_v2_query", "Task 6", "task8.sql: result grid of the query on InStockListing."),
+    ("t6_modify", "Task 6",
+     "task8.sql: Action Output panel for the modification attempts (errors 1471, 1288, 1369, 1369 and the "
+     "successful INSERT and UPDATE)."),
+]
+SHOT_INFO = {name: (task, what) for name, task, what in SHOT_PLAN}
+
+
+def text_response(text):
+    text = text or "(no output)"
     err = " err" if text.startswith("ERROR") else ""
-    return ('<pre class="out%s">%s</pre><p class="shotlabel">System response recorded by capture_responses.py '
-            '(mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/%s.png</b>.</p>'
-            % (err, esc(text), shot))
+    return '<pre class="out%s">%s</pre>' % (err, esc(text))
 
 
-def stmt_block(record, shot, show_comments=True):
+def shot_slot(name):
+    """The Workbench screenshot `name` (plus _2, _3 ... parts), or a placeholder box."""
+    task, what = SHOT_INFO[name]
+    parts = [name] + ["%s_%d" % (name, n) for n in range(2, 10)]
+    found = [p for p in parts if os.path.exists(os.path.join(SHOTS, p + ".png"))]
+    if not found:
+        MISSING.append(name + ".png")
+        return ('<div class="shot missing"><b>Screenshot needed: screenshots/%s.png</b><br>%s</div>'
+                % (name, esc(what)))
+    imgs = "".join('<img src="file:///%s">' % os.path.join(SHOTS, p + ".png").replace("\\", "/") for p in found)
+    return '<div class="shot">%s<p class="shotlabel ok">Figure: MySQL Workbench, %s</p></div>' % (imgs, esc(what))
+
+
+def stmt_block(record, show_comments=True):
     sql = record["sql"]
     if show_comments and record["comments"]:
         sql = record["comments"] + "\n" + sql
-    return '<div class="stmt"><pre class="sql">%s</pre>%s</div>' % (esc(sql), response_html(record, shot))
+    return '<div class="stmt"><pre class="sql">%s</pre>%s</div>' % (esc(sql), text_response(record["response"]))
 
 
-def file_blocks(name, task, skip=lambda r: False, show_comments=True):
-    out = []
-    for n, record in enumerate(responses(name), start=1):
-        if not skip(record):
-            out.append(stmt_block(record, "t%d_%02d" % (task, n), show_comments))
+def file_blocks(name, slots=(), show_comments=True):
+    """Every statement of a file with its recorded response.
+
+    slots: (sql prefix, occurrence, screenshot name). The screenshot slot is
+    placed right after the n-th statement that starts with that prefix.
+    """
+    out, seen = [], {}
+    for record in responses(name):
+        out.append(stmt_block(record, show_comments))
+        for prefix, occurrence, shot in slots:
+            if record["sql"].startswith(prefix):
+                seen[prefix, shot] = seen.get((prefix, shot), 0) + 1
+                if seen[prefix, shot] == occurrence:
+                    out.append(shot_slot(shot))
     return "\n".join(out)
 
 
@@ -246,16 +302,18 @@ def build_html():
     drops = [r for r in recs if r["sql"].startswith("DROP")]
     H.append('<div class="stmt"><pre class="sql">%s</pre>%s</div>' % (
         esc(drops[0]["comments"] + "\n" + "\n".join(r["sql"] for r in drops)),
-        response_html({"response": "\n\n".join(r["response"] for r in drops)}, "t1_drop")))
+        text_response("\n\n".join(r["response"] for r in drops))))
     for r in recs:
-        m = re.match(r"CREATE TABLE (\w+)", r["sql"])
-        if m:
-            H.append(stmt_block(r, "t1_create_%s" % m.group(1), show_comments=False))
+        if r["sql"].startswith("CREATE TABLE"):
+            H.append(stmt_block(r, show_comments=False))
         elif r["sql"].startswith("CREATE INDEX"):
-            H.append(stmt_block(r, "t1_index_%s" % r["sql"].split()[2]))
+            H.append(stmt_block(r))
+    H.append(shot_slot("t1_create"))
     H.append(h3("1.3", "DESCRIBE output for each relation", pb=True))
+    H.append("<p>The handout accepts the CREATE TABLE responses above <i>or</i> DESCRIBE output. Both are given; "
+             "the DESCRIBE output below was recorded with the mysql client.</p>")
     for r in responses("describe"):
-        H.append(stmt_block(r, "t1_describe_%s" % r["sql"].split()[1].rstrip(";")))
+        H.append(stmt_block(r))
     H.append(h3("1.4", "Constraints not enforced by the DBMS"))
     footer = read("SQL/task3.sql")
     block = footer[footer.index("-- Constraints not enforced by the DBMS"):footer.index("-- DESCRIBE output")]
@@ -269,7 +327,8 @@ def build_html():
              "The file runs on the empty schema, before the bulk load, so each <code>SELECT *</code> is short. Its "
              "keys never occur in the generated data, so the load still succeeds afterwards.</p>")
     H.append(header_comment("SQL/task4.sql"))
-    H.append(file_blocks("task4", 2))
+    H.append(file_blocks("task4", [("SELECT * FROM BOMLine", n, "t2_select%d" % n) for n in (1, 2, 3)]))
+    H.append(shot_slot("t2_output"))
 
     # ---- 3. Task 3
     H.append(h2("3.", "Task 3: Substantial Data Loading"))
@@ -298,7 +357,7 @@ def build_html():
     H.append(h3("3.3", "Integrity checks and relation sizes"))
     H.append("<p>Two relations hold thousands of tuples (Part, Listing, BOMLine, BOMSelection) and several hold hundreds "
              "(Customer, BOM, Review, CartLine, PartAlternative). Part and BOM include the Task 2 rows.</p>")
-    H.append(file_blocks("check_data", 3, show_comments=False))
+    H.append(file_blocks("check_data", [("SELECT 'Customer'", 1, "t3_counts")], show_comments=False))
     H.append(h3("3.4", "Sample records", pb=True))
     samples = read("SRC/samples.md")
     H.append(md_to_html(samples[samples.index("## Customer"):], 2))
@@ -324,7 +383,8 @@ def build_html():
     ], ["6%", "40%", "44%", "10%"]))
     for n, r in enumerate(responses("task6"), start=1):
         H.append("<h4>Q%d</h4>" % n)
-        H.append(stmt_block(r, "t4_q%d" % n))
+        H.append(stmt_block(r))
+        H.append(shot_slot("t4_q%d" % n))
 
     # ---- 5. Task 5
     H.append(h2("5.", "Task 5: Data Modification Commands"))
@@ -334,7 +394,10 @@ def build_html():
              "a change. Each command sits between SELECTs that show its effect. The file runs in one transaction that "
              "ends with ROLLBACK, so it can be rerun and the database stays equal to the dump.</p>")
     H.append(header_comment("SQL/task7.sql"))
-    H.append(file_blocks("task7", 5))
+    H.append(file_blocks("task7", [("SELECT bl.BOM_name", 1, "t5_m1"),
+                                   ("SELECT COUNT(*) AS LCSCCapacitorListings", 2, "t5_m2"),
+                                   ("SELECT COUNT(*) AS Carts", 2, "t5_m3")]))
+    H.append(shot_slot("t5_output"))
 
     # ---- 6. Task 6
     H.append(h2("6.", "Task 6: View Creation and Evaluation"))
@@ -342,7 +405,10 @@ def build_html():
              "<b>InStockListing</b> (updatable, WITH CHECK OPTION) holds the listings that can be bought now. "
              "The script shows each CREATE VIEW, a query on each view, and modification attempts on both.</p>")
     H.append(header_comment("SQL/task8.sql"))
-    H.append(file_blocks("task8", 6))
+    H.append(file_blocks("task8", [("CREATE VIEW InStockListing", 1, "t6_create"),
+                                   ("SELECT sp.Title", 1, "t6_v1_query"),
+                                   ("SELECT v.ManufacturerName", 1, "t6_v2_query")]))
+    H.append(shot_slot("t6_modify"))
     H.append(h3("6.1", "Are the views updatable?", pb=True))
     ex = read("explanation.md")
     H.append(md_to_html(md_section(ex, "### The ISO rules", "## Likely TA questions"), 1))
@@ -409,15 +475,29 @@ def find_pages():
 
 
 def write_screenshot_readme():
-    names = sorted(set(MISSING))
+    missing = set(MISSING)
     lines = ["# Screenshots for the Assignment 3 report", "",
-             "Put each Workbench screenshot here as a PNG with exactly the name below. `build_report.py` embeds it "
-             "next to its statement. Until a file exists, the report shows the response recorded by "
-             "`capture_responses.py` as a placeholder.", "",
-             "Names: `t<task>_...`. For Tasks 2, 3, 5 and 6 the number is the statement's position in its file "
-             "(comments are not counted), so `t5_04.png` is the 4th statement of task7.sql.", "",
-             "Still missing (%d):" % len(names), ""]
-    lines += ["- %s" % n for n in names]
+             "_Generated by `build_report.py`. Do not edit by hand._", "",
+             "The report already shows every statement's response as text (recorded by `capture_responses.py`). "
+             "These %d Workbench screenshots are the evidence that the statements were run in MySQL Workbench: "
+             "about one per handout requirement, not one per statement." % len(SHOT_PLAN), "",
+             "## How to take them", "",
+             "1. In Workbench, open each SQL file and run the whole script (lightning-bolt button). For task7.sql "
+             "and task8.sql, first turn on *Edit > Preferences > SQL Editor > Continue SQL script execution on "
+             "errors*, because some statements fail on purpose.",
+             "2. Run the files in this order on an empty `ep_sourcer` schema: task3.sql, task4.sql, "
+             "SRC/load_data.sql, SRC/check_data.sql, task6.sql, task7.sql, task8.sql.",
+             "3. **Action Output** (bottom panel) lists the response of every statement in the script. One "
+             "screenshot of it covers a whole file. If it needs scrolling, save the extra parts as "
+             "`<name>_2.png`, `<name>_3.png`, and the report embeds them in order.",
+             "4. **Result grids**: each SELECT opens a result tab. Click the tab you need and capture the query "
+             "together with its grid.",
+             "5. Save each PNG here with exactly the name below, then run `python build_report.py`.", "",
+             "## Checklist", "",
+             "| | File | Task | What to capture |", "|---|---|---|---|"]
+    for name, task, what in SHOT_PLAN:
+        lines.append("| %s | `%s.png` | %s | %s |" % ("[ ]" if name + ".png" in missing else "[x]", name, task, what))
+    lines += ["", "Still missing: %d of %d." % (len(missing), len(SHOT_PLAN))]
     with open(os.path.join(SHOTS, "README.md"), "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(lines) + "\n")
 
@@ -436,7 +516,8 @@ def main():
         print("wrote", OUT_PDF)
     write_screenshot_readme()
     print("wrote", OUT_HTML)
-    print("%d screenshots still missing (placeholders shown); list in screenshots/README.md" % len(set(MISSING)))
+    print("%d of %d screenshots still missing (placeholders shown); checklist in screenshots/README.md"
+          % (len(set(MISSING)), len(SHOT_PLAN)))
     return 0
 
 
