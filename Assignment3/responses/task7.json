@@ -1,0 +1,87 @@
+[
+ {
+  "comments": "-- task7.sql: Task 5, three data modification commands\n-- ============================================================================\n-- Run after SQL/task3.sql, SQL/task4.sql and SRC/load_data.sql.\n-- M1 is an INSERT ... SELECT, M2 an UPDATE of many tuples chosen by a\n-- subquery, M3 a DELETE of a set chosen by a correlated subquery that\n-- cascades to a child relation. Each is surrounded by SELECTs that show its\n-- effect. M2b and M3b show constraints the DBMS enforces rejecting a change.\n--\n-- The whole file runs in ONE transaction that ends with ROLLBACK, so it can be\n-- rerun and the database stays equal to the dump in DUMP/. Every SELECT inside\n-- the transaction already sees the changes. Replace ROLLBACK with COMMIT to\n-- keep them.\n--\n-- M2b and M3b fail on purpose. In the mysql client run this file with\n-- --force; in Workbench, turn on \"Continue SQL script execution on errors\".\n-- A failed statement is undone on its own; the transaction carries on.\n-- ============================================================================",
+  "sql": "START TRANSACTION;",
+  "response": "Query OK, 0 rows affected (0.004 sec)"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- M1: INSERT ... SELECT. Copy a shared project into another customer's\n-- account (Assignment 1 \"Project Sharing\": replicate someone else's build).\n-- Jordan copies leila.patel143's shared project \"Open Battery Charger\".\n-- ---------------------------------------------------------------------------\n-- Before: Jordan has no BOMs",
+  "sql": "SELECT COUNT(*) AS JordanBOMs FROM BOM WHERE CustomerEmail = 'jordan.li1@example.com';",
+  "response": "+------------+\n| JordanBOMs |\n+------------+\n|          0 |\n+------------+\n1 row in set (0.003 sec)"
+ },
+ {
+  "comments": "-- The new (empty) BOM that will receive the copied lines",
+  "sql": "INSERT INTO BOM (CustomerEmail, BOM_name, Date_created)\nVALUES ('jordan.li1@example.com', 'Battery Charger (copied)', CURRENT_DATE);",
+  "response": "Query OK, 1 row affected (0.002 sec)"
+ },
+ {
+  "comments": "-- M1: every line of the shared project's BOM becomes a line of the new BOM.\n-- The shared BOM is found through its alternate key (CustomerEmail, Title),\n-- the way a user picks a project by its title, not by its BOM_name.",
+  "sql": "INSERT INTO BOMLine (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum, Quantity)\nSELECT 'jordan.li1@example.com', 'Battery Charger (copied)',\n       bl.ManufacturerName, bl.Manufacturer_PartNum, bl.Quantity\nFROM SharedProject sp\n     JOIN BOMLine bl ON bl.CustomerEmail = sp.CustomerEmail\n                    AND bl.BOM_name = sp.BOM_name\nWHERE sp.CustomerEmail = 'leila.patel143@example.com'\n  AND sp.Title = 'Open Battery Charger';",
+  "response": "Query OK, 5 rows affected (0.008 sec)\nRecords: 5  Duplicates: 0  Warnings: 0"
+ },
+ {
+  "comments": "-- After: the copy has the same parts and quantities as the original",
+  "sql": "SELECT bl.BOM_name, bl.ManufacturerName, bl.Manufacturer_PartNum, bl.Quantity\nFROM BOMLine bl\nWHERE bl.CustomerEmail = 'jordan.li1@example.com'\nORDER BY bl.ManufacturerName, bl.Manufacturer_PartNum;",
+  "response": "+--------------------------+------------------+----------------------+----------+\n| BOM_name                 | ManufacturerName | Manufacturer_PartNum | Quantity |\n+--------------------------+------------------+----------------------+----------+\n| Battery Charger (copied) | onsemi           | TR21613-K            |       10 |\n| Battery Charger (copied) | Samsung          | CC27227-J            |       50 |\n| Battery Charger (copied) | Samsung          | RC25645-B            |       10 |\n| Battery Charger (copied) | Yageo            | CC13864-K            |        4 |\n| Battery Charger (copied) | Yageo            | CC15313-F            |       10 |\n+--------------------------+------------------+----------------------+----------+\n5 rows in set (0.001 sec)"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- M2: UPDATE many tuples, chosen by a subquery on another relation.\n-- LCSC raises the price of all its capacitor listings by 10% and records the\n-- change time. Category lives in Part, not Listing, so the listings to change\n-- are found with a row-value IN subquery over the composite part key.\n-- ---------------------------------------------------------------------------\n-- Before: how many listings qualify, and their average price",
+  "sql": "SELECT COUNT(*) AS LCSCCapacitorListings, AVG(UnitPrice) AS AvgPrice\nFROM Listing\nWHERE DistributorName = 'LCSC'\n  AND (ManufacturerName, Manufacturer_PartNum) IN\n      (SELECT ManufacturerName, Manufacturer_PartNum FROM Part WHERE Category = 'Capacitor');",
+  "response": "+-----------------------+----------+\n| LCSCCapacitorListings | AvgPrice |\n+-----------------------+----------+\n|                   129 | 0.479380 |\n+-----------------------+----------+\n1 row in set (0.010 sec)"
+ },
+ {
+  "comments": "-- M2",
+  "sql": "UPDATE Listing\nSET UnitPrice = CAST(UnitPrice * 1.10 AS DECIMAL(10,2)),\n    LastUpdated = CURRENT_TIMESTAMP\nWHERE DistributorName = 'LCSC'\n  AND (ManufacturerName, Manufacturer_PartNum) IN\n      (SELECT ManufacturerName, Manufacturer_PartNum FROM Part WHERE Category = 'Capacitor');",
+  "response": "Query OK, 129 rows affected (0.189 sec)\nRows matched: 129  Changed: 129  Warnings: 0"
+ },
+ {
+  "comments": "-- After: same count, average about 10% higher. CAST rounds each new price to\n-- cents explicitly, so MySQL does not warn about truncating extra decimals.",
+  "sql": "SELECT COUNT(*) AS LCSCCapacitorListings, AVG(UnitPrice) AS AvgPrice\nFROM Listing\nWHERE DistributorName = 'LCSC'\n  AND (ManufacturerName, Manufacturer_PartNum) IN\n      (SELECT ManufacturerName, Manufacturer_PartNum FROM Part WHERE Category = 'Capacitor');",
+  "response": "+-----------------------+----------+\n| LCSCCapacitorListings | AvgPrice |\n+-----------------------+----------+\n|                   129 | 0.528140 |\n+-----------------------+----------+\n1 row in set (0.011 sec)"
+ },
+ {
+  "comments": "-- M2b (fails on purpose): a $1.00 discount on every LCSC listing would make\n-- the cheap ones negative. CHECK ck_Listing_price (C1: UnitPrice >= 0)\n-- rejects the WHOLE statement (expected: ERROR 3819), so no row changes.",
+  "sql": "UPDATE Listing\nSET UnitPrice = UnitPrice - 1.00\nWHERE DistributorName = 'LCSC';",
+  "response": "ERROR 3819 (HY000) at line 33: Check constraint 'ck_Listing_price' is violated."
+ },
+ {
+  "comments": "-- Proof that nothing changed: no LCSC listing is negative, the count is intact",
+  "sql": "SELECT COUNT(*) AS LCSCListings, MIN(UnitPrice) AS MinPrice\nFROM Listing\nWHERE DistributorName = 'LCSC';",
+  "response": "+--------------+----------+\n| LCSCListings | MinPrice |\n+--------------+----------+\n|          489 |     0.01 |\n+--------------+----------+\n1 row in set (0.013 sec)"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- M3: DELETE a set chosen by a correlated NOT EXISTS subquery, which\n-- cascades. Abandoned carts are removed: carts created before 2026-08-01\n-- whose owner has never made a BOM (an inactive account).\n-- fk_CartLine_ShoppingCart is ON DELETE CASCADE, so their CartLine rows go\n-- too. No BOM, BOMLine, BOMSelection or SharedProject row is touched, so the\n-- unenforced constraints C3 and C5 cannot be broken by this delete.\n-- ---------------------------------------------------------------------------\n-- Before",
+  "sql": "SELECT COUNT(*) AS Carts, (SELECT COUNT(*) FROM CartLine) AS CartLines\nFROM ShoppingCart;",
+  "response": "+-------+-----------+\n| Carts | CartLines |\n+-------+-----------+\n|   200 |      1200 |\n+-------+-----------+\n1 row in set (0.028 sec)"
+ },
+ {
+  "comments": "-- M3",
+  "sql": "DELETE FROM ShoppingCart\nWHERE Date_created < DATE '2026-08-01'\n  AND NOT EXISTS (SELECT *\n                  FROM BOM b\n                  WHERE b.CustomerEmail = ShoppingCart.CustomerEmail);",
+  "response": "Query OK, 18 rows affected (0.075 sec)"
+ },
+ {
+  "comments": "-- After: fewer carts, and their lines removed by ON DELETE CASCADE",
+  "sql": "SELECT COUNT(*) AS Carts, (SELECT COUNT(*) FROM CartLine) AS CartLines\nFROM ShoppingCart;",
+  "response": "+-------+-----------+\n| Carts | CartLines |\n+-------+-----------+\n|   182 |      1110 |\n+-------+-----------+\n1 row in set (0.123 sec)"
+ },
+ {
+  "comments": "-- No orphaned cart line is left behind",
+  "sql": "SELECT COUNT(*) AS OrphanCartLines\nFROM CartLine c\nWHERE NOT EXISTS (SELECT * FROM ShoppingCart s WHERE s.CustomerEmail = c.CustomerEmail);",
+  "response": "+-----------------+\n| OrphanCartLines |\n+-----------------+\n|               0 |\n+-----------------+\n1 row in set (0.056 sec)"
+ },
+ {
+  "comments": "-- M3b (fails on purpose): delete Eaton's fuses. Many are still offered by a\n-- distributor, and fk_Listing_Part is ON DELETE RESTRICT, so the delete is\n-- rejected (expected: ERROR 1451) and none of the parts, nor their reviews\n-- (which would otherwise cascade), are removed.",
+  "sql": "DELETE FROM Part\nWHERE ManufacturerName = 'Eaton' AND Category = 'Fuse';",
+  "response": "ERROR 1451 (23000) at line 51: Cannot delete or update a parent row: a foreign key constraint fails (`ep_sourcer_test`.`listing`, CONSTRAINT `fk_Listing_Part` FOREIGN KEY (`ManufacturerName`, `Manufacturer_PartNum`) REFERENCES `part` (`ManufacturerName`, `Manufacturer_PartNum`) ON DELETE RE"
+ },
+ {
+  "comments": "",
+  "sql": "SELECT COUNT(*) AS EatonFuses FROM Part WHERE ManufacturerName = 'Eaton' AND Category = 'Fuse';",
+  "response": "+------------+\n| EatonFuses |\n+------------+\n|         23 |\n+------------+\n1 row in set (0.003 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "ROLLBACK;",
+  "response": "Query OK, 0 rows affected (0.099 sec)"
+ }
+]

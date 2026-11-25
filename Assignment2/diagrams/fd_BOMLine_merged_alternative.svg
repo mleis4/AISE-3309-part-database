@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 825 84" width="825" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="825" height="84" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="69.6" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="181.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">BOM_name</text>
+<rect x="216.7" y="2" width="123.2" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="278.3" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">ManufacturerName</text>
+<rect x="339.9" y="2" width="150.0" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="414.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Manufacturer_PartNum</text>
+<rect x="489.9" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="524.7" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Quantity</text>
+<rect x="559.5" y="2" width="116.5" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="617.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">DistributorName</text>
+<rect x="676.0" y="2" width="143.3" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="747.6" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Distributor_PartNum</text>
+<polyline points="89.6,28.0 89.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="89.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="175.9,28.0 175.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="175.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="272.3,28.0 272.3,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="272.3" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="408.9,28.0 408.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="408.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="518.7,50.0 518.7,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="518.7,29.0 515.2,37.0 522.2,37.0" fill="#0b4ea2"/>
+<polyline points="611.8,50.0 611.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="611.8,29.0 608.2,37.0 615.2,37.0" fill="#0b4ea2"/>
+<polyline points="741.6,50.0 741.6,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="741.6,29.0 738.1,37.0 745.1,37.0" fill="#0b4ea2"/>
+<polyline points="89.6,50.0 741.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+<polyline points="623.8,28.0 623.8,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="623.8" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="753.6,28.0 753.6,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="753.6" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="284.3,72.0 284.3,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="284.3,29.0 280.8,37.0 287.8,37.0" fill="#b03a2e"/>
+<polyline points="420.9,72.0 420.9,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="420.9,29.0 417.4,37.0 424.4,37.0" fill="#b03a2e"/>
+<polyline points="284.3,72.0 753.6,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<text x="4.0" y="76.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#b03a2e">FD2</text>
+</svg>

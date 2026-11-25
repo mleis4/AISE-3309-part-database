@@ -1,0 +1,132 @@
+digraph FD { rankdir=LR; fontname="Helvetica"; node [fontname="Helvetica", fontsize=10]; edge [fontsize=9];
+labelloc=t; label="Functional dependency diagrams (all relations; determinant boxes are keys)";
+subgraph cluster_0 { label="Customer"; style=rounded; color=gray40;
+"Customer.Email" [label="Email", shape=plaintext];
+"Customer.Username" [label="Username", shape=plaintext];
+"Customer.Password" [label="Password", shape=plaintext];
+"Customer.FirstName" [label="FirstName", shape=plaintext];
+"Customer.LastName" [label="LastName", shape=plaintext];
+"Customer.HouseAddress" [label="HouseAddress", shape=plaintext];
+"Customer.UnitNum" [label="UnitNum", shape=plaintext];
+"Customer.PostCode" [label="PostCode", shape=plaintext];
+"Customer.City" [label="City", shape=plaintext];
+"Customer.Province" [label="Province", shape=plaintext];
+"Customer.Country" [label="Country", shape=plaintext];
+"Customer.fd0" [label="Email", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"Customer.fd0" -> "Customer.Username";
+"Customer.fd0" -> "Customer.Password";
+"Customer.fd0" -> "Customer.FirstName";
+"Customer.fd0" -> "Customer.LastName";
+"Customer.fd0" -> "Customer.HouseAddress";
+"Customer.fd0" -> "Customer.UnitNum";
+"Customer.fd0" -> "Customer.PostCode";
+"Customer.fd0" -> "Customer.City";
+"Customer.fd0" -> "Customer.Province";
+"Customer.fd0" -> "Customer.Country";
+"Customer.fd1" [label="Username", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"Customer.fd1" -> "Customer.Email";
+}
+subgraph cluster_1 { label="Part"; style=rounded; color=gray40;
+"Part.Manufacturer_PartNum" [label="Manufacturer_PartNum", shape=plaintext];
+"Part.Name" [label="Name", shape=plaintext];
+"Part.Description" [label="Description", shape=plaintext];
+"Part.Category" [label="Category", shape=plaintext];
+"Part.Length" [label="Length", shape=plaintext];
+"Part.Width" [label="Width", shape=plaintext];
+"Part.Height" [label="Height", shape=plaintext];
+"Part.Datasheet_link" [label="Datasheet_link", shape=plaintext];
+"Part.fd0" [label="Manufacturer_PartNum", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"Part.fd0" -> "Part.Name";
+"Part.fd0" -> "Part.Description";
+"Part.fd0" -> "Part.Category";
+"Part.fd0" -> "Part.Length";
+"Part.fd0" -> "Part.Width";
+"Part.fd0" -> "Part.Height";
+"Part.fd0" -> "Part.Datasheet_link";
+}
+subgraph cluster_2 { label="Distributor"; style=rounded; color=gray40;
+"Distributor.Name" [label="Name", shape=plaintext];
+"Distributor.Website" [label="Website", shape=plaintext];
+"Distributor.fd0" [label="Name", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"Distributor.fd0" -> "Distributor.Website";
+"Distributor.fd1" [label="Website", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"Distributor.fd1" -> "Distributor.Name";
+}
+subgraph cluster_3 { label="SharedProject"; style=rounded; color=gray40;
+"SharedProject.Title" [label="Title", shape=plaintext];
+"SharedProject.Description" [label="Description", shape=plaintext];
+"SharedProject.Date_shared" [label="Date_shared", shape=plaintext];
+"SharedProject.CustomerEmail" [label="CustomerEmail", shape=plaintext];
+"SharedProject.fd0" [label="Title", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"SharedProject.fd0" -> "SharedProject.Description";
+"SharedProject.fd0" -> "SharedProject.Date_shared";
+"SharedProject.fd0" -> "SharedProject.CustomerEmail";
+}
+subgraph cluster_4 { label="BOM"; style=rounded; color=gray40;
+"BOM.CustomerEmail" [label="CustomerEmail", shape=plaintext];
+"BOM.BOM_name" [label="BOM_name", shape=plaintext];
+"BOM.Date_created" [label="Date_created", shape=plaintext];
+"BOM.fd0" [label="CustomerEmail, BOM_name", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"BOM.fd0" -> "BOM.Date_created";
+}
+subgraph cluster_5 { label="ShoppingCart"; style=rounded; color=gray40;
+"ShoppingCart.CustomerEmail" [label="CustomerEmail", shape=plaintext];
+"ShoppingCart.Date_Added" [label="Date_Added", shape=plaintext];
+"ShoppingCart.fd0" [label="CustomerEmail", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"ShoppingCart.fd0" -> "ShoppingCart.Date_Added";
+}
+subgraph cluster_6 { label="Listing"; style=rounded; color=gray40;
+"Listing.DistributorName" [label="DistributorName", shape=plaintext];
+"Listing.Distributor_PartNum" [label="Distributor_PartNum", shape=plaintext];
+"Listing.Manufacturer_PartNum" [label="Manufacturer_PartNum", shape=plaintext];
+"Listing.UnitPrice" [label="UnitPrice", shape=plaintext];
+"Listing.StockQuantity" [label="StockQuantity", shape=plaintext];
+"Listing.EstShipTime" [label="EstShipTime", shape=plaintext];
+"Listing.LastUpdated" [label="LastUpdated", shape=plaintext];
+"Listing.fd0" [label="DistributorName, Distributor_PartNum", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"Listing.fd0" -> "Listing.Manufacturer_PartNum";
+"Listing.fd0" -> "Listing.UnitPrice";
+"Listing.fd0" -> "Listing.StockQuantity";
+"Listing.fd0" -> "Listing.EstShipTime";
+"Listing.fd0" -> "Listing.LastUpdated";
+"Listing.fd1" [label="DistributorName, Manufacturer_PartNum", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"Listing.fd1" -> "Listing.Distributor_PartNum";
+}
+subgraph cluster_7 { label="BOMLine"; style=rounded; color=gray40;
+"BOMLine.CustomerEmail" [label="CustomerEmail", shape=plaintext];
+"BOMLine.BOM_name" [label="BOM_name", shape=plaintext];
+"BOMLine.Manufacturer_PartNum" [label="Manufacturer_PartNum", shape=plaintext];
+"BOMLine.Quantity" [label="Quantity", shape=plaintext];
+"BOMLine.fd0" [label="CustomerEmail, BOM_name, Manufacturer_PartNum", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"BOMLine.fd0" -> "BOMLine.Quantity";
+}
+subgraph cluster_8 { label="CartLine"; style=rounded; color=gray40;
+"CartLine.CustomerEmail" [label="CustomerEmail", shape=plaintext];
+"CartLine.DistributorName" [label="DistributorName", shape=plaintext];
+"CartLine.Distributor_PartNum" [label="Distributor_PartNum", shape=plaintext];
+"CartLine.Quantity" [label="Quantity", shape=plaintext];
+"CartLine.fd0" [label="CustomerEmail, DistributorName, Distributor_PartNum", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"CartLine.fd0" -> "CartLine.Quantity";
+}
+subgraph cluster_9 { label="Review"; style=rounded; color=gray40;
+"Review.CustomerEmail" [label="CustomerEmail", shape=plaintext];
+"Review.DistributorName" [label="DistributorName", shape=plaintext];
+"Review.ReviewText" [label="ReviewText", shape=plaintext];
+"Review.StarRating" [label="StarRating", shape=plaintext];
+"Review.fd0" [label="CustomerEmail, DistributorName", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"Review.fd0" -> "Review.ReviewText";
+"Review.fd0" -> "Review.StarRating";
+}
+subgraph cluster_10 { label="ProjectPart"; style=rounded; color=gray40;
+"ProjectPart.Title" [label="Title", shape=plaintext];
+"ProjectPart.Manufacturer_PartNum" [label="Manufacturer_PartNum", shape=plaintext];
+"ProjectPart.Quantity" [label="Quantity", shape=plaintext];
+"ProjectPart.fd0" [label="Title, Manufacturer_PartNum", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+"ProjectPart.fd0" -> "ProjectPart.Quantity";
+}
+subgraph cluster_11 { label="PartAlternative"; style=rounded; color=gray40;
+"PartAlternative.Part1_PartNum" [label="Part1_PartNum", shape=plaintext];
+"PartAlternative.Part2_PartNum" [label="Part2_PartNum", shape=plaintext];
+"PartAlternative.key" [label="Part1_PartNum, Part2_PartNum  (all-key: no non-key attributes)", shape=box, style="filled,bold", fillcolor="#dbe9ff"];
+}
+}

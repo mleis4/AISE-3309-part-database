@@ -1,0 +1,113 @@
+@startuml
+title Engineering Part Sourcer - Conceptual Model (UML Database Notation)
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide circle
+skinparam class {
+  BackgroundColor White
+  BorderColor Black
+}
+
+class Customer <<entity>> {
+  {static} Email {PK}
+  --
+  Username {CK}
+  Password
+  FirstName
+  LastName
+  BillingAddress.HouseAddress
+  BillingAddress.UnitNum
+  BillingAddress.PostCode
+  BillingAddress.City
+  BillingAddress.Province
+  BillingAddress.Country
+}
+
+class Part <<entity>> {
+  {static} Manufacturer_PartNum {PK}
+  --
+  Name
+  Description
+  Category
+  Dimensions.Length
+  Dimensions.Width
+  Dimensions.Height
+  Datasheet_link
+}
+
+class Distributor <<entity>> {
+  {static} Name {PK}
+  --
+  Website
+  /AvgStarRating
+}
+
+class SharedProject <<entity>> {
+  {static} Title {PK}
+  --
+  Description
+  Date_shared
+}
+
+class BOM <<weak entity>> {
+  {static} BOM_name {partial key}
+  --
+  Date_created
+  /NumberOfParts
+  /TotalCost
+}
+
+class ShoppingCart <<weak entity>> {
+  Date_Added
+  --
+  /Subtotal
+  /ShippingPrice
+  /TotalPrice
+}
+
+class Listing <<weak entity>> {
+  {static} Distributor_PartNum {partial key}
+  --
+  UnitPrice
+  StockQuantity
+  EstShipTime
+  LastUpdated
+}
+
+class Review <<association class>> {
+  ReviewText
+  StarRating {1..5}
+}
+class BOMLine <<association class>> {
+  Quantity
+}
+class CartLine <<association class>> {
+  Quantity
+}
+class ProjectPart <<association class>> {
+  Quantity
+}
+
+' identifying relationships (weak entities)
+Customer "1" *-- "0..*" BOM : creates >
+Customer "1" *-- "0..1" ShoppingCart : owns >
+Distributor "1" *-- "0..*" Listing : publishes >
+
+' regular relationships
+Listing "0..*" -- "1" Part : offers >
+Part "0..*" -- "0..*" Part : alternative to
+note on link : symmetric, recursive M:N
+
+BOM "0..*" -- "0..*" Part : contains >
+(BOM, Part) .. BOMLine
+
+ShoppingCart "0..*" -- "0..*" Listing : holds >
+(ShoppingCart, Listing) .. CartLine
+
+Customer "0..*" -- "0..*" Distributor : reviews >
+(Customer, Distributor) .. Review
+
+Customer "1" -- "0..*" SharedProject : shares >
+SharedProject "0..*" -- "1..*" Part : uses >
+(SharedProject, Part) .. ProjectPart
+@enduml

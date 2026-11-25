@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1018 84" width="1018" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="1018" height="84" fill="#fff"/>
+<rect x="44.0" y="2" width="116.5" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="102.2" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">DistributorName</text>
+<rect x="160.5" y="2" width="143.3" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="232.2" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Distributor_PartNum</text>
+<rect x="303.8" y="2" width="123.2" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="365.4" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">ManufacturerName</text>
+<rect x="427.0" y="2" width="150.0" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="502.0" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Manufacturer_PartNum</text>
+<rect x="577.0" y="2" width="76.3" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="615.1" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Packaging</text>
+<rect x="653.3" y="2" width="76.3" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="691.4" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">UnitPrice</text>
+<rect x="729.6" y="2" width="103.1" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="781.1" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">StockQuantity</text>
+<rect x="832.7" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="877.5" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">EstShipTime</text>
+<rect x="922.4" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="967.2" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">LastUpdated</text>
+<polyline points="96.2,28.0 96.2,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="96.2" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="226.2,28.0 226.2,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="226.2" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="359.4,50.0 359.4,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="359.4,29.0 355.9,37.0 362.9,37.0" fill="#0b4ea2"/>
+<polyline points="496.0,50.0 496.0,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="496.0,29.0 492.5,37.0 499.5,37.0" fill="#0b4ea2"/>
+<polyline points="609.1,50.0 609.1,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="609.1,29.0 605.6,37.0 612.6,37.0" fill="#0b4ea2"/>
+<polyline points="685.4,50.0 685.4,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="685.4,29.0 681.9,37.0 688.9,37.0" fill="#0b4ea2"/>
+<polyline points="775.1,50.0 775.1,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="775.1,29.0 771.6,37.0 778.6,37.0" fill="#0b4ea2"/>
+<polyline points="871.5,50.0 871.5,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="871.5,29.0 868.0,37.0 875.0,37.0" fill="#0b4ea2"/>
+<polyline points="961.2,50.0 961.2,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="961.2,29.0 957.8,37.0 964.8,37.0" fill="#0b4ea2"/>
+<polyline points="96.2,50.0 961.2,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+<polyline points="108.2,28.0 108.2,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="108.2" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="371.4,28.0 371.4,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="371.4" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="508.0,28.0 508.0,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="508.0" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="621.1,28.0 621.1,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="621.1" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="238.2,72.0 238.2,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="238.2,29.0 234.7,37.0 241.7,37.0" fill="#b03a2e"/>
+<polyline points="697.4,72.0 697.4,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="697.4,29.0 693.9,37.0 700.9,37.0" fill="#b03a2e"/>
+<polyline points="787.1,72.0 787.1,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="787.1,29.0 783.6,37.0 790.6,37.0" fill="#b03a2e"/>
+<polyline points="883.5,72.0 883.5,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="883.5,29.0 880.0,37.0 887.0,37.0" fill="#b03a2e"/>
+<polyline points="973.2,72.0 973.2,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="973.2,29.0 969.8,37.0 976.8,37.0" fill="#b03a2e"/>
+<polyline points="108.2,72.0 973.2,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<text x="4.0" y="76.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#b03a2e">FD2</text>
+</svg>

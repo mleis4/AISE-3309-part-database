@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 797 62" width="797" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="797" height="62" fill="#fff"/>
+<rect x="44.0" y="2" width="123.2" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="105.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">ManufacturerName</text>
+<rect x="167.2" y="2" width="150.0" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="242.2" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Manufacturer_PartNum</text>
+<rect x="317.2" y="2" width="42.8" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="338.6" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Name</text>
+<rect x="360.0" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="404.9" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Description</text>
+<rect x="449.7" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="484.5" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Category</text>
+<rect x="519.3" y="2" width="56.2" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="547.4" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Length</text>
+<rect x="575.5" y="2" width="49.5" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="600.2" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Width</text>
+<rect x="625.0" y="2" width="56.2" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="653.1" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Height</text>
+<rect x="681.2" y="2" width="109.8" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="736.1" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Datasheet_link</text>
+<polyline points="105.6,28.0 105.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="105.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="242.2,28.0 242.2,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="242.2" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="338.6,50.0 338.6,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="338.6,29.0 335.1,37.0 342.1,37.0" fill="#0b4ea2"/>
+<polyline points="404.9,50.0 404.9,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="404.9,29.0 401.4,37.0 408.4,37.0" fill="#0b4ea2"/>
+<polyline points="484.5,50.0 484.5,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="484.5,29.0 481.0,37.0 488.0,37.0" fill="#0b4ea2"/>
+<polyline points="547.4,50.0 547.4,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="547.4,29.0 543.9,37.0 550.9,37.0" fill="#0b4ea2"/>
+<polyline points="600.2,50.0 600.2,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="600.2,29.0 596.8,37.0 603.8,37.0" fill="#0b4ea2"/>
+<polyline points="653.1,50.0 653.1,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="653.1,29.0 649.6,37.0 656.6,37.0" fill="#0b4ea2"/>
+<polyline points="736.1,50.0 736.1,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="736.1,29.0 732.6,37.0 739.6,37.0" fill="#0b4ea2"/>
+<polyline points="105.6,50.0 736.1,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 482 62" width="482" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="482" height="62" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="116.5" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="205.4" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">DistributorName</text>
+<rect x="263.6" y="2" width="143.3" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="335.2" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Distributor_PartNum</text>
+<rect x="406.9" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="441.7" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Quantity</text>
+<polyline points="95.6,28.0 95.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="95.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="205.4,28.0 205.4,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="205.4" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="335.2,28.0 335.2,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="335.2" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="441.7,50.0 441.7,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="441.7,29.0 438.2,37.0 445.2,37.0" fill="#0b4ea2"/>
+<polyline points="95.6,50.0 441.7,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+</svg>

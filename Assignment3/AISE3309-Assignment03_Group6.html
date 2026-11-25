@@ -1,0 +1,1589 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>AISE 3309 Assignment 03 - Group 6</title><style>
+@page { size: Letter; margin: 0.75in 0.8in; @bottom-center { content: counter(page); font-family: 'Segoe UI', Arial, sans-serif; font-size: 9pt; } }
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; font-size: 10pt; line-height: 1.4; color: #000; margin: 0; }
+.cover { text-align: center; }
+.banner { background: #1565c0; color: #fff; padding: 46px 10px 40px; font-size: 15pt; font-weight: 600; border-radius: 0 0 50% 50% / 0 0 26px 26px; }
+.ctitle { color: #1565c0; font-size: 22pt; font-weight: 700; margin: 150px 0 40px; }
+.csub1 { color: #1565c0; font-size: 18pt; font-weight: 700; margin: 0; }
+.csub2 { color: #1565c0; font-size: 12pt; margin: 4px 0 40px; }
+.cover table { width: 78%; margin: 0 auto; text-align: left; }
+h2.sec { background: #cfe2f6; border-top: 3px solid #1e88e5; color: #1565c0; font-weight: 500; font-size: 14pt; padding: 4px 10px; margin: 22px 0 12px; break-after: avoid; }
+h3 { color: #1565c0; font-size: 12pt; margin: 18px 0 6px; break-after: avoid; }
+h4 { font-size: 10.5pt; margin: 12px 0 4px; break-after: avoid; }
+p { margin: 6px 0; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0 12px; font-size: 9pt; }
+th, td { border: 1px solid #000; padding: 4px 6px; vertical-align: top; text-align: left; }
+th { background: #bdd7ee; text-align: center; }
+tr { break-inside: avoid; }
+.toctitle { color: #1565c0; text-align: center; font-size: 22pt; font-weight: 700; margin: 10px 0 24px; }
+.tr { display: flex; align-items: baseline; margin: 5px 0; }
+.tr.l1 { font-weight: 600; margin-top: 10px; }
+.tr.l2 { margin-left: 26px; }
+.dots { flex: 1; border-bottom: 1px dotted #000; margin: 0 6px; }
+.fig { text-align: center; margin: 8px 0; break-inside: avoid; }
+.fig svg { max-width: 100%; height: auto; }
+.cap { text-align: center; font-size: 9pt; font-style: italic; margin: 2px 0 12px; }
+.rel { margin: 9px 0; padding: 5px 9px; border-left: 3px solid #1e88e5; background: #f6f9fd; break-inside: avoid; }
+.relhead { font-size: 10pt; }
+.relkey { margin-left: 22px; font-size: 9pt; }
+.pk { text-decoration: underline; font-weight: 600; }
+.nf { break-inside: avoid; margin-bottom: 12px; }
+.nf .fig { text-align: left; }
+.fdlist { font-size: 9pt; margin: 2px 0; }
+.expr { margin: 6px 0 6px 22px; font-weight: 600; }
+ul.tight { margin: 4px 0 4px 0; padding-left: 20px; }
+ul.tight li { margin: 1px 0; }
+.pb { break-before: page; page-break-before: always; }
+
+pre.sql, pre.out { font-family: Consolas, 'Courier New', monospace; font-size: 7.6pt; line-height: 1.3;
+  white-space: pre-wrap; word-break: break-word; margin: 4px 0; padding: 6px 8px; border-radius: 3px; }
+pre.sql { background: #f4f7fb; border-left: 3px solid #1e88e5; }
+pre.out { background: #fbfbf7; border: 1px dashed #b0a060; }
+pre.err { color: #a00000; }
+.stmt { break-inside: avoid; margin: 8px 0 12px; }
+.shotlabel { font-size: 7.5pt; color: #806000; margin: 2px 0 0; }
+.shotlabel.ok { color: #2e7d32; }
+.stmt img { max-width: 100%; border: 1px solid #999; }
+.note { background: #fff8e1; border-left: 3px solid #f9a825; padding: 5px 9px; margin: 8px 0; font-size: 9pt; }
+code { font-family: Consolas, 'Courier New', monospace; font-size: 8.5pt; }
+td code { font-size: 8pt; }
+</style></head><body>
+<div class="cover"><div class="banner">Western Engineering<br>Electrical and Computer Engineering</div><p class="ctitle">AISE 3309: Database Management Systems</p><p class="csub1">Assignment 03</p><p class="csub2">Database Implementation</p><table><tr><td><b>Group #:</b></td><td>6 (Lab 2, AISE 3309A 002)</td></tr><tr><td><b>Project Name:</b></td><td>Engineering Part Sourcer</td></tr><tr><th style="width:50%">Team Member Name</th><th>Team Member ID</th></tr><tr><td>1.&nbsp; Shaan Wrench</td><td>251422184</td></tr><tr><td>2.&nbsp; Mats Leis</td><td>251409940</td></tr><tr><td>3.&nbsp; Ayman Hossain</td><td>251430600</td></tr><tr><td>4.&nbsp; Samuel Huang</td><td>251418742</td></tr><tr><td>5.&nbsp; Anish Jami</td><td>251419182</td></tr></table></div>
+<p class="toctitle" style="page-break-before:always">Table of Contents</p>
+<div class="tr l1"><span>0. Final Schema Evaluation and Refinement</span><span class="dots"></span><span>3</span></div>
+<div class="tr l2"><span>0.1 Implementation decision: no triggers</span><span class="dots"></span><span>3</span></div>
+<div class="tr l1"><span>1. Task 1: SQL Database Schema Creation</span><span class="dots"></span><span>4</span></div>
+<div class="tr l2"><span>1.1 Design decisions</span><span class="dots"></span><span>4</span></div>
+<div class="tr l2"><span>1.2 CREATE TABLE statements and responses</span><span class="dots"></span><span>4</span></div>
+<div class="tr l2"><span>1.3 DESCRIBE output for each relation</span><span class="dots"></span><span>9</span></div>
+<div class="tr l2"><span>1.4 Constraints not enforced by the DBMS</span><span class="dots"></span><span>11</span></div>
+<div class="tr l1"><span>2. Task 2: Basic Data Insertion</span><span class="dots"></span><span>12</span></div>
+<div class="tr l1"><span>3. Task 3: Substantial Data Loading</span><span class="dots"></span><span>14</span></div>
+<div class="tr l2"><span>3.1 How to rebuild the database</span><span class="dots"></span><span>14</span></div>
+<div class="tr l2"><span>3.2 Coverage of edge cases</span><span class="dots"></span><span>14</span></div>
+<div class="tr l2"><span>3.3 Integrity checks and relation sizes</span><span class="dots"></span><span>14</span></div>
+<div class="tr l2"><span>3.4 Sample records</span><span class="dots"></span><span>17</span></div>
+<div class="tr l2"><span>3.5 Database dump</span><span class="dots"></span><span>19</span></div>
+<div class="tr l1"><span>4. Task 4: SQL Queries (SELECT)</span><span class="dots"></span><span>20</span></div>
+<div class="tr l1"><span>5. Task 5: Data Modification Commands</span><span class="dots"></span><span>24</span></div>
+<div class="tr l1"><span>6. Task 6: View Creation and Evaluation</span><span class="dots"></span><span>28</span></div>
+<div class="tr l2"><span>6.1 Are the views updatable?</span><span class="dots"></span><span>32</span></div>
+<div class="tr l1"><span>7. Notes on ISO SQL</span><span class="dots"></span><span>34</span></div>
+<div class="tr l1"><span>8. AI Use</span><span class="dots"></span><span>35</span></div>
+<div class="tr l1"><span>9. Team Contribution Efforts</span><span class="dots"></span><span>36</span></div>
+<h2 class="sec pb">0.&nbsp; Final Schema Evaluation and Refinement</h2>
+<p>Assignment 3 starts with a final, critical evaluation of the Assignment 2 schema. The peer review of Assignment 2 raised four points; the table records what changed and why. Every relation is still in BCNF: the only new determinants are the changed alternate keys, and both are candidate keys.</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>#</th><th>Peer feedback</th><th>Change</th><th>Effect on the schema</th></tr></thead><tbody>
+<tr><td>1</td><td>&quot;Part key: generic part numbers like 1N4148 are made by several manufacturers, so use (Manufacturer, Manufacturer_PartNum).&quot;</td><td>No change needed. The key was already (ManufacturerName, Manufacturer_PartNum) in RELS, and table 1.4 records the change from Assignment 1.</td><td>None</td></tr>
+<tr><td>2</td><td>&quot;C2 (one listing per distributor per part) is a shortcut: a distributor that sells a part as both cut tape and reel can&#x27;t store both.&quot;</td><td>Added the attribute <b>Listing.Packaging</b>. C2 is now &quot;at most one listing per distributor, part and packaging&quot;, and the AK of Listing is (DistributorName, ManufacturerName, Manufacturer_PartNum, Packaging).</td><td>Listing has a new column, and its AK and FD2 change. It is still in BCNF, since both determinants are candidate keys. C3 is unchanged: a BOM still selects at most one listing per part, and the C3 trigger now has real alternatives to choose between.</td></tr>
+<tr><td>3</td><td>&quot;SharedProject.Title unique across all customers means two users can&#x27;t share projects with the same name.&quot;</td><td>The AK changed from Title to <b>(CustomerEmail, Title)</b>.</td><td>Titles are unique per customer only. FD2 of SharedProject changes, and it is still in BCNF.</td></tr>
+<tr><td>4</td><td>&quot;BCNF section is dense; add a short summary at the start.&quot;</td><td>Added a summary paragraph at the start of 3.3.3: everything is in BCNF, and why BOMLine and BOMSelection are kept separate.</td><td>Report text only</td></tr>
+</tbody></table>
+<h3>0.1&nbsp; Implementation decision: no triggers</h3>
+<p>Section 2.4 of the A2 report says triggers will maintain C3, C5 and C7. In A3 the group uses <b>no triggers</b>, because the handout only asks us to &quot;consider&quot; them. The A3 report should say so and explain how each constraint is handled instead:</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>Constraint</th><th>Why the DBMS cannot enforce it</th><th>How it is upheld</th></tr></thead><tbody>
+<tr><td>C3 (a selection must be for a part the BOM contains, at most one per part)</td><td>It spans BOMSelection, Listing and BOMLine, so the ISO form is CREATE ASSERTION, which MySQL does not support</td><td>Data generator and A4 application; <code>check_data.sql</code> query</td></tr>
+<tr><td>C4 (Part1 &lt; Part2, no self-pair)</td><td>The ISO CHECK is rejected by MySQL error 3823 because the columns have FK referential actions</td><td>Data generator and application; <code>check_data.sql</code> query</td></tr>
+<tr><td>C5 (a shared BOM has at least one line)</td><td>Needs CREATE ASSERTION</td><td>Data generator and application; <code>check_data.sql</code> query</td></tr>
+<tr><td>C7 (a listing&#x27;s part never changes)</td><td>A rule about updates, which no assertion can express</td><td>The application never updates those columns</td></tr>
+</tbody></table>
+<h2 class="sec pb">1.&nbsp; Task 1: SQL Database Schema Creation</h2>
+<p>The schema is in <code>SQL/task3.sql</code>. It is generated by <code>SRC/build_ddl.py</code> from the same definition of the relations (<code>RELS</code>) that produced the Assignment 2 diagrams, so the table names, keys and foreign keys cannot drift from the design. The script adds what Assignment 2 left open: data types, NOT NULL, CHECK constraints and indexes.</p>
+<h3>1.1&nbsp; Design decisions</h3>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:22%"><col style="width:78%"></colgroup>
+<thead><tr><th>Decision</th><th>Choice and reason</th></tr></thead><tbody>
+<tr><td>Data types</td><td>VARCHAR for names, emails and part numbers (Email VARCHAR(254), the longest legal address); DECIMAL(10,2) for money; INTEGER for quantities, stock and ratings; DATE for creation dates; TIMESTAMP for Listing.LastUpdated. ISO CREATE DOMAIN would define each shared domain once; MySQL lacks it, so the type is repeated.</td></tr>
+<tr><td>Keys</td><td>Named constraints: <code>pk_</code>, <code>ak_</code> (UNIQUE), <code>fk_</code>, <code>ck_</code>. Every FK column is NOT NULL with ON UPDATE CASCADE; ON DELETE (CASCADE or RESTRICT) is taken from the A2 referential integrity table.</td></tr>
+<tr><td>CHECK (C1 and domains)</td><td>StarRating BETWEEN 1 AND 5; Quantity &gt; 0; UnitPrice, StockQuantity, EstShipTime and ShippingFee &gt;= 0; positive dimensions; Packaging IN a fixed list (instead of MySQL's ENUM). Enforced by MySQL 8.0.16 and later.</td></tr>
+<tr><td>C2 and C6</td><td>C2 is the alternate key ak_Listing_1 (DistributorName, ManufacturerName, Manufacturer_PartNum, Packaging). C6 is the primary key of Review.</td></tr>
+<tr><td>Optional attributes</td><td>Left nullable: Customer.UnitNum, Part.Description, the three dimensions, Part.Datasheet_link, SharedProject.Description, Review.ReviewText.</td></tr>
+<tr><td>Indexes</td><td>InnoDB already indexes every PK, UNIQUE and FK. Two are added: Part(Category) for the category filter, and Listing(ManufacturerName, Manufacturer_PartNum, UnitPrice) for Price Match.</td></tr>
+<tr><td>Derived attributes</td><td>Not stored (A2 decision). They are computed in queries and the BOMTotals view.</td></tr>
+<tr><td>Triggers</td><td>None (group decision). C3, C4, C5 and C7 are documented at the end of task3.sql in their ISO form (CREATE ASSERTION or CHECK) and verified by SRC/check_data.sql (section 3.3).</td></tr>
+</tbody></table>
+<h3>1.2&nbsp; CREATE TABLE statements and responses</h3>
+<pre class="sql">-- task3.sql: Task 1, CREATE TABLE statements
+-- ============================================================================
+-- AISE 3309 Assignment 3, Group 6: Engineering Part Sourcer
+-- Generated by SRC/build_ddl.py from RELS in Assignment2/build_report.py.
+-- Do not edit by hand: change build_ddl.py (types, CHECKs, indexes) or RELS
+-- (keys, FKs) and rerun it.
+--
+-- Target: MySQL 8.0.16 or later (CHECK constraints are only enforced from
+-- 8.0.16; earlier versions parse and silently ignore them). Tested on MySQL
+-- 26.10.0 with sql_mode ONLY_FULL_GROUP_BY, STRICT_TRANS_TABLES.
+--
+-- Conventions
+--   * ISO SQL throughout. Identifiers are unquoted (no backticks, no double
+--     quotes). Every MySQL-only statement is marked &quot;MySQL-specific&quot;.
+--   * Keys are named constraints: pk_&lt;Relation&gt;, ak_&lt;Relation&gt;_&lt;n&gt;,
+--     fk_&lt;Relation&gt;_&lt;Target&gt;, ck_&lt;Relation&gt;_&lt;rule&gt;.
+--   * Every FK column is NOT NULL and uses ON UPDATE CASCADE. ON DELETE is
+--     taken from the Assignment 2 referential integrity table.
+--   * Derived attributes (/AvgStarRating, /NumberOfParts, /UnpricedParts,
+--     /TotalCost, /Subtotal, /ShippingPrice, /TotalPrice) are NOT columns.
+--     They are computed in queries and in the BOMTotals view (task8.sql).
+--   * No triggers (group decision; the handout makes them optional). See the
+--     &quot;Constraints not enforced by the DBMS&quot; block at the end of this file.
+-- ============================================================================</pre>
+<div class="stmt"><pre class="sql">-- task3.sql: Task 1, CREATE TABLE statements
+-- ============================================================================
+-- AISE 3309 Assignment 3, Group 6: Engineering Part Sourcer
+-- Generated by SRC/build_ddl.py from RELS in Assignment2/build_report.py.
+-- Do not edit by hand: change build_ddl.py (types, CHECKs, indexes) or RELS
+-- (keys, FKs) and rerun it.
+--
+-- Target: MySQL 8.0.16 or later (CHECK constraints are only enforced from
+-- 8.0.16; earlier versions parse and silently ignore them). Tested on MySQL
+-- 26.10.0 with sql_mode ONLY_FULL_GROUP_BY, STRICT_TRANS_TABLES.
+--
+-- Conventions
+--   * ISO SQL throughout. Identifiers are unquoted (no backticks, no double
+--     quotes). Every MySQL-only statement is marked &quot;MySQL-specific&quot;.
+--   * Keys are named constraints: pk_&lt;Relation&gt;, ak_&lt;Relation&gt;_&lt;n&gt;,
+--     fk_&lt;Relation&gt;_&lt;Target&gt;, ck_&lt;Relation&gt;_&lt;rule&gt;.
+--   * Every FK column is NOT NULL and uses ON UPDATE CASCADE. ON DELETE is
+--     taken from the Assignment 2 referential integrity table.
+--   * Derived attributes (/AvgStarRating, /NumberOfParts, /UnpricedParts,
+--     /TotalCost, /Subtotal, /ShippingPrice, /TotalPrice) are NOT columns.
+--     They are computed in queries and in the BOMTotals view (task8.sql).
+--   * No triggers (group decision; the handout makes them optional). See the
+--     &quot;Constraints not enforced by the DBMS&quot; block at the end of this file.
+-- ============================================================================
+
+-- MySQL-specific: DROP TABLE IF EXISTS. ISO SQL has DROP TABLE &lt;name&gt;
+-- [RESTRICT | CASCADE] with no IF EXISTS; it lets this script be rerun.
+-- Children are dropped before their parents.
+DROP TABLE IF EXISTS Review;
+DROP TABLE IF EXISTS CartLine;
+DROP TABLE IF EXISTS BOMSelection;
+DROP TABLE IF EXISTS BOMLine;
+DROP TABLE IF EXISTS PartAlternative;
+DROP TABLE IF EXISTS SharedProject;
+DROP TABLE IF EXISTS BOM;
+DROP TABLE IF EXISTS ShoppingCart;
+DROP TABLE IF EXISTS Listing;
+DROP TABLE IF EXISTS Distributor;
+DROP TABLE IF EXISTS Part;
+DROP TABLE IF EXISTS Customer;</pre><pre class="out">Query OK, 0 rows affected (0.087 sec)
+
+Query OK, 0 rows affected (0.059 sec)
+
+Query OK, 0 rows affected (0.071 sec)
+
+Query OK, 0 rows affected (0.060 sec)
+
+Query OK, 0 rows affected (0.064 sec)
+
+Query OK, 0 rows affected (0.060 sec)
+
+Query OK, 0 rows affected (0.059 sec)
+
+Query OK, 0 rows affected (0.049 sec)
+
+Query OK, 0 rows affected (0.084 sec)
+
+Query OK, 0 rows affected (0.041 sec)
+
+Query OK, 0 rows affected (0.052 sec)
+
+Query OK, 0 rows affected (0.047 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_drop.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE Customer (
+    Email        VARCHAR(254) NOT NULL,
+    Username     VARCHAR(30) NOT NULL,
+    Password     VARCHAR(255) NOT NULL,  -- a salted hash, never plain text
+    FirstName    VARCHAR(50) NOT NULL,
+    LastName     VARCHAR(50) NOT NULL,
+    HouseAddress VARCHAR(100) NOT NULL,
+    UnitNum      VARCHAR(10),
+    City         VARCHAR(50) NOT NULL,
+    Province     VARCHAR(50) NOT NULL,
+    Country      VARCHAR(56) NOT NULL,
+    PostCode     VARCHAR(10) NOT NULL,
+    CONSTRAINT pk_Customer PRIMARY KEY (Email),
+    CONSTRAINT ak_Customer_1 UNIQUE (Username)
+);</pre><pre class="out">Query OK, 0 rows affected (0.109 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_Customer.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE Part (
+    ManufacturerName     VARCHAR(60) NOT NULL,
+    Manufacturer_PartNum VARCHAR(60) NOT NULL,
+    Name                 VARCHAR(100) NOT NULL,
+    Description          VARCHAR(1000),
+    Category             VARCHAR(50) NOT NULL,
+    Length               DECIMAL(8,2),  -- millimetres
+    Width                DECIMAL(8,2),
+    Height               DECIMAL(8,2),
+    Datasheet_link       VARCHAR(2048),
+    CONSTRAINT pk_Part PRIMARY KEY (ManufacturerName, Manufacturer_PartNum),
+    CONSTRAINT ck_Part_dims CHECK (Length &gt; 0 AND Width &gt; 0 AND Height &gt; 0)  -- a NULL dimension makes the CHECK unknown, which passes (ISO rule)
+);</pre><pre class="out">Query OK, 0 rows affected (0.070 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_Part.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE Distributor (
+    Name        VARCHAR(60) NOT NULL,
+    Website     VARCHAR(255) NOT NULL,
+    ShippingFee DECIMAL(10,2) NOT NULL,
+    CONSTRAINT pk_Distributor PRIMARY KEY (Name),
+    CONSTRAINT ak_Distributor_1 UNIQUE (Website),
+    CONSTRAINT ck_Distributor_fee CHECK (ShippingFee &gt;= 0)
+);</pre><pre class="out">Query OK, 0 rows affected (0.147 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_Distributor.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE Listing (
+    DistributorName      VARCHAR(60) NOT NULL,
+    Distributor_PartNum  VARCHAR(60) NOT NULL,
+    ManufacturerName     VARCHAR(60) NOT NULL,
+    Manufacturer_PartNum VARCHAR(60) NOT NULL,
+    Packaging            VARCHAR(20) NOT NULL,
+    UnitPrice            DECIMAL(10,2) NOT NULL,
+    StockQuantity        INTEGER NOT NULL,
+    EstShipTime          INTEGER NOT NULL,  -- estimated shipping time in days
+    LastUpdated          TIMESTAMP NOT NULL,
+    CONSTRAINT pk_Listing PRIMARY KEY (DistributorName, Distributor_PartNum),
+    CONSTRAINT ak_Listing_1 UNIQUE (DistributorName, ManufacturerName, Manufacturer_PartNum, Packaging),
+    CONSTRAINT fk_Listing_Distributor FOREIGN KEY (DistributorName)
+        REFERENCES Distributor (Name)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_Listing_Part FOREIGN KEY (ManufacturerName, Manufacturer_PartNum)
+        REFERENCES Part (ManufacturerName, Manufacturer_PartNum)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT ck_Listing_price CHECK (UnitPrice &gt;= 0),
+    CONSTRAINT ck_Listing_stock CHECK (StockQuantity &gt;= 0),
+    CONSTRAINT ck_Listing_ship CHECK (EstShipTime &gt;= 0),
+    CONSTRAINT ck_Listing_pack CHECK (Packaging IN (&#x27;Cut Tape&#x27;, &#x27;Tape &amp; Reel&#x27;, &#x27;Tray&#x27;, &#x27;Bulk&#x27;, &#x27;Tube&#x27;))  -- replaces a MySQL ENUM with an ISO CHECK on a fixed list
+);</pre><pre class="out">Query OK, 0 rows affected (0.174 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_Listing.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE ShoppingCart (
+    CustomerEmail VARCHAR(254) NOT NULL,
+    Date_created  DATE NOT NULL,
+    CONSTRAINT pk_ShoppingCart PRIMARY KEY (CustomerEmail),
+    CONSTRAINT fk_ShoppingCart_Customer FOREIGN KEY (CustomerEmail)
+        REFERENCES Customer (Email)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);</pre><pre class="out">Query OK, 0 rows affected (0.061 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_ShoppingCart.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE BOM (
+    CustomerEmail VARCHAR(254) NOT NULL,
+    BOM_name      VARCHAR(100) NOT NULL,
+    Date_created  DATE NOT NULL,
+    CONSTRAINT pk_BOM PRIMARY KEY (CustomerEmail, BOM_name),
+    CONSTRAINT fk_BOM_Customer FOREIGN KEY (CustomerEmail)
+        REFERENCES Customer (Email)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);</pre><pre class="out">Query OK, 0 rows affected (0.086 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_BOM.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE SharedProject (
+    CustomerEmail VARCHAR(254) NOT NULL,
+    BOM_name      VARCHAR(100) NOT NULL,
+    Title         VARCHAR(100) NOT NULL,
+    Description   VARCHAR(1000),
+    Date_shared   DATE NOT NULL,
+    CONSTRAINT pk_SharedProject PRIMARY KEY (CustomerEmail, BOM_name),
+    CONSTRAINT ak_SharedProject_1 UNIQUE (CustomerEmail, Title),
+    CONSTRAINT fk_SharedProject_BOM FOREIGN KEY (CustomerEmail, BOM_name)
+        REFERENCES BOM (CustomerEmail, BOM_name)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);</pre><pre class="out">Query OK, 0 rows affected (0.186 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_SharedProject.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE PartAlternative (
+    Part1_ManufacturerName VARCHAR(60) NOT NULL,
+    Part1_PartNum          VARCHAR(60) NOT NULL,
+    Part2_ManufacturerName VARCHAR(60) NOT NULL,
+    Part2_PartNum          VARCHAR(60) NOT NULL,
+    CONSTRAINT pk_PartAlternative PRIMARY KEY (Part1_ManufacturerName, Part1_PartNum, Part2_ManufacturerName, Part2_PartNum),
+    CONSTRAINT fk_PartAlternative_Part1 FOREIGN KEY (Part1_ManufacturerName, Part1_PartNum)
+        REFERENCES Part (ManufacturerName, Manufacturer_PartNum)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_PartAlternative_Part2 FOREIGN KEY (Part2_ManufacturerName, Part2_PartNum)
+        REFERENCES Part (ManufacturerName, Manufacturer_PartNum)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);</pre><pre class="out">Query OK, 0 rows affected (0.205 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_PartAlternative.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE BOMLine (
+    CustomerEmail        VARCHAR(254) NOT NULL,
+    BOM_name             VARCHAR(100) NOT NULL,
+    ManufacturerName     VARCHAR(60) NOT NULL,
+    Manufacturer_PartNum VARCHAR(60) NOT NULL,
+    Quantity             INTEGER NOT NULL,
+    CONSTRAINT pk_BOMLine PRIMARY KEY (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum),
+    CONSTRAINT fk_BOMLine_BOM FOREIGN KEY (CustomerEmail, BOM_name)
+        REFERENCES BOM (CustomerEmail, BOM_name)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_BOMLine_Part FOREIGN KEY (ManufacturerName, Manufacturer_PartNum)
+        REFERENCES Part (ManufacturerName, Manufacturer_PartNum)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT ck_BOMLine_qty CHECK (Quantity &gt; 0)
+);</pre><pre class="out">Query OK, 0 rows affected (0.196 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_BOMLine.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE BOMSelection (
+    CustomerEmail       VARCHAR(254) NOT NULL,
+    BOM_name            VARCHAR(100) NOT NULL,
+    DistributorName     VARCHAR(60) NOT NULL,
+    Distributor_PartNum VARCHAR(60) NOT NULL,
+    CONSTRAINT pk_BOMSelection PRIMARY KEY (CustomerEmail, BOM_name, DistributorName, Distributor_PartNum),
+    CONSTRAINT fk_BOMSelection_BOM FOREIGN KEY (CustomerEmail, BOM_name)
+        REFERENCES BOM (CustomerEmail, BOM_name)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_BOMSelection_Listing FOREIGN KEY (DistributorName, Distributor_PartNum)
+        REFERENCES Listing (DistributorName, Distributor_PartNum)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);</pre><pre class="out">Query OK, 0 rows affected (0.184 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_BOMSelection.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE CartLine (
+    CustomerEmail       VARCHAR(254) NOT NULL,
+    DistributorName     VARCHAR(60) NOT NULL,
+    Distributor_PartNum VARCHAR(60) NOT NULL,
+    Quantity            INTEGER NOT NULL,
+    CONSTRAINT pk_CartLine PRIMARY KEY (CustomerEmail, DistributorName, Distributor_PartNum),
+    CONSTRAINT fk_CartLine_ShoppingCart FOREIGN KEY (CustomerEmail)
+        REFERENCES ShoppingCart (CustomerEmail)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_CartLine_Listing FOREIGN KEY (DistributorName, Distributor_PartNum)
+        REFERENCES Listing (DistributorName, Distributor_PartNum)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT ck_CartLine_qty CHECK (Quantity &gt; 0)
+);</pre><pre class="out">Query OK, 0 rows affected (0.153 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_CartLine.png</b>.</p></div>
+<div class="stmt"><pre class="sql">CREATE TABLE Review (
+    CustomerEmail        VARCHAR(254) NOT NULL,
+    ManufacturerName     VARCHAR(60) NOT NULL,
+    Manufacturer_PartNum VARCHAR(60) NOT NULL,
+    ReviewText           VARCHAR(2000),
+    StarRating           INTEGER NOT NULL,
+    CONSTRAINT pk_Review PRIMARY KEY (CustomerEmail, ManufacturerName, Manufacturer_PartNum),
+    CONSTRAINT fk_Review_Customer FOREIGN KEY (CustomerEmail)
+        REFERENCES Customer (Email)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_Review_Part FOREIGN KEY (ManufacturerName, Manufacturer_PartNum)
+        REFERENCES Part (ManufacturerName, Manufacturer_PartNum)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT ck_Review_stars CHECK (StarRating BETWEEN 1 AND 5)  -- C1
+);</pre><pre class="out">Query OK, 0 rows affected (0.173 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_create_Review.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- Indexes
+-- MySQL-specific: CREATE INDEX is not part of ISO SQL (indexes are a
+-- physical design choice the standard leaves to the DBMS), but it is the
+-- form taught in lectures (C&amp;B 7.3.5). InnoDB already indexes every PK,
+-- UNIQUE and FK, so only the two indexes below are added.
+-- Filter by category (Assignment 1 Filter function, Task 4 Q2/Q6). No key starts with Category.
+CREATE INDEX ix_Part_Category ON Part (Category);</pre><pre class="out">Query OK, 0 rows affected (0.136 sec)
+Records: 0  Duplicates: 0  Warnings: 0</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_index_ix_Part_Category.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- Price Match: all offers for one part ordered by price. Also serves the FK to Part, so InnoDB reuses it instead of building a separate FK index.
+CREATE INDEX ix_Listing_Part_Price ON Listing (ManufacturerName, Manufacturer_PartNum, UnitPrice);</pre><pre class="out">Query OK, 0 rows affected (0.124 sec)
+Records: 0  Duplicates: 0  Warnings: 0</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_index_ix_Listing_Part_Price.png</b>.</p></div>
+<h3 class="pb">1.3&nbsp; DESCRIBE output for each relation</h3>
+<div class="stmt"><pre class="sql">DESCRIBE Customer;</pre><pre class="out">+--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| Email        | varchar(254) | NO   | PRI | NULL    |       |
+| Username     | varchar(30)  | NO   | UNI | NULL    |       |
+| Password     | varchar(255) | NO   |     | NULL    |       |
+| FirstName    | varchar(50)  | NO   |     | NULL    |       |
+| LastName     | varchar(50)  | NO   |     | NULL    |       |
+| HouseAddress | varchar(100) | NO   |     | NULL    |       |
+| UnitNum      | varchar(10)  | YES  |     | NULL    |       |
+| City         | varchar(50)  | NO   |     | NULL    |       |
+| Province     | varchar(50)  | NO   |     | NULL    |       |
+| Country      | varchar(56)  | NO   |     | NULL    |       |
+| PostCode     | varchar(10)  | NO   |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+11 rows in set (0.009 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_Customer.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE Part;</pre><pre class="out">+----------------------+---------------+------+-----+---------+-------+
+| Field                | Type          | Null | Key | Default | Extra |
++----------------------+---------------+------+-----+---------+-------+
+| ManufacturerName     | varchar(60)   | NO   | PRI | NULL    |       |
+| Manufacturer_PartNum | varchar(60)   | NO   | PRI | NULL    |       |
+| Name                 | varchar(100)  | NO   |     | NULL    |       |
+| Description          | varchar(1000) | YES  |     | NULL    |       |
+| Category             | varchar(50)   | NO   | MUL | NULL    |       |
+| Length               | decimal(8,2)  | YES  |     | NULL    |       |
+| Width                | decimal(8,2)  | YES  |     | NULL    |       |
+| Height               | decimal(8,2)  | YES  |     | NULL    |       |
+| Datasheet_link       | varchar(2048) | YES  |     | NULL    |       |
++----------------------+---------------+------+-----+---------+-------+
+9 rows in set (0.006 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_Part.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE Distributor;</pre><pre class="out">+-------------+---------------+------+-----+---------+-------+
+| Field       | Type          | Null | Key | Default | Extra |
++-------------+---------------+------+-----+---------+-------+
+| Name        | varchar(60)   | NO   | PRI | NULL    |       |
+| Website     | varchar(255)  | NO   | UNI | NULL    |       |
+| ShippingFee | decimal(10,2) | NO   |     | NULL    |       |
++-------------+---------------+------+-----+---------+-------+
+3 rows in set (0.005 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_Distributor.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE Listing;</pre><pre class="out">+----------------------+---------------+------+-----+---------+-------+
+| Field                | Type          | Null | Key | Default | Extra |
++----------------------+---------------+------+-----+---------+-------+
+| DistributorName      | varchar(60)   | NO   | PRI | NULL    |       |
+| Distributor_PartNum  | varchar(60)   | NO   | PRI | NULL    |       |
+| ManufacturerName     | varchar(60)   | NO   | MUL | NULL    |       |
+| Manufacturer_PartNum | varchar(60)   | NO   |     | NULL    |       |
+| Packaging            | varchar(20)   | NO   |     | NULL    |       |
+| UnitPrice            | decimal(10,2) | NO   |     | NULL    |       |
+| StockQuantity        | int           | NO   |     | NULL    |       |
+| EstShipTime          | int           | NO   |     | NULL    |       |
+| LastUpdated          | timestamp     | NO   |     | NULL    |       |
++----------------------+---------------+------+-----+---------+-------+
+9 rows in set (0.012 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_Listing.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE ShoppingCart;</pre><pre class="out">+---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| CustomerEmail | varchar(254) | NO   | PRI | NULL    |       |
+| Date_created  | date         | NO   |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+2 rows in set (0.005 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_ShoppingCart.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE BOM;</pre><pre class="out">+---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| CustomerEmail | varchar(254) | NO   | PRI | NULL    |       |
+| BOM_name      | varchar(100) | NO   | PRI | NULL    |       |
+| Date_created  | date         | NO   |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+3 rows in set (0.005 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_BOM.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE SharedProject;</pre><pre class="out">+---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| CustomerEmail | varchar(254)  | NO   | PRI | NULL    |       |
+| BOM_name      | varchar(100)  | NO   | PRI | NULL    |       |
+| Title         | varchar(100)  | NO   |     | NULL    |       |
+| Description   | varchar(1000) | YES  |     | NULL    |       |
+| Date_shared   | date          | NO   |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+5 rows in set (0.005 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_SharedProject.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE PartAlternative;</pre><pre class="out">+------------------------+-------------+------+-----+---------+-------+
+| Field                  | Type        | Null | Key | Default | Extra |
++------------------------+-------------+------+-----+---------+-------+
+| Part1_ManufacturerName | varchar(60) | NO   | PRI | NULL    |       |
+| Part1_PartNum          | varchar(60) | NO   | PRI | NULL    |       |
+| Part2_ManufacturerName | varchar(60) | NO   | PRI | NULL    |       |
+| Part2_PartNum          | varchar(60) | NO   | PRI | NULL    |       |
++------------------------+-------------+------+-----+---------+-------+
+4 rows in set (0.005 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_PartAlternative.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE BOMLine;</pre><pre class="out">+----------------------+--------------+------+-----+---------+-------+
+| Field                | Type         | Null | Key | Default | Extra |
++----------------------+--------------+------+-----+---------+-------+
+| CustomerEmail        | varchar(254) | NO   | PRI | NULL    |       |
+| BOM_name             | varchar(100) | NO   | PRI | NULL    |       |
+| ManufacturerName     | varchar(60)  | NO   | PRI | NULL    |       |
+| Manufacturer_PartNum | varchar(60)  | NO   | PRI | NULL    |       |
+| Quantity             | int          | NO   |     | NULL    |       |
++----------------------+--------------+------+-----+---------+-------+
+5 rows in set (0.005 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_BOMLine.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE BOMSelection;</pre><pre class="out">+---------------------+--------------+------+-----+---------+-------+
+| Field               | Type         | Null | Key | Default | Extra |
++---------------------+--------------+------+-----+---------+-------+
+| CustomerEmail       | varchar(254) | NO   | PRI | NULL    |       |
+| BOM_name            | varchar(100) | NO   | PRI | NULL    |       |
+| DistributorName     | varchar(60)  | NO   | PRI | NULL    |       |
+| Distributor_PartNum | varchar(60)  | NO   | PRI | NULL    |       |
++---------------------+--------------+------+-----+---------+-------+
+4 rows in set (0.004 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_BOMSelection.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE CartLine;</pre><pre class="out">+---------------------+--------------+------+-----+---------+-------+
+| Field               | Type         | Null | Key | Default | Extra |
++---------------------+--------------+------+-----+---------+-------+
+| CustomerEmail       | varchar(254) | NO   | PRI | NULL    |       |
+| DistributorName     | varchar(60)  | NO   | PRI | NULL    |       |
+| Distributor_PartNum | varchar(60)  | NO   | PRI | NULL    |       |
+| Quantity            | int          | NO   |     | NULL    |       |
++---------------------+--------------+------+-----+---------+-------+
+4 rows in set (0.004 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_CartLine.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DESCRIBE Review;</pre><pre class="out">+----------------------+---------------+------+-----+---------+-------+
+| Field                | Type          | Null | Key | Default | Extra |
++----------------------+---------------+------+-----+---------+-------+
+| CustomerEmail        | varchar(254)  | NO   | PRI | NULL    |       |
+| ManufacturerName     | varchar(60)   | NO   | PRI | NULL    |       |
+| Manufacturer_PartNum | varchar(60)   | NO   | PRI | NULL    |       |
+| ReviewText           | varchar(2000) | YES  |     | NULL    |       |
+| StarRating           | int           | NO   |     | NULL    |       |
++----------------------+---------------+------+-----+---------+-------+
+5 rows in set (0.004 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t1_describe_Review.png</b>.</p></div>
+<h3>1.4&nbsp; Constraints not enforced by the DBMS</h3>
+<pre class="sql">-- Constraints not enforced by the DBMS
+-- ----------------------------------------------------------------------------
+-- C1 (ranges), C2 (Listing AK), C6 (Review PK) and every FK are enforced above.
+-- The four rules below cannot be written as a key or a CHECK that MySQL
+-- accepts. The group decided not to use triggers, so each rule is written in
+-- its ISO form for the record and upheld outside the DBMS:
+--   * SRC/generate_data.py asserts it before writing load_data.sql,
+--   * the Assignment 4 application checks it on every change, and
+--   * SRC/check_data.sql has a query that returns 0 rows when it holds.
+--
+-- C3: a BOM selects only listings of parts it contains, at most one per part.
+--   It spans BOMSelection, Listing and BOMLine, so the ISO form is an
+--   assertion (C&amp;B ch. 7). MySQL does not support CREATE ASSERTION.
+--
+--   CREATE ASSERTION SelectionMatchesLine CHECK (NOT EXISTS (
+--       SELECT * FROM BOMSelection s JOIN Listing l
+--              ON l.DistributorName = s.DistributorName
+--             AND l.Distributor_PartNum = s.Distributor_PartNum
+--       WHERE NOT EXISTS (
+--           SELECT * FROM BOMLine b
+--           WHERE b.CustomerEmail = s.CustomerEmail
+--             AND b.BOM_name = s.BOM_name
+--             AND b.ManufacturerName = l.ManufacturerName
+--             AND b.Manufacturer_PartNum = l.Manufacturer_PartNum)));
+--
+--   CREATE ASSERTION OneSelectionPerPart CHECK (NOT EXISTS (
+--       SELECT s.CustomerEmail, s.BOM_name, l.ManufacturerName, l.Manufacturer_PartNum
+--       FROM BOMSelection s JOIN Listing l
+--              ON l.DistributorName = s.DistributorName
+--             AND l.Distributor_PartNum = s.Distributor_PartNum
+--       GROUP BY s.CustomerEmail, s.BOM_name, l.ManufacturerName, l.Manufacturer_PartNum
+--       HAVING COUNT(*) &gt; 1));
+--
+-- C4: AlternativeTo is symmetric and irreflexive. Each pair is stored once,
+--   with the smaller part key first. The ISO form is a table CHECK:
+--
+--   CONSTRAINT ck_PartAlternative_order CHECK (
+--       (Part1_ManufacturerName, Part1_PartNum) &lt; (Part2_ManufacturerName, Part2_PartNum))
+--
+--   MySQL rejects it with error 3823 (&quot;Column cannot be used in a check
+--   constraint: needed in a foreign key constraint referential action&quot;),
+--   because all four columns have ON UPDATE CASCADE / ON DELETE CASCADE.
+--   The Assignment 2 referential actions are kept rather than weakened to make
+--   the CHECK fit. Queries read each pair in both directions (Task 4).
+--
+-- C5: a SharedProject&#x27;s BOM always has at least one BOMLine.
+--
+--   CREATE ASSERTION SharedBOMNotEmpty CHECK (NOT EXISTS (
+--       SELECT * FROM SharedProject p
+--       WHERE NOT EXISTS (
+--           SELECT * FROM BOMLine b
+--           WHERE b.CustomerEmail = p.CustomerEmail
+--             AND b.BOM_name = p.BOM_name)));
+--
+-- C7: the part offered by a listing never changes.
+--   This is a rule about UPDATE (old value vs. new value), which no CHECK or
+--   assertion can express: both only see the current state. The application
+--   never updates Listing.ManufacturerName or Listing.Manufacturer_PartNum; an
+--   offer for a different part is inserted as a new listing. The only change
+--   to those columns is the ON UPDATE CASCADE from Part when a part&#x27;s own key
+--   is corrected, and then the listing still refers to the same part.
+-- ============================================================================</pre>
+<h2 class="sec pb">2.&nbsp; Task 2: Basic Data Insertion</h2>
+<p>All three INSERTs target <b>BOMLine</b>. They differ in structure, not just values: (1) one tuple with no column list, in table order; (2) three tuples in one statement with an explicit column list in a different order; (3) <code>INSERT ... SELECT</code>, where the new tuples are the result of a query. The file runs on the empty schema, before the bulk load, so each <code>SELECT *</code> is short. Its keys never occur in the generated data, so the load still succeeds afterwards.</p>
+<pre class="sql">-- task4.sql: Task 2, three types of INSERT
+-- ============================================================================
+-- Run order: SQL/task3.sql (empty schema), then THIS FILE, then
+-- SRC/load_data.sql. Running it on the empty schema keeps each SELECT * short
+-- enough to screenshot. Its keys (the task2 customer, the Espressif/Bosch/
+-- Murata parts below) never occur in the generated data, so load_data.sql
+-- still loads on top of these rows without a key clash.
+--
+-- Relation used for all three INSERTs: BOMLine (which parts a BOM needs, and
+-- how many). Every BOMLine row needs its BOM and its Part to exist first
+-- (two foreign keys), so the setup block creates those parent rows.
+-- ============================================================================</pre>
+<div class="stmt"><pre class="sql">-- task4.sql: Task 2, three types of INSERT
+-- ============================================================================
+-- Run order: SQL/task3.sql (empty schema), then THIS FILE, then
+-- SRC/load_data.sql. Running it on the empty schema keeps each SELECT * short
+-- enough to screenshot. Its keys (the task2 customer, the Espressif/Bosch/
+-- Murata parts below) never occur in the generated data, so load_data.sql
+-- still loads on top of these rows without a key clash.
+--
+-- Relation used for all three INSERTs: BOMLine (which parts a BOM needs, and
+-- how many). Every BOMLine row needs its BOM and its Part to exist first
+-- (two foreign keys), so the setup block creates those parent rows.
+-- ============================================================================
+
+-- ---------------------------------------------------------------------------
+-- Setup: parent rows the three INSERTs refer to
+-- ---------------------------------------------------------------------------
+INSERT INTO Customer (Email, Username, Password, FirstName, LastName, HouseAddress,
+                      City, Province, Country, PostCode)
+VALUES (&#x27;task2.demo@example.com&#x27;, &#x27;task2demo&#x27;,
+        &#x27;5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8&#x27;,
+        &#x27;Robin&#x27;, &#x27;Demo&#x27;, &#x27;1151 Richmond St&#x27;, &#x27;London&#x27;, &#x27;Ontario&#x27;, &#x27;Canada&#x27;, &#x27;N6A 3K7&#x27;);</pre><pre class="out">Query OK, 1 row affected (0.014 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t2_01.png</b>.</p></div>
+<div class="stmt"><pre class="sql">INSERT INTO Part (ManufacturerName, Manufacturer_PartNum, Name, Category, Length, Width, Height)
+VALUES (&#x27;Espressif&#x27;, &#x27;ESP32-C3-MINI-1&#x27;, &#x27;ESP32-C3 Wi-Fi/BLE Module 4MB Flash&#x27;, &#x27;MCU&#x27;, 13.20, 16.60, 2.40),
+       (&#x27;Bosch&#x27;, &#x27;BME280&#x27;, &#x27;Humidity, Pressure and Temperature Sensor&#x27;, &#x27;Sensor&#x27;, 2.50, 2.50, 0.93),
+       (&#x27;Murata&#x27;, &#x27;GRM188R71C104KA01D&#x27;, &#x27;100nF 0603 X7R Capacitor 16V&#x27;, &#x27;Capacitor&#x27;, 1.60, 0.80, 0.80),
+       (&#x27;Wurth Elektronik&#x27;, &#x27;61300411121&#x27;, &#x27;4-Pin Male Header 2.54mm&#x27;, &#x27;Connector&#x27;, 10.16, 2.54, 8.50);</pre><pre class="out">Query OK, 4 rows affected (0.011 sec)
+Records: 4  Duplicates: 0  Warnings: 0</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t2_02.png</b>.</p></div>
+<div class="stmt"><pre class="sql">INSERT INTO BOM (CustomerEmail, BOM_name, Date_created)
+VALUES (&#x27;task2.demo@example.com&#x27;, &#x27;Rover Rev A&#x27;, DATE &#x27;2026-11-20&#x27;),
+       (&#x27;task2.demo@example.com&#x27;, &#x27;Rover Rev B&#x27;, DATE &#x27;2026-11-24&#x27;);</pre><pre class="out">Query OK, 2 rows affected (0.019 sec)
+Records: 2  Duplicates: 0  Warnings: 0</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t2_03.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- INSERT 1: single row, VALUES with NO column list.
+-- Every column is given, in the order of CREATE TABLE BOMLine
+-- (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum, Quantity).
+-- Differs from 2 and 3: no column list, one tuple, all values are constants.
+-- ---------------------------------------------------------------------------
+INSERT INTO BOMLine
+VALUES (&#x27;task2.demo@example.com&#x27;, &#x27;Rover Rev A&#x27;, &#x27;Espressif&#x27;, &#x27;ESP32-C3-MINI-1&#x27;, 1);</pre><pre class="out">Query OK, 1 row affected (0.012 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t2_04.png</b>.</p></div>
+<div class="stmt"><pre class="sql">SELECT * FROM BOMLine;</pre><pre class="out">+------------------------+-------------+------------------+----------------------+----------+
+| CustomerEmail          | BOM_name    | ManufacturerName | Manufacturer_PartNum | Quantity |
++------------------------+-------------+------------------+----------------------+----------+
+| task2.demo@example.com | Rover Rev A | Espressif        | ESP32-C3-MINI-1      |        1 |
++------------------------+-------------+------------------+----------------------+----------+
+1 row in set (0.001 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t2_05.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- INSERT 2: several rows in ONE statement, with an explicit column list in a
+-- DIFFERENT order from the table (Quantity first, the BOM key last).
+-- Differs from 1: names its columns, so the values are matched by name and
+-- not by position, and inserts three tuples at once (atomically: if one row
+-- broke a constraint, none of the three would be inserted).
+-- ---------------------------------------------------------------------------
+INSERT INTO BOMLine (Quantity, ManufacturerName, Manufacturer_PartNum, CustomerEmail, BOM_name)
+VALUES (1,  &#x27;Bosch&#x27;,            &#x27;BME280&#x27;,             &#x27;task2.demo@example.com&#x27;, &#x27;Rover Rev A&#x27;),
+       (12, &#x27;Murata&#x27;,           &#x27;GRM188R71C104KA01D&#x27;, &#x27;task2.demo@example.com&#x27;, &#x27;Rover Rev A&#x27;),
+       (2,  &#x27;Wurth Elektronik&#x27;, &#x27;61300411121&#x27;,        &#x27;task2.demo@example.com&#x27;, &#x27;Rover Rev A&#x27;);</pre><pre class="out">Query OK, 3 rows affected (0.008 sec)
+Records: 3  Duplicates: 0  Warnings: 0</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t2_06.png</b>.</p></div>
+<div class="stmt"><pre class="sql">SELECT * FROM BOMLine;</pre><pre class="out">+------------------------+-------------+------------------+----------------------+----------+
+| CustomerEmail          | BOM_name    | ManufacturerName | Manufacturer_PartNum | Quantity |
++------------------------+-------------+------------------+----------------------+----------+
+| task2.demo@example.com | Rover Rev A | Bosch            | BME280               |        1 |
+| task2.demo@example.com | Rover Rev A | Espressif        | ESP32-C3-MINI-1      |        1 |
+| task2.demo@example.com | Rover Rev A | Murata           | GRM188R71C104KA01D   |       12 |
+| task2.demo@example.com | Rover Rev A | Wurth Elektronik | 61300411121          |        2 |
++------------------------+-------------+------------------+----------------------+----------+
+4 rows in set (0.001 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t2_07.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- INSERT 3: INSERT ... SELECT. The new tuples are the RESULT OF A QUERY, not
+-- literals: Rev B of the rover starts as a copy of Rev A, with double the
+-- quantity of every part Rev A needs fewer than 10 of (the capacitors are
+-- already ordered in bulk, so that line is left out).
+-- Differs from 1 and 2: no VALUES clause at all; how many rows are inserted
+-- depends on the data (here 3 of Rev A&#x27;s 4 lines qualify).
+-- ---------------------------------------------------------------------------
+INSERT INTO BOMLine (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum, Quantity)
+SELECT bl.CustomerEmail, &#x27;Rover Rev B&#x27;, bl.ManufacturerName, bl.Manufacturer_PartNum, bl.Quantity * 2
+FROM BOMLine bl
+WHERE bl.CustomerEmail = &#x27;task2.demo@example.com&#x27;
+  AND bl.BOM_name = &#x27;Rover Rev A&#x27;
+  AND bl.Quantity &lt; 10;</pre><pre class="out">Query OK, 3 rows affected (0.010 sec)
+Records: 3  Duplicates: 0  Warnings: 0</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t2_08.png</b>.</p></div>
+<div class="stmt"><pre class="sql">SELECT * FROM BOMLine;</pre><pre class="out">+------------------------+-------------+------------------+----------------------+----------+
+| CustomerEmail          | BOM_name    | ManufacturerName | Manufacturer_PartNum | Quantity |
++------------------------+-------------+------------------+----------------------+----------+
+| task2.demo@example.com | Rover Rev A | Bosch            | BME280               |        1 |
+| task2.demo@example.com | Rover Rev A | Espressif        | ESP32-C3-MINI-1      |        1 |
+| task2.demo@example.com | Rover Rev A | Murata           | GRM188R71C104KA01D   |       12 |
+| task2.demo@example.com | Rover Rev A | Wurth Elektronik | 61300411121          |        2 |
+| task2.demo@example.com | Rover Rev B | Bosch            | BME280               |        2 |
+| task2.demo@example.com | Rover Rev B | Espressif        | ESP32-C3-MINI-1      |        2 |
+| task2.demo@example.com | Rover Rev B | Wurth Elektronik | 61300411121          |        4 |
++------------------------+-------------+------------------+----------------------+----------+
+7 rows in set (0.001 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t2_09.png</b>.</p></div>
+<h2 class="sec pb">3.&nbsp; Task 3: Substantial Data Loading</h2>
+<p><code>SRC/generate_data.py</code> (Python 3, standard library only, fixed seed 3309) fabricates the data and writes <code>SRC/load_data.sql</code>: multi-row <code>INSERT INTO ... VALUES</code> batches of 500 tuples inside one <code>START TRANSACTION ... COMMIT</code>, in dependency order (parents first). The data is mock data: manufacturer and distributor names look real, but every part, price, address and review is invented. Before writing anything, the script asserts every key, every foreign key and constraints C1 to C6, because the DBMS does not enforce C3, C4 and C5.</p>
+<h3>3.1&nbsp; How to rebuild the database</h3>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:8%"><col style="width:32%"><col style="width:60%"></colgroup>
+<thead><tr><th>Step</th><th>File</th><th>What it does</th></tr></thead><tbody>
+<tr><td>1</td><td>SQL/task3.sql</td><td>Drops and creates the 12 tables and 2 indexes</td></tr>
+<tr><td>2</td><td>SQL/task4.sql</td><td>Task 2 inserts (5 BOMLine tuples and their parents)</td></tr>
+<tr><td>3</td><td>SRC/load_data.sql</td><td>Loads the generated data (about 24,000 tuples)</td></tr>
+<tr><td>4</td><td>SRC/check_data.sql</td><td>Integrity checks: every count must be 0</td></tr>
+<tr><td>5</td><td>SQL/task6.sql, task7.sql, task8.sql</td><td>Tasks 4 to 6 (task7 and task8 end with ROLLBACK)</td></tr>
+<tr><td>or</td><td>DUMP/ep_sourcer_dump.sql</td><td>Restores the whole database, views included, in one step</td></tr>
+</tbody></table>
+<h3>3.2&nbsp; Coverage of edge cases</h3>
+<ul class="tight"><li>12% of parts have no listing; 12% of listings have stock 0, so stock filters change results.</li><li>20% of (distributor, part) pairs come in 2 or 3 packagings, so C2 and the price comparison have real choices.</li><li>Generic parts (1N4148, 2N3904, LM358, NE555, L7805) are made by several manufacturers: the reason for the composite part key.</li><li>About 29% of BOM lines have no selected listing (non-zero /UnpricedParts); 41 BOMs have no lines at all; 69 customers have no BOM; 17 carts are empty.</li><li>Shared-project titles repeat across customers (the AK is per customer).</li></ul>
+<h3>3.3&nbsp; Integrity checks and relation sizes</h3>
+<p>Two relations hold thousands of tuples (Part, Listing, BOMLine, BOMSelection) and several hold hundreds (Customer, BOM, Review, CartLine, PartAlternative). Part and BOM include the Task 2 rows.</p>
+<div class="stmt"><pre class="sql">SELECT &#x27;Listing -&gt; Distributor&#x27; AS CheckName, COUNT(*) AS Violations
+FROM Listing l LEFT JOIN Distributor d ON d.Name = l.DistributorName
+WHERE d.Name IS NULL
+UNION ALL
+SELECT &#x27;Listing -&gt; Part&#x27;, COUNT(*)
+FROM Listing l LEFT JOIN Part p
+       ON p.ManufacturerName = l.ManufacturerName AND p.Manufacturer_PartNum = l.Manufacturer_PartNum
+WHERE p.ManufacturerName IS NULL
+UNION ALL
+SELECT &#x27;ShoppingCart -&gt; Customer&#x27;, COUNT(*)
+FROM ShoppingCart s LEFT JOIN Customer c ON c.Email = s.CustomerEmail
+WHERE c.Email IS NULL
+UNION ALL
+SELECT &#x27;BOM -&gt; Customer&#x27;, COUNT(*)
+FROM BOM b LEFT JOIN Customer c ON c.Email = b.CustomerEmail
+WHERE c.Email IS NULL
+UNION ALL
+SELECT &#x27;SharedProject -&gt; BOM&#x27;, COUNT(*)
+FROM SharedProject s LEFT JOIN BOM b ON b.CustomerEmail = s.CustomerEmail AND b.BOM_name = s.BOM_name
+WHERE b.CustomerEmail IS NULL
+UNION ALL
+SELECT &#x27;PartAlternative -&gt; Part (1)&#x27;, COUNT(*)
+FROM PartAlternative a LEFT JOIN Part p
+       ON p.ManufacturerName = a.Part1_ManufacturerName AND p.Manufacturer_PartNum = a.Part1_PartNum
+WHERE p.ManufacturerName IS NULL
+UNION ALL
+SELECT &#x27;PartAlternative -&gt; Part (2)&#x27;, COUNT(*)
+FROM PartAlternative a LEFT JOIN Part p
+       ON p.ManufacturerName = a.Part2_ManufacturerName AND p.Manufacturer_PartNum = a.Part2_PartNum
+WHERE p.ManufacturerName IS NULL
+UNION ALL
+SELECT &#x27;BOMLine -&gt; BOM&#x27;, COUNT(*)
+FROM BOMLine l LEFT JOIN BOM b ON b.CustomerEmail = l.CustomerEmail AND b.BOM_name = l.BOM_name
+WHERE b.CustomerEmail IS NULL
+UNION ALL
+SELECT &#x27;BOMLine -&gt; Part&#x27;, COUNT(*)
+FROM BOMLine l LEFT JOIN Part p
+       ON p.ManufacturerName = l.ManufacturerName AND p.Manufacturer_PartNum = l.Manufacturer_PartNum
+WHERE p.ManufacturerName IS NULL
+UNION ALL
+SELECT &#x27;BOMSelection -&gt; BOM&#x27;, COUNT(*)
+FROM BOMSelection s LEFT JOIN BOM b ON b.CustomerEmail = s.CustomerEmail AND b.BOM_name = s.BOM_name
+WHERE b.CustomerEmail IS NULL
+UNION ALL
+SELECT &#x27;BOMSelection -&gt; Listing&#x27;, COUNT(*)
+FROM BOMSelection s LEFT JOIN Listing l
+       ON l.DistributorName = s.DistributorName AND l.Distributor_PartNum = s.Distributor_PartNum
+WHERE l.DistributorName IS NULL
+UNION ALL
+SELECT &#x27;CartLine -&gt; ShoppingCart&#x27;, COUNT(*)
+FROM CartLine c LEFT JOIN ShoppingCart s ON s.CustomerEmail = c.CustomerEmail
+WHERE s.CustomerEmail IS NULL
+UNION ALL
+SELECT &#x27;CartLine -&gt; Listing&#x27;, COUNT(*)
+FROM CartLine c LEFT JOIN Listing l
+       ON l.DistributorName = c.DistributorName AND l.Distributor_PartNum = c.Distributor_PartNum
+WHERE l.DistributorName IS NULL
+UNION ALL
+SELECT &#x27;Review -&gt; Customer&#x27;, COUNT(*)
+FROM Review r LEFT JOIN Customer c ON c.Email = r.CustomerEmail
+WHERE c.Email IS NULL
+UNION ALL
+SELECT &#x27;Review -&gt; Part&#x27;, COUNT(*)
+FROM Review r LEFT JOIN Part p
+       ON p.ManufacturerName = r.ManufacturerName AND p.Manufacturer_PartNum = r.Manufacturer_PartNum
+WHERE p.ManufacturerName IS NULL
+UNION ALL
+
+SELECT &#x27;C3 selection without a matching line&#x27;, COUNT(*)
+FROM BOMSelection s
+     JOIN Listing l ON l.DistributorName = s.DistributorName AND l.Distributor_PartNum = s.Distributor_PartNum
+WHERE NOT EXISTS (SELECT * FROM BOMLine b
+                  WHERE b.CustomerEmail = s.CustomerEmail AND b.BOM_name = s.BOM_name
+                    AND b.ManufacturerName = l.ManufacturerName
+                    AND b.Manufacturer_PartNum = l.Manufacturer_PartNum)
+UNION ALL
+SELECT &#x27;C3 two selections for one part&#x27;, COUNT(*)
+FROM (SELECT s.CustomerEmail, s.BOM_name, l.ManufacturerName, l.Manufacturer_PartNum
+      FROM BOMSelection s
+           JOIN Listing l ON l.DistributorName = s.DistributorName AND l.Distributor_PartNum = s.Distributor_PartNum
+      GROUP BY s.CustomerEmail, s.BOM_name, l.ManufacturerName, l.Manufacturer_PartNum
+      HAVING COUNT(*) &gt; 1) dup
+UNION ALL
+SELECT &#x27;C4 pair out of order or self-pair&#x27;, COUNT(*)
+FROM PartAlternative
+WHERE NOT ((Part1_ManufacturerName, Part1_PartNum) &lt; (Part2_ManufacturerName, Part2_PartNum))
+UNION ALL
+SELECT &#x27;C5 shared BOM with no lines&#x27;, COUNT(*)
+FROM SharedProject p
+WHERE NOT EXISTS (SELECT * FROM BOMLine b
+                  WHERE b.CustomerEmail = p.CustomerEmail AND b.BOM_name = p.BOM_name)
+UNION ALL
+SELECT &#x27;C2 duplicate listing per distributor, part, packaging&#x27;, COUNT(*)
+FROM (SELECT DistributorName, ManufacturerName, Manufacturer_PartNum, Packaging
+      FROM Listing
+      GROUP BY DistributorName, ManufacturerName, Manufacturer_PartNum, Packaging
+      HAVING COUNT(*) &gt; 1) dup
+UNION ALL
+SELECT &#x27;Duplicate (customer, title) shared project&#x27;, COUNT(*)
+FROM (SELECT CustomerEmail, Title FROM SharedProject
+      GROUP BY CustomerEmail, Title HAVING COUNT(*) &gt; 1) dup;</pre><pre class="out">+-------------------------------------------------------+------------+
+| CheckName                                             | Violations |
++-------------------------------------------------------+------------+
+| Listing -&gt; Distributor                                |          0 |
+| Listing -&gt; Part                                       |          0 |
+| ShoppingCart -&gt; Customer                              |          0 |
+| BOM -&gt; Customer                                       |          0 |
+| SharedProject -&gt; BOM                                  |          0 |
+| PartAlternative -&gt; Part (1)                           |          0 |
+| PartAlternative -&gt; Part (2)                           |          0 |
+| BOMLine -&gt; BOM                                        |          0 |
+| BOMLine -&gt; Part                                       |          0 |
+| BOMSelection -&gt; BOM                                   |          0 |
+| BOMSelection -&gt; Listing                               |          0 |
+| CartLine -&gt; ShoppingCart                              |          0 |
+| CartLine -&gt; Listing                                   |          0 |
+| Review -&gt; Customer                                    |          0 |
+| Review -&gt; Part                                        |          0 |
+| C3 selection without a matching line                  |          0 |
+| C3 two selections for one part                        |          0 |
+| C4 pair out of order or self-pair                     |          0 |
+| C5 shared BOM with no lines                           |          0 |
+| C2 duplicate listing per distributor, part, packaging |          0 |
+| Duplicate (customer, title) shared project            |          0 |
++-------------------------------------------------------+------------+
+21 rows in set (2.292 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t3_01.png</b>.</p></div>
+<div class="stmt"><pre class="sql">SELECT &#x27;Customer&#x27; AS Relation, COUNT(*) AS Tuples FROM Customer
+UNION ALL SELECT &#x27;Part&#x27;, COUNT(*) FROM Part
+UNION ALL SELECT &#x27;Distributor&#x27;, COUNT(*) FROM Distributor
+UNION ALL SELECT &#x27;Listing&#x27;, COUNT(*) FROM Listing
+UNION ALL SELECT &#x27;ShoppingCart&#x27;, COUNT(*) FROM ShoppingCart
+UNION ALL SELECT &#x27;BOM&#x27;, COUNT(*) FROM BOM
+UNION ALL SELECT &#x27;SharedProject&#x27;, COUNT(*) FROM SharedProject
+UNION ALL SELECT &#x27;PartAlternative&#x27;, COUNT(*) FROM PartAlternative
+UNION ALL SELECT &#x27;BOMLine&#x27;, COUNT(*) FROM BOMLine
+UNION ALL SELECT &#x27;BOMSelection&#x27;, COUNT(*) FROM BOMSelection
+UNION ALL SELECT &#x27;CartLine&#x27;, COUNT(*) FROM CartLine
+UNION ALL SELECT &#x27;Review&#x27;, COUNT(*) FROM Review;</pre><pre class="out">+-----------------+--------+
+| Relation        | Tuples |
++-----------------+--------+
+| Customer        |    301 |
+| Part            |   3004 |
+| Distributor     |     15 |
+| Listing         |   7259 |
+| ShoppingCart    |    200 |
+| BOM             |    802 |
+| SharedProject   |    150 |
+| PartAlternative |    500 |
+| BOMLine         |   4007 |
+| BOMSelection    |   2848 |
+| CartLine        |   1200 |
+| Review          |   1500 |
++-----------------+--------+
+12 rows in set (0.109 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t3_02.png</b>.</p></div>
+<h3 class="pb">3.4&nbsp; Sample records</h3>
+<h4>Customer</h4>
+<p>The first row is the showcase customer that the rows below belong to.</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>Email</th><th>Username</th><th>FirstName</th><th>LastName</th><th>HouseAddress</th><th>UnitNum</th><th>City</th><th>Province</th><th>Country</th><th>PostCode</th></tr></thead><tbody>
+<tr><td>alex.chen0@example.com</td><td>achen0</td><td>Alex</td><td>Chen</td><td>464 Queen St</td><td>NULL</td><td>Calgary</td><td>Alberta</td><td>Canada</td><td>T2P 4P4</td></tr>
+<tr><td>jordan.li1@example.com</td><td>jli1</td><td>Jordan</td><td>Li</td><td>992 Dundas St</td><td>1195</td><td>Vancouver</td><td>British Columbia</td><td>Canada</td><td>V6B 6C9</td></tr>
+<tr><td>taylor.wong2@example.com</td><td>twong2</td><td>Taylor</td><td>Wong</td><td>1410 Dundas St</td><td>NULL</td><td>Calgary</td><td>Alberta</td><td>Canada</td><td>T2P 0C8</td></tr>
+<tr><td>morgan.patel3@example.com</td><td>mpatel3</td><td>Morgan</td><td>Patel</td><td>1455 Elm St</td><td>NULL</td><td>Toronto</td><td>Ontario</td><td>Canada</td><td>M5V 2A3</td></tr>
+<tr><td>casey.wilson4@example.com</td><td>cwilson4</td><td>Casey</td><td>Wilson</td><td>2244 King St</td><td>NULL</td><td>Toronto</td><td>Ontario</td><td>Canada</td><td>M5V 2I1</td></tr>
+</tbody></table>
+<h4>Part</h4>
+<p>Parts in the showcase customer&#x27;s BOM lines (generic second-sourced parts fill in if needed).</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>ManufacturerName</th><th>Manufacturer_PartNum</th><th>Name</th><th>Description</th><th>Category</th><th>Length</th><th>Width</th><th>Height</th><th>Datasheet_link</th></tr></thead><tbody>
+<tr><td>Abracon</td><td>XT10434-G</td><td>Crystal LQFP-48 62</td><td>Crystal by Abracon, mock catalogue entry...</td><td>Crystal</td><td>6.32</td><td>14.03</td><td>9.24</td><td>https://datasheets.example.com/abracon/x...</td></tr>
+<tr><td>Samsung</td><td>CC18295-D</td><td>10pF 0402 X5R Capacitor 50V</td><td>Capacitor by Samsung, mock catalogue ent...</td><td>Capacitor</td><td>4.34</td><td>33.92</td><td>16.07</td><td>https://datasheets.example.com/samsung/c...</td></tr>
+<tr><td>Samsung</td><td>RC19919-B</td><td>220 Ohm TO-220 Resistor 5%</td><td>Resistor by Samsung, mock catalogue entr...</td><td>Resistor</td><td>51.24</td><td>27.94</td><td>15.30</td><td>https://datasheets.example.com/samsung/r...</td></tr>
+<tr><td>Samsung</td><td>RC25050-H</td><td>4.7k Ohm 0805 Resistor 0.1%</td><td>Resistor by Samsung, mock catalogue entr...</td><td>Resistor</td><td>NULL</td><td>NULL</td><td>NULL</td><td>https://datasheets.example.com/samsung/r...</td></tr>
+<tr><td>Panasonic</td><td>RC30769-F</td><td>4.7k Ohm 0805 Resistor 1%</td><td>Resistor by Panasonic, mock catalogue en...</td><td>Resistor</td><td>45.72</td><td>9.18</td><td>2.79</td><td>https://datasheets.example.com/panasonic...</td></tr>
+</tbody></table>
+<h4>Distributor</h4>
+<p>Distributors of the listings below.</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>Name</th><th>Website</th><th>ShippingFee</th></tr></thead><tbody>
+<tr><td>LCSC</td><td>https://www.lcsc.com</td><td>4.50</td></tr>
+<tr><td>Allied Electronics</td><td>https://www.alliedelec.com</td><td>9.00</td></tr>
+<tr><td>Future Electronics</td><td>https://www.futureelectronics.com</td><td>6.00</td></tr>
+<tr><td>Avnet</td><td>https://www.avnet.com</td><td>0.00</td></tr>
+</tbody></table>
+<h4>Listing</h4>
+<p>The listings the showcase BOMs selected, then other offers for the same parts.</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>DistributorName</th><th>Distributor_PartNum</th><th>ManufacturerName</th><th>Manufacturer_PartNum</th><th>Packaging</th><th>UnitPrice</th><th>StockQuantity</th><th>EstShipTime</th><th>LastUpdated</th></tr></thead><tbody>
+<tr><td>LCSC</td><td>LC-000143</td><td>Abracon</td><td>XT10434-G</td><td>Tray</td><td>0.73</td><td>87763</td><td>10</td><td>2026-11-18 06:41</td></tr>
+<tr><td>Future Electronics</td><td>FE-002847</td><td>Samsung</td><td>CC18295-D</td><td>Tube</td><td>0.41</td><td>51884</td><td>8</td><td>2026-03-21 09:00</td></tr>
+<tr><td>LCSC</td><td>LC-003133</td><td>Samsung</td><td>RC19919-B</td><td>Tape &amp; Reel</td><td>0.17</td><td>860</td><td>8</td><td>2026-07-10 16:16</td></tr>
+<tr><td>Avnet</td><td>AV-004225</td><td>Samsung</td><td>RC25050-H</td><td>Bulk</td><td>0.18</td><td>1201</td><td>6</td><td>2026-08-07 12:57</td></tr>
+<tr><td>Allied Electronics</td><td>AL-006630</td><td>Panasonic</td><td>RC30769-F</td><td>Tape &amp; Reel</td><td>0.19</td><td>99142</td><td>9</td><td>2026-11-19 06:11</td></tr>
+</tbody></table>
+<h4>ShoppingCart</h4>
+<p>The first cart is the showcase customer&#x27;s.</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>CustomerEmail</th><th>Date_created</th></tr></thead><tbody>
+<tr><td>alex.chen0@example.com</td><td>2026-07-30</td></tr>
+<tr><td>mei.li81@example.com</td><td>2026-08-25</td></tr>
+<tr><td>sam.smith6@example.com</td><td>2026-09-08</td></tr>
+<tr><td>aisha.lee119@example.com</td><td>2026-11-06</td></tr>
+<tr><td>leila.roy233@example.com</td><td>2026-09-08</td></tr>
+</tbody></table>
+<h4>BOM</h4>
+<p>&quot;Empty Draft&quot; has no lines on purpose (edge case: /NumberOfParts = 0).</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>CustomerEmail</th><th>BOM_name</th><th>Date_created</th></tr></thead><tbody>
+<tr><td>alex.chen0@example.com</td><td>Weather Station v2</td><td>2026-03-01</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Line Follower Robot</td><td>2026-03-21</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Capstone Prototype</td><td>2026-04-10</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Empty Draft</td><td>2026-04-30</td></tr>
+<tr><td>alex.chen0@example.com</td><td>CAN Bus Sniffer Rev B</td><td>2026-08-23</td></tr>
+</tbody></table>
+<h4>SharedProject</h4>
+<p>Only BOMs with at least one line are shared (C5).</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>CustomerEmail</th><th>BOM_name</th><th>Title</th><th>Description</th><th>Date_shared</th></tr></thead><tbody>
+<tr><td>alex.chen0@example.com</td><td>Weather Station v2</td><td>Open Weather Station</td><td>Parts list for my weather station build....</td><td>2026-04-03</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Line Follower Robot</td><td>Open Line Follower Robot</td><td>Parts list for my line follower robot bu...</td><td>2026-04-01</td></tr>
+<tr><td>fatima.roy73@example.com</td><td>CAN Bus Sniffer v2</td><td>Open CAN Bus Sniffer</td><td>Parts list for my can bus sniffer build....</td><td>2025-10-30</td></tr>
+<tr><td>quinn.lee159@example.com</td><td>Battery Charger v3</td><td>Open Battery Charger</td><td>Parts list for my battery charger build....</td><td>2026-01-22</td></tr>
+<tr><td>sofia.taylor165@example.com</td><td>Line Follower Robot Rev A</td><td>Open Line Follower Robot</td><td>Parts list for my line follower robot bu...</td><td>2026-01-08</td></tr>
+</tbody></table>
+<h4>PartAlternative</h4>
+<p>Each pair is stored once with the smaller part key first (C4).</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>Part1_ManufacturerName</th><th>Part1_PartNum</th><th>Part2_ManufacturerName</th><th>Part2_PartNum</th></tr></thead><tbody>
+<tr><td>onsemi</td><td>1N4148</td><td>Vishay</td><td>1N4148</td></tr>
+<tr><td>Nexperia</td><td>1N4148</td><td>Vishay</td><td>1N4148</td></tr>
+<tr><td>Nexperia</td><td>1N4148</td><td>onsemi</td><td>1N4148</td></tr>
+<tr><td>Nexperia</td><td>2N3904</td><td>onsemi</td><td>2N3904</td></tr>
+<tr><td>STMicroelectronics</td><td>LM358</td><td>Texas Instruments</td><td>LM358</td></tr>
+</tbody></table>
+<h4>BOMLine</h4>
+<p>Lines of the showcase customer&#x27;s BOMs.</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>CustomerEmail</th><th>BOM_name</th><th>ManufacturerName</th><th>Manufacturer_PartNum</th><th>Quantity</th></tr></thead><tbody>
+<tr><td>alex.chen0@example.com</td><td>Weather Station v2</td><td>Panasonic</td><td>RC30769-F</td><td>10</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Line Follower Robot</td><td>Abracon</td><td>XT10434-G</td><td>1</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Capstone Prototype</td><td>Samsung</td><td>CC18295-D</td><td>5</td></tr>
+<tr><td>alex.chen0@example.com</td><td>CAN Bus Sniffer Rev B</td><td>Samsung</td><td>RC25050-H</td><td>10</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Solar Tracker Final</td><td>Samsung</td><td>RC19919-B</td><td>1</td></tr>
+</tbody></table>
+<h4>BOMSelection</h4>
+<p>The listing chosen for some of those lines; the other lines are unpriced.</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>CustomerEmail</th><th>BOM_name</th><th>DistributorName</th><th>Distributor_PartNum</th></tr></thead><tbody>
+<tr><td>alex.chen0@example.com</td><td>Weather Station v2</td><td>Allied Electronics</td><td>AL-006630</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Line Follower Robot</td><td>LCSC</td><td>LC-000143</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Capstone Prototype</td><td>Future Electronics</td><td>FE-002847</td></tr>
+<tr><td>alex.chen0@example.com</td><td>CAN Bus Sniffer Rev B</td><td>Avnet</td><td>AV-004225</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Solar Tracker Final</td><td>LCSC</td><td>LC-003133</td></tr>
+</tbody></table>
+<h4>CartLine</h4>
+<p>Lines in the showcase customer&#x27;s cart.</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>CustomerEmail</th><th>DistributorName</th><th>Distributor_PartNum</th><th>Quantity</th></tr></thead><tbody>
+<tr><td>alex.chen0@example.com</td><td>TME</td><td>TM-003445</td><td>2</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Avnet</td><td>AV-002808</td><td>1</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Sager Electronics</td><td>SG-003523</td><td>50</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Allied Electronics</td><td>AL-001807</td><td>25</td></tr>
+<tr><td>alex.chen0@example.com</td><td>Arrow</td><td>AR-003354</td><td>5</td></tr>
+</tbody></table>
+<h4>Review</h4>
+<p>Reviews of the generic part Vishay 1N4148, then the showcase customer&#x27;s reviews.</p>
+<table width="100%" style="width:100%">
+<thead><tr><th>CustomerEmail</th><th>ManufacturerName</th><th>Manufacturer_PartNum</th><th>ReviewText</th><th>StarRating</th></tr></thead><tbody>
+<tr><td>taylor.brown272@example.com</td><td>Vishay</td><td>1N4148</td><td>Used it in three builds without a failure.</td><td>5</td></tr>
+<tr><td>hassan.brown52@example.com</td><td>Vishay</td><td>1N4148</td><td>NULL</td><td>4</td></tr>
+<tr><td>olivia.lee139@example.com</td><td>Vishay</td><td>1N4148</td><td>Best option in this category.</td><td>5</td></tr>
+<tr><td>arjun.tremblay170@example.com</td><td>Vishay</td><td>1N4148</td><td>Fine for prototyping.</td><td>3</td></tr>
+<tr><td>sofia.singh15@example.com</td><td>Vishay</td><td>1N4148</td><td>NULL</td><td>5</td></tr>
+</tbody></table>
+<p>Customer.Password holds a mock SHA-256 hash and is left out of the sample above.</p>
+<h3>3.5&nbsp; Database dump</h3>
+<p><code>DUMP/ep_sourcer_dump.sql</code> holds the loaded database, including both views. <span class="note">Placeholder: this copy was made with mysqldump by capture_responses.py. Replace it with the Workbench export (Server &gt; Data Export, "Dump Structure and Data", self-contained file).</span></p>
+<h2 class="sec pb">4.&nbsp; Task 4: SQL Queries (SELECT)</h2>
+<p>Seven queries, each answering a question an Assignment 1 function asks. Q1 is the one plain query; each of the other six uses a different main feature. No row-limit syntax is used: the conditions keep every result short. <code>explanation.md</code> explains each query's logic, execution order and relational algebra.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:6%"><col style="width:40%"><col style="width:44%"><col style="width:10%"></colgroup>
+<thead><tr><th>#</th><th>Question</th><th>Main SQL feature</th><th>Rows</th></tr></thead><tbody>
+<tr><td>Q1</td><td>Distributors shipping for under $7</td><td>simple SELECT-FROM-WHERE, ORDER BY</td><td>7</td></tr>
+<tr><td>Q2</td><td>Offers for 100 units of 1N4148, with cost</td><td>3-relation inner join on a composite key, computed column</td><td>2</td></tr>
+<tr><td>Q3</td><td>BOM totals and unpriced lines for one customer</td><td>LEFT OUTER JOIN + GROUP BY + COUNT/SUM/COALESCE</td><td>9</td></tr>
+<tr><td>Q4</td><td>Best-rated parts</td><td>GROUP BY + HAVING on two aggregates</td><td>16</td></tr>
+<tr><td>Q5</td><td>Op-amps listed but out of stock everywhere</td><td>correlated EXISTS and NOT EXISTS</td><td>8</td></tr>
+<tr><td>Q6</td><td>Cheapest in-stock offer for each line of a BOM</td><td>correlated scalar subquery with MIN</td><td>7</td></tr>
+<tr><td>Q7</td><td>Alternatives to a part, both directions</td><td>UNION</td><td>2</td></tr>
+</tbody></table>
+<h4>Q1</h4>
+<div class="stmt"><pre class="sql">-- task6.sql: Task 4, seven SELECT queries
+-- ============================================================================
+-- Run after SQL/task3.sql, SQL/task4.sql and SRC/load_data.sql.
+-- Each query answers a question the Assignment 1 functions ask, and each uses
+-- a different main SQL feature. No row-limit syntax is used: the WHERE,
+-- GROUP BY and HAVING conditions keep every result short.
+-- Q numbers match explanation.md.
+-- ============================================================================
+
+-- ---------------------------------------------------------------------------
+-- Q1 (simple SELECT-FROM-WHERE). Distributors that ship for under $7.00,
+-- cheapest first. Serves: Filter by distributor / Cart shipping estimate.
+-- ---------------------------------------------------------------------------
+SELECT Name, Website, ShippingFee
+FROM Distributor
+WHERE ShippingFee &lt; 7.00
+ORDER BY ShippingFee, Name;</pre><pre class="out">+--------------------+-----------------------------------+-------------+
+| Name               | Website                           | ShippingFee |
++--------------------+-----------------------------------+-------------+
+| Arrow              | https://www.arrow.com             |        0.00 |
+| Avnet              | https://www.avnet.com             |        0.00 |
+| LCSC               | https://www.lcsc.com              |        4.50 |
+| Jameco             | https://www.jameco.com            |        5.95 |
+| Future Electronics | https://www.futureelectronics.com |        6.00 |
+| Adafruit           | https://www.adafruit.com          |        6.50 |
+| SparkFun           | https://www.sparkfun.com          |        6.75 |
++--------------------+-----------------------------------+-------------+
+7 rows in set (0.003 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t4_q1.png</b>.</p></div>
+<h4>Q2</h4>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- Q2 (multi-table inner join over a composite key, computed column).
+-- Price Match: every offer for 100 units of the generic part 1N4148, from any
+-- manufacturer, with enough stock, and the subtotal including shipping.
+-- Serves: Price Match.
+-- ---------------------------------------------------------------------------
+SELECT p.ManufacturerName, d.Name AS Distributor, l.Distributor_PartNum, l.Packaging,
+       l.UnitPrice, l.StockQuantity, l.EstShipTime,
+       100 * l.UnitPrice + d.ShippingFee AS CostFor100
+FROM Part p
+     JOIN Listing l ON l.ManufacturerName = p.ManufacturerName
+                   AND l.Manufacturer_PartNum = p.Manufacturer_PartNum
+     JOIN Distributor d ON d.Name = l.DistributorName
+WHERE p.Manufacturer_PartNum = &#x27;1N4148&#x27;
+  AND l.StockQuantity &gt;= 100
+ORDER BY CostFor100;</pre><pre class="out">+------------------+-------------------+---------------------+-----------+-----------+---------------+-------------+------------+
+| ManufacturerName | Distributor       | Distributor_PartNum | Packaging | UnitPrice | StockQuantity | EstShipTime | CostFor100 |
++------------------+-------------------+---------------------+-----------+-----------+---------------+-------------+------------+
+| onsemi           | Sager Electronics | SG-000026           | Cut Tape  |      0.10 |        225341 |          14 |      17.25 |
+| Vishay           | Avnet             | AV-000013           | Tray      |      0.25 |        119605 |          11 |      25.00 |
++------------------+-------------------+---------------------+-----------+-----------+---------------+-------------+------------+
+2 rows in set (0.007 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t4_q2.png</b>.</p></div>
+<h4>Q3</h4>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- Q3 (LEFT OUTER JOIN with GROUP BY and aggregates).
+-- BOM summary for one customer: the derived attributes /NumberOfParts,
+-- /UnpricedParts and /TotalCost of every BOM, including a BOM with no lines.
+-- Serves: BOM maker (line costs, totals, unpriced-part warning).
+-- ---------------------------------------------------------------------------
+SELECT b.BOM_name,
+       COUNT(bl.Manufacturer_PartNum)                    AS NumberOfParts,
+       COUNT(bl.Manufacturer_PartNum) - COUNT(l.UnitPrice) AS UnpricedParts,
+       COALESCE(SUM(bl.Quantity * l.UnitPrice), 0)       AS TotalCost
+FROM BOM b
+     LEFT JOIN BOMLine bl
+            ON bl.CustomerEmail = b.CustomerEmail
+           AND bl.BOM_name = b.BOM_name
+     LEFT JOIN (BOMSelection s
+                JOIN Listing l
+                  ON l.DistributorName = s.DistributorName
+                 AND l.Distributor_PartNum = s.Distributor_PartNum)
+            ON s.CustomerEmail = bl.CustomerEmail
+           AND s.BOM_name = bl.BOM_name
+           AND l.ManufacturerName = bl.ManufacturerName
+           AND l.Manufacturer_PartNum = bl.Manufacturer_PartNum
+WHERE b.CustomerEmail = &#x27;alex.chen0@example.com&#x27;
+GROUP BY b.CustomerEmail, b.BOM_name
+ORDER BY TotalCost DESC;</pre><pre class="out">+-------------------------------+---------------+---------------+-----------+
+| BOM_name                      | NumberOfParts | UnpricedParts | TotalCost |
++-------------------------------+---------------+---------------+-----------+
+| Drone Flight Controller v1    |             6 |             3 |    834.07 |
+| Keyboard PCB v3               |             8 |             2 |    297.94 |
+| Weather Station v2            |             7 |             3 |    114.85 |
+| Drone Flight Controller Rev A |             6 |             1 |     58.25 |
+| CAN Bus Sniffer Rev B         |            10 |             3 |     48.49 |
+| Solar Tracker Final           |             5 |             0 |     11.79 |
+| Capstone Prototype            |             4 |             1 |      3.61 |
+| Line Follower Robot           |             2 |             1 |      0.73 |
+| Empty Draft                   |             0 |             0 |      0.00 |
++-------------------------------+---------------+---------------+-----------+
+9 rows in set (0.009 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t4_q3.png</b>.</p></div>
+<h4>Q4</h4>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- Q4 (GROUP BY with HAVING on two aggregates).
+-- Best-rated parts: an average rating (/AvgStarRating) of at least 4.5 from
+-- at least 5 reviews. Serves: Part rating.
+-- ---------------------------------------------------------------------------
+SELECT p.ManufacturerName, p.Manufacturer_PartNum, p.Name, p.Category,
+       COUNT(*) AS Reviews,
+       AVG(r.StarRating) AS AvgStarRating
+FROM Part p
+     JOIN Review r ON r.ManufacturerName = p.ManufacturerName
+                  AND r.Manufacturer_PartNum = p.Manufacturer_PartNum
+GROUP BY p.ManufacturerName, p.Manufacturer_PartNum, p.Name, p.Category
+HAVING AVG(r.StarRating) &gt;= 4.5 AND COUNT(*) &gt;= 5
+ORDER BY AvgStarRating DESC, Reviews DESC, p.ManufacturerName, p.Manufacturer_PartNum;</pre><pre class="out">+--------------------+----------------------+-----------------------------+------------+---------+---------------+
+| ManufacturerName   | Manufacturer_PartNum | Name                        | Category   | Reviews | AvgStarRating |
++--------------------+----------------------+-----------------------------+------------+---------+---------------+
+| Samsung            | RC15936-G            | 47 Ohm TO-220 Resistor 0.1% | Resistor   |       7 |        4.8571 |
+| TE Connectivity    | CN22733-J            | 20-Pin Male Header 2.00mm   | Connector  |       7 |        4.8571 |
+| Microchip          | OA16398-G            | Op-Amp DIP-8 914            | Op-Amp     |       5 |        4.8000 |
+| onsemi             | DI16377-B            | Diode TO-220 911            | Diode      |       9 |        4.6667 |
+| Diodes Inc         | DI27997-K            | Diode 0805 2571             | Diode      |       6 |        4.6667 |
+| Lite-On            | LD14732-H            | LED 1206 676                | LED        |       6 |        4.6667 |
+| Panasonic          | RC13801-C            | 220 Ohm LQFP-48 Resistor 5% | Resistor   |       6 |        4.6667 |
+| Abracon            | XT13745-G            | Crystal TO-220 535          | Crystal    |       5 |        4.6000 |
+| Sensirion          | SN21025-C            | Sensor 0805 1575            | Sensor     |       5 |        4.6000 |
+| TDK                | IN21823-A            | 2.2uH Power Inductor DIP-8  | Inductor   |       5 |        4.6000 |
+| Yageo              | CC28249-K            | 10nF 0402 X5R Capacitor 16V | Capacitor  |       5 |        4.6000 |
+| Nexperia           | TR16517-G            | Transistor 0603 931         | Transistor |       7 |        4.5714 |
+| STMicroelectronics | TR25708-K            | Transistor LQFP-48 2244     | Transistor |       7 |        4.5714 |
+| Yageo              | RC28522-H            | 1M Ohm 1206 Resistor 1%     | Resistor   |      12 |        4.5000 |
+| Vishay             | DI17560-C            | Diode DIP-8 1080            | Diode      |       8 |        4.5000 |
+| Vishay             | RC23965-A            | 47k Ohm 0805 Resistor 5%    | Resistor   |       6 |        4.5000 |
++--------------------+----------------------+-----------------------------+------------+---------+---------------+
+16 rows in set (0.289 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t4_q4.png</b>.</p></div>
+<h4>Q5</h4>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- Q5 (correlated EXISTS and NOT EXISTS).
+-- Op-amps that ARE sold by at least one distributor, but that NO distributor
+-- currently has in stock. Serves: Filter (minimum stock) / BOM stock warning.
+-- ---------------------------------------------------------------------------
+SELECT p.ManufacturerName, p.Manufacturer_PartNum, p.Name
+FROM Part p
+WHERE p.Category = &#x27;Op-Amp&#x27;
+  AND EXISTS (SELECT *
+              FROM Listing l
+              WHERE l.ManufacturerName = p.ManufacturerName
+                AND l.Manufacturer_PartNum = p.Manufacturer_PartNum)
+  AND NOT EXISTS (SELECT *
+                  FROM Listing l
+                  WHERE l.ManufacturerName = p.ManufacturerName
+                    AND l.Manufacturer_PartNum = p.Manufacturer_PartNum
+                    AND l.StockQuantity &gt; 0)
+ORDER BY p.ManufacturerName, p.Manufacturer_PartNum;</pre><pre class="out">+--------------------+----------------------+--------------------+
+| ManufacturerName   | Manufacturer_PartNum | Name               |
++--------------------+----------------------+--------------------+
+| Analog Devices     | OA17238-G            | Op-Amp QFN-32 1034 |
+| Analog Devices     | OA22376-B            | Op-Amp 1206 1768   |
+| Microchip          | OA19205-D            | Op-Amp 0805 1315   |
+| STMicroelectronics | OA12282-H            | Op-Amp LQFP-48 326 |
+| STMicroelectronics | OA12800-H            | Op-Amp SOIC-8 400  |
+| Texas Instruments  | OA19275-G            | Op-Amp QFN-32 1325 |
+| Texas Instruments  | OA30153-H            | Op-Amp TO-220 2879 |
+| Texas Instruments  | OA30825-D            | Op-Amp 0402 2975   |
++--------------------+----------------------+--------------------+
+8 rows in set (0.048 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t4_q5.png</b>.</p></div>
+<h4>Q6</h4>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- Q6 (scalar subquery with an aggregate, compared in WHERE).
+-- For each line of one BOM, the cheapest offer that is in stock: a listing
+-- qualifies only if its price equals the minimum in-stock price for that part.
+-- Serves: BOM maker (&quot;pick cheapest supplier for every line&quot;).
+-- ---------------------------------------------------------------------------
+SELECT bl.ManufacturerName, bl.Manufacturer_PartNum, bl.Quantity,
+       l.DistributorName, l.Distributor_PartNum, l.UnitPrice,
+       bl.Quantity * l.UnitPrice AS LineCost
+FROM BOMLine bl
+     JOIN Listing l ON l.ManufacturerName = bl.ManufacturerName
+                   AND l.Manufacturer_PartNum = bl.Manufacturer_PartNum
+WHERE bl.CustomerEmail = &#x27;alex.chen0@example.com&#x27;
+  AND bl.BOM_name = &#x27;Weather Station v2&#x27;
+  AND l.StockQuantity &gt; 0
+  AND l.UnitPrice = (SELECT MIN(l2.UnitPrice)
+                     FROM Listing l2
+                     WHERE l2.ManufacturerName = bl.ManufacturerName
+                       AND l2.Manufacturer_PartNum = bl.Manufacturer_PartNum
+                       AND l2.StockQuantity &gt; 0)
+ORDER BY LineCost DESC, l.DistributorName;</pre><pre class="out">+------------------+----------------------+----------+--------------------+---------------------+-----------+----------+
+| ManufacturerName | Manufacturer_PartNum | Quantity | DistributorName    | Distributor_PartNum | UnitPrice | LineCost |
++------------------+----------------------+----------+--------------------+---------------------+-----------+----------+
+| Microchip        | OA24504-F            |       50 | Future Electronics | FE-004693           |      1.05 |    52.50 |
+| Bourns           | IN27304-A            |       50 | LCSC               | LC-005174           |      0.99 |    49.50 |
+| Eaton            | FU28158-A            |      100 | Arrow              | AR-005421           |      0.18 |    18.00 |
+| Bourns           | RC24875-B            |       10 | DigiKey            | DK-003978           |      0.23 |     2.30 |
+| Murata           | IN21683-D            |        5 | TME                | TM-003692           |      0.39 |     1.95 |
+| Panasonic        | RC30769-F            |       10 | Allied Electronics | AL-006630           |      0.19 |     1.90 |
+| Bourns           | RC18330-H            |       10 | TME                | TM-002509           |      0.03 |     0.30 |
++------------------+----------------------+----------+--------------------+---------------------+-----------+----------+
+7 rows in set (0.012 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t4_q6.png</b>.</p></div>
+<h4>Q7</h4>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- Q7 (set operation: UNION).
+-- All alternatives to onsemi&#x27;s 1N4148. Each pair is stored only once, with
+-- the smaller part key first (constraint C4), so the part can be on either
+-- side of a pair: the first SELECT reads pairs where it is Part1, the second
+-- where it is Part2, and UNION merges them and removes duplicates.
+-- Serves: Alternative parts.
+-- ---------------------------------------------------------------------------
+SELECT a.Part2_ManufacturerName AS AltManufacturer, a.Part2_PartNum AS AltPartNum, p.Name, &#x27;stored as Part2&#x27; AS StoredAs
+FROM PartAlternative a
+     JOIN Part p ON p.ManufacturerName = a.Part2_ManufacturerName
+                AND p.Manufacturer_PartNum = a.Part2_PartNum
+WHERE a.Part1_ManufacturerName = &#x27;onsemi&#x27; AND a.Part1_PartNum = &#x27;1N4148&#x27;
+UNION
+SELECT a.Part1_ManufacturerName, a.Part1_PartNum, p.Name, &#x27;stored as Part1&#x27;
+FROM PartAlternative a
+     JOIN Part p ON p.ManufacturerName = a.Part1_ManufacturerName
+                AND p.Manufacturer_PartNum = a.Part1_PartNum
+WHERE a.Part2_ManufacturerName = &#x27;onsemi&#x27; AND a.Part2_PartNum = &#x27;1N4148&#x27;
+ORDER BY AltManufacturer;</pre><pre class="out">+-----------------+------------+--------------------------------+-----------------+
+| AltManufacturer | AltPartNum | Name                           | StoredAs        |
++-----------------+------------+--------------------------------+-----------------+
+| Nexperia        | 1N4148     | 1N4148 Small Signal Diode 100V | stored as Part1 |
+| Vishay          | 1N4148     | 1N4148 Small Signal Diode 100V | stored as Part2 |
++-----------------+------------+--------------------------------+-----------------+
+2 rows in set (0.020 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t4_q7.png</b>.</p></div>
+<h2 class="sec pb">5.&nbsp; Task 5: Data Modification Commands</h2>
+<p>M1 is an <code>INSERT ... SELECT</code>, M2 an <code>UPDATE</code> of 129 tuples chosen by a subquery, and M3 a <code>DELETE</code> chosen by a correlated <code>NOT EXISTS</code> that cascades to CartLine. M2b and M3b fail on purpose to show a CHECK constraint and an ON DELETE RESTRICT foreign key rejecting a change. Each command sits between SELECTs that show its effect. The file runs in one transaction that ends with ROLLBACK, so it can be rerun and the database stays equal to the dump.</p>
+<pre class="sql">-- task7.sql: Task 5, three data modification commands
+-- ============================================================================
+-- Run after SQL/task3.sql, SQL/task4.sql and SRC/load_data.sql.
+-- M1 is an INSERT ... SELECT, M2 an UPDATE of many tuples chosen by a
+-- subquery, M3 a DELETE of a set chosen by a correlated subquery that
+-- cascades to a child relation. Each is surrounded by SELECTs that show its
+-- effect. M2b and M3b show constraints the DBMS enforces rejecting a change.
+--
+-- The whole file runs in ONE transaction that ends with ROLLBACK, so it can be
+-- rerun and the database stays equal to the dump in DUMP/. Every SELECT inside
+-- the transaction already sees the changes. Replace ROLLBACK with COMMIT to
+-- keep them.
+--
+-- M2b and M3b fail on purpose. In the mysql client run this file with
+-- --force; in Workbench, turn on &quot;Continue SQL script execution on errors&quot;.
+-- A failed statement is undone on its own; the transaction carries on.
+-- ============================================================================</pre>
+<div class="stmt"><pre class="sql">-- task7.sql: Task 5, three data modification commands
+-- ============================================================================
+-- Run after SQL/task3.sql, SQL/task4.sql and SRC/load_data.sql.
+-- M1 is an INSERT ... SELECT, M2 an UPDATE of many tuples chosen by a
+-- subquery, M3 a DELETE of a set chosen by a correlated subquery that
+-- cascades to a child relation. Each is surrounded by SELECTs that show its
+-- effect. M2b and M3b show constraints the DBMS enforces rejecting a change.
+--
+-- The whole file runs in ONE transaction that ends with ROLLBACK, so it can be
+-- rerun and the database stays equal to the dump in DUMP/. Every SELECT inside
+-- the transaction already sees the changes. Replace ROLLBACK with COMMIT to
+-- keep them.
+--
+-- M2b and M3b fail on purpose. In the mysql client run this file with
+-- --force; in Workbench, turn on &quot;Continue SQL script execution on errors&quot;.
+-- A failed statement is undone on its own; the transaction carries on.
+-- ============================================================================
+START TRANSACTION;</pre><pre class="out">Query OK, 0 rows affected (0.004 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_01.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- M1: INSERT ... SELECT. Copy a shared project into another customer&#x27;s
+-- account (Assignment 1 &quot;Project Sharing&quot;: replicate someone else&#x27;s build).
+-- Jordan copies leila.patel143&#x27;s shared project &quot;Open Battery Charger&quot;.
+-- ---------------------------------------------------------------------------
+-- Before: Jordan has no BOMs
+SELECT COUNT(*) AS JordanBOMs FROM BOM WHERE CustomerEmail = &#x27;jordan.li1@example.com&#x27;;</pre><pre class="out">+------------+
+| JordanBOMs |
++------------+
+|          0 |
++------------+
+1 row in set (0.003 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_02.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- The new (empty) BOM that will receive the copied lines
+INSERT INTO BOM (CustomerEmail, BOM_name, Date_created)
+VALUES (&#x27;jordan.li1@example.com&#x27;, &#x27;Battery Charger (copied)&#x27;, CURRENT_DATE);</pre><pre class="out">Query OK, 1 row affected (0.002 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_03.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- M1: every line of the shared project&#x27;s BOM becomes a line of the new BOM.
+-- The shared BOM is found through its alternate key (CustomerEmail, Title),
+-- the way a user picks a project by its title, not by its BOM_name.
+INSERT INTO BOMLine (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum, Quantity)
+SELECT &#x27;jordan.li1@example.com&#x27;, &#x27;Battery Charger (copied)&#x27;,
+       bl.ManufacturerName, bl.Manufacturer_PartNum, bl.Quantity
+FROM SharedProject sp
+     JOIN BOMLine bl ON bl.CustomerEmail = sp.CustomerEmail
+                    AND bl.BOM_name = sp.BOM_name
+WHERE sp.CustomerEmail = &#x27;leila.patel143@example.com&#x27;
+  AND sp.Title = &#x27;Open Battery Charger&#x27;;</pre><pre class="out">Query OK, 5 rows affected (0.008 sec)
+Records: 5  Duplicates: 0  Warnings: 0</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_04.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- After: the copy has the same parts and quantities as the original
+SELECT bl.BOM_name, bl.ManufacturerName, bl.Manufacturer_PartNum, bl.Quantity
+FROM BOMLine bl
+WHERE bl.CustomerEmail = &#x27;jordan.li1@example.com&#x27;
+ORDER BY bl.ManufacturerName, bl.Manufacturer_PartNum;</pre><pre class="out">+--------------------------+------------------+----------------------+----------+
+| BOM_name                 | ManufacturerName | Manufacturer_PartNum | Quantity |
++--------------------------+------------------+----------------------+----------+
+| Battery Charger (copied) | onsemi           | TR21613-K            |       10 |
+| Battery Charger (copied) | Samsung          | CC27227-J            |       50 |
+| Battery Charger (copied) | Samsung          | RC25645-B            |       10 |
+| Battery Charger (copied) | Yageo            | CC13864-K            |        4 |
+| Battery Charger (copied) | Yageo            | CC15313-F            |       10 |
++--------------------------+------------------+----------------------+----------+
+5 rows in set (0.001 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_05.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- M2: UPDATE many tuples, chosen by a subquery on another relation.
+-- LCSC raises the price of all its capacitor listings by 10% and records the
+-- change time. Category lives in Part, not Listing, so the listings to change
+-- are found with a row-value IN subquery over the composite part key.
+-- ---------------------------------------------------------------------------
+-- Before: how many listings qualify, and their average price
+SELECT COUNT(*) AS LCSCCapacitorListings, AVG(UnitPrice) AS AvgPrice
+FROM Listing
+WHERE DistributorName = &#x27;LCSC&#x27;
+  AND (ManufacturerName, Manufacturer_PartNum) IN
+      (SELECT ManufacturerName, Manufacturer_PartNum FROM Part WHERE Category = &#x27;Capacitor&#x27;);</pre><pre class="out">+-----------------------+----------+
+| LCSCCapacitorListings | AvgPrice |
++-----------------------+----------+
+|                   129 | 0.479380 |
++-----------------------+----------+
+1 row in set (0.010 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_06.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- M2
+UPDATE Listing
+SET UnitPrice = CAST(UnitPrice * 1.10 AS DECIMAL(10,2)),
+    LastUpdated = CURRENT_TIMESTAMP
+WHERE DistributorName = &#x27;LCSC&#x27;
+  AND (ManufacturerName, Manufacturer_PartNum) IN
+      (SELECT ManufacturerName, Manufacturer_PartNum FROM Part WHERE Category = &#x27;Capacitor&#x27;);</pre><pre class="out">Query OK, 129 rows affected (0.189 sec)
+Rows matched: 129  Changed: 129  Warnings: 0</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_07.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- After: same count, average about 10% higher. CAST rounds each new price to
+-- cents explicitly, so MySQL does not warn about truncating extra decimals.
+SELECT COUNT(*) AS LCSCCapacitorListings, AVG(UnitPrice) AS AvgPrice
+FROM Listing
+WHERE DistributorName = &#x27;LCSC&#x27;
+  AND (ManufacturerName, Manufacturer_PartNum) IN
+      (SELECT ManufacturerName, Manufacturer_PartNum FROM Part WHERE Category = &#x27;Capacitor&#x27;);</pre><pre class="out">+-----------------------+----------+
+| LCSCCapacitorListings | AvgPrice |
++-----------------------+----------+
+|                   129 | 0.528140 |
++-----------------------+----------+
+1 row in set (0.011 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_08.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- M2b (fails on purpose): a $1.00 discount on every LCSC listing would make
+-- the cheap ones negative. CHECK ck_Listing_price (C1: UnitPrice &gt;= 0)
+-- rejects the WHOLE statement (expected: ERROR 3819), so no row changes.
+UPDATE Listing
+SET UnitPrice = UnitPrice - 1.00
+WHERE DistributorName = &#x27;LCSC&#x27;;</pre><pre class="out err">ERROR 3819 (HY000) at line 33: Check constraint &#x27;ck_Listing_price&#x27; is violated.</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_09.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- Proof that nothing changed: no LCSC listing is negative, the count is intact
+SELECT COUNT(*) AS LCSCListings, MIN(UnitPrice) AS MinPrice
+FROM Listing
+WHERE DistributorName = &#x27;LCSC&#x27;;</pre><pre class="out">+--------------+----------+
+| LCSCListings | MinPrice |
++--------------+----------+
+|          489 |     0.01 |
++--------------+----------+
+1 row in set (0.013 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_10.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- M3: DELETE a set chosen by a correlated NOT EXISTS subquery, which
+-- cascades. Abandoned carts are removed: carts created before 2026-08-01
+-- whose owner has never made a BOM (an inactive account).
+-- fk_CartLine_ShoppingCart is ON DELETE CASCADE, so their CartLine rows go
+-- too. No BOM, BOMLine, BOMSelection or SharedProject row is touched, so the
+-- unenforced constraints C3 and C5 cannot be broken by this delete.
+-- ---------------------------------------------------------------------------
+-- Before
+SELECT COUNT(*) AS Carts, (SELECT COUNT(*) FROM CartLine) AS CartLines
+FROM ShoppingCart;</pre><pre class="out">+-------+-----------+
+| Carts | CartLines |
++-------+-----------+
+|   200 |      1200 |
++-------+-----------+
+1 row in set (0.028 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_11.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- M3
+DELETE FROM ShoppingCart
+WHERE Date_created &lt; DATE &#x27;2026-08-01&#x27;
+  AND NOT EXISTS (SELECT *
+                  FROM BOM b
+                  WHERE b.CustomerEmail = ShoppingCart.CustomerEmail);</pre><pre class="out">Query OK, 18 rows affected (0.075 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_12.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- After: fewer carts, and their lines removed by ON DELETE CASCADE
+SELECT COUNT(*) AS Carts, (SELECT COUNT(*) FROM CartLine) AS CartLines
+FROM ShoppingCart;</pre><pre class="out">+-------+-----------+
+| Carts | CartLines |
++-------+-----------+
+|   182 |      1110 |
++-------+-----------+
+1 row in set (0.123 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_13.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- No orphaned cart line is left behind
+SELECT COUNT(*) AS OrphanCartLines
+FROM CartLine c
+WHERE NOT EXISTS (SELECT * FROM ShoppingCart s WHERE s.CustomerEmail = c.CustomerEmail);</pre><pre class="out">+-----------------+
+| OrphanCartLines |
++-----------------+
+|               0 |
++-----------------+
+1 row in set (0.056 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_14.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- M3b (fails on purpose): delete Eaton&#x27;s fuses. Many are still offered by a
+-- distributor, and fk_Listing_Part is ON DELETE RESTRICT, so the delete is
+-- rejected (expected: ERROR 1451) and none of the parts, nor their reviews
+-- (which would otherwise cascade), are removed.
+DELETE FROM Part
+WHERE ManufacturerName = &#x27;Eaton&#x27; AND Category = &#x27;Fuse&#x27;;</pre><pre class="out err">ERROR 1451 (23000) at line 51: Cannot delete or update a parent row: a foreign key constraint fails (`ep_sourcer_test`.`listing`, CONSTRAINT `fk_Listing_Part` FOREIGN KEY (`ManufacturerName`, `Manufacturer_PartNum`) REFERENCES `part` (`ManufacturerName`, `Manufacturer_PartNum`) ON DELETE RE</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_15.png</b>.</p></div>
+<div class="stmt"><pre class="sql">SELECT COUNT(*) AS EatonFuses FROM Part WHERE ManufacturerName = &#x27;Eaton&#x27; AND Category = &#x27;Fuse&#x27;;</pre><pre class="out">+------------+
+| EatonFuses |
++------------+
+|         23 |
++------------+
+1 row in set (0.003 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_16.png</b>.</p></div>
+<div class="stmt"><pre class="sql">ROLLBACK;</pre><pre class="out">Query OK, 0 rows affected (0.099 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t5_17.png</b>.</p></div>
+<h2 class="sec pb">6.&nbsp; Task 6: View Creation and Evaluation</h2>
+<p><b>BOMTotals</b> (not updatable) gives each BOM's /NumberOfParts, /UnpricedParts and /TotalCost. <b>InStockListing</b> (updatable, WITH CHECK OPTION) holds the listings that can be bought now. The script shows each CREATE VIEW, a query on each view, and modification attempts on both.</p>
+<pre class="sql">-- task8.sql: Task 6, two views, a query on each, and modification attempts
+-- ============================================================================
+-- Run after SQL/task3.sql, SQL/task4.sql and SRC/load_data.sql.
+-- V1 BOMTotals is NOT updatable (joins, outer join, GROUP BY, aggregates).
+-- V2 InStockListing IS updatable (one base table, plain columns, simple
+-- WHERE) and uses WITH CHECK OPTION. The updatability of each is explained
+-- in explanation.md (section V) with the ISO rules from C&amp;B.
+--
+-- Several statements fail on purpose. In the mysql client run this file with
+-- --force; in Workbench, turn on &quot;Continue SQL script execution on errors&quot;.
+-- The modifications run in a transaction that ends with ROLLBACK, so the
+-- views stay but the data is left as loaded.
+-- ============================================================================</pre>
+<div class="stmt"><pre class="sql">-- task8.sql: Task 6, two views, a query on each, and modification attempts
+-- ============================================================================
+-- Run after SQL/task3.sql, SQL/task4.sql and SRC/load_data.sql.
+-- V1 BOMTotals is NOT updatable (joins, outer join, GROUP BY, aggregates).
+-- V2 InStockListing IS updatable (one base table, plain columns, simple
+-- WHERE) and uses WITH CHECK OPTION. The updatability of each is explained
+-- in explanation.md (section V) with the ISO rules from C&amp;B.
+--
+-- Several statements fail on purpose. In the mysql client run this file with
+-- --force; in Workbench, turn on &quot;Continue SQL script execution on errors&quot;.
+-- The modifications run in a transaction that ends with ROLLBACK, so the
+-- views stay but the data is left as loaded.
+-- ============================================================================
+
+-- MySQL-specific: DROP VIEW IF EXISTS (ISO has DROP VIEW &lt;name&gt; with no
+-- IF EXISTS). It lets this script be rerun.
+DROP VIEW IF EXISTS BOMTotals;</pre><pre class="out">Query OK, 0 rows affected (0.016 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_01.png</b>.</p></div>
+<div class="stmt"><pre class="sql">DROP VIEW IF EXISTS InStockListing;</pre><pre class="out">Query OK, 0 rows affected (0.014 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_02.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- V1: BOMTotals. One row per BOM with the three derived attributes of BOM
+-- from Assignment 2: /NumberOfParts, /UnpricedParts and /TotalCost.
+-- Purpose: the BOM list page shows every BOM&#x27;s size and cost without the
+-- application repeating this join; the derived values are never stored.
+-- ---------------------------------------------------------------------------
+CREATE VIEW BOMTotals (CustomerEmail, BOM_name, NumberOfParts, UnpricedParts, TotalCost) AS
+SELECT b.CustomerEmail, b.BOM_name,
+       COUNT(bl.Manufacturer_PartNum),
+       COUNT(bl.Manufacturer_PartNum) - COUNT(l.UnitPrice),
+       COALESCE(SUM(bl.Quantity * l.UnitPrice), 0)
+FROM BOM b
+     LEFT JOIN BOMLine bl
+            ON bl.CustomerEmail = b.CustomerEmail
+           AND bl.BOM_name = b.BOM_name
+     LEFT JOIN (BOMSelection s
+                JOIN Listing l
+                  ON l.DistributorName = s.DistributorName
+                 AND l.Distributor_PartNum = s.Distributor_PartNum)
+            ON s.CustomerEmail = bl.CustomerEmail
+           AND s.BOM_name = bl.BOM_name
+           AND l.ManufacturerName = bl.ManufacturerName
+           AND l.Manufacturer_PartNum = bl.Manufacturer_PartNum
+GROUP BY b.CustomerEmail, b.BOM_name;</pre><pre class="out">Query OK, 0 rows affected (0.022 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_03.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- V2: InStockListing. The listings that can be bought right now.
+-- Purpose: the default for Price Match and the &quot;in stock only&quot; filter.
+-- Every column of Listing is kept (including all NOT NULL ones) so a full
+-- tuple can be inserted through the view. WITH CHECK OPTION stops an INSERT
+-- or UPDATE through the view from producing a row the view cannot see.
+-- ---------------------------------------------------------------------------
+CREATE VIEW InStockListing AS
+SELECT DistributorName, Distributor_PartNum, ManufacturerName, Manufacturer_PartNum,
+       Packaging, UnitPrice, StockQuantity, EstShipTime, LastUpdated
+FROM Listing
+WHERE StockQuantity &gt; 0
+WITH CHECK OPTION;</pre><pre class="out">Query OK, 0 rows affected (0.015 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_04.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- Queries on the views
+-- ---------------------------------------------------------------------------
+-- Query on V1: shared projects whose BOM is fully priced (no unpriced line)
+-- and has at least 7 parts, most expensive first. A view can be joined like
+-- a base table.
+SELECT sp.Title, t.CustomerEmail, t.NumberOfParts, t.TotalCost
+FROM BOMTotals t
+     JOIN SharedProject sp ON sp.CustomerEmail = t.CustomerEmail
+                          AND sp.BOM_name = t.BOM_name
+WHERE t.UnpricedParts = 0
+  AND t.NumberOfParts &gt;= 7
+ORDER BY t.TotalCost DESC;</pre><pre class="out">+---------------------------+----------------------------+---------------+-----------+
+| Title                     | CustomerEmail              | NumberOfParts | TotalCost |
++---------------------------+----------------------------+---------------+-----------+
+| Open Lab Signal Generator | liam.martin18@example.com  |             7 |    420.36 |
+| Open Lab Signal Generator | riley.taylor5@example.com  |             8 |    256.63 |
+| Open Smart Thermostat     | sam.gagnon216@example.com  |             7 |     95.55 |
+| Open LED Matrix Clock     | leila.patel143@example.com |             8 |     15.42 |
++---------------------------+----------------------------+---------------+-----------+
+4 rows in set (0.702 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_05.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- Query on V2: every in-stock offer for the generic 1N4148 diode, with the
+-- distributor&#x27;s shipping fee.
+SELECT v.ManufacturerName, v.DistributorName, v.Distributor_PartNum, v.Packaging,
+       v.UnitPrice, v.StockQuantity, d.ShippingFee
+FROM InStockListing v
+     JOIN Distributor d ON d.Name = v.DistributorName
+WHERE v.Manufacturer_PartNum = &#x27;1N4148&#x27;
+ORDER BY v.UnitPrice;</pre><pre class="out">+------------------+--------------------+---------------------+-------------+-----------+---------------+-------------+
+| ManufacturerName | DistributorName    | Distributor_PartNum | Packaging   | UnitPrice | StockQuantity | ShippingFee |
++------------------+--------------------+---------------------+-------------+-----------+---------------+-------------+
+| Nexperia         | Allied Electronics | AL-000026           | Cut Tape    |      0.09 |            45 |        9.00 |
+| Nexperia         | Allied Electronics | AL-000039           | Tube        |      0.09 |            10 |        9.00 |
+| onsemi           | Allied Electronics | AL-000013           | Tube        |      0.10 |            13 |        9.00 |
+| onsemi           | Sager Electronics  | SG-000026           | Cut Tape    |      0.10 |        225341 |        7.25 |
+| Vishay           | Sager Electronics  | SG-000013           | Tape &amp; Reel |      0.24 |             2 |        7.25 |
+| Vishay           | Avnet              | AV-000013           | Tray        |      0.25 |        119605 |        0.00 |
++------------------+--------------------+---------------------+-------------+-----------+---------------+-------------+
+6 rows in set (0.060 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_06.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- ---------------------------------------------------------------------------
+-- Modification attempts
+-- ---------------------------------------------------------------------------
+START TRANSACTION;</pre><pre class="out">Query OK, 0 rows affected (0.004 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_07.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- V1, attempt 1 (fails): INSERT into the aggregate view.
+-- Expected: ERROR 1471, &quot;The target table BOMTotals of the INSERT is not
+-- insertable-into&quot;. There is no base tuple a row of totals could become.
+INSERT INTO BOMTotals (CustomerEmail, BOM_name, NumberOfParts, UnpricedParts, TotalCost)
+VALUES (&#x27;alex.chen0@example.com&#x27;, &#x27;New BOM&#x27;, 0, 0, 0.00);</pre><pre class="out err">ERROR 1471 (HY000) at line 41: The target table BOMTotals of the INSERT is not insertable-into</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_08.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- V1, attempt 2 (fails): UPDATE a computed column.
+-- Expected: ERROR 1288, &quot;The target table BOMTotals of the UPDATE is not
+-- updatable&quot;. TotalCost is a SUM over many tuples of two other relations.
+UPDATE BOMTotals
+SET TotalCost = 0
+WHERE CustomerEmail = &#x27;alex.chen0@example.com&#x27; AND BOM_name = &#x27;Weather Station v2&#x27;;</pre><pre class="out err">ERROR 1288 (HY000) at line 43: The target table BOMTotals of the UPDATE is not updatable</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_09.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- V2, attempt 1 (succeeds): insert an in-stock listing through the view.
+-- The row goes into the base relation Listing.
+INSERT INTO InStockListing (DistributorName, Distributor_PartNum, ManufacturerName,
+                            Manufacturer_PartNum, Packaging, UnitPrice, StockQuantity,
+                            EstShipTime, LastUpdated)
+VALUES (&#x27;DigiKey&#x27;, &#x27;DK-1N4148-ON&#x27;, &#x27;onsemi&#x27;, &#x27;1N4148&#x27;, &#x27;Tube&#x27;, 0.09, 500, 3, CURRENT_TIMESTAMP);</pre><pre class="out">Query OK, 1 row affected (0.007 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_10.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- The new tuple is visible both in the view and in the base table
+SELECT DistributorName, Distributor_PartNum, Packaging, UnitPrice, StockQuantity
+FROM InStockListing WHERE Distributor_PartNum = &#x27;DK-1N4148-ON&#x27;;</pre><pre class="out">+-----------------+---------------------+-----------+-----------+---------------+
+| DistributorName | Distributor_PartNum | Packaging | UnitPrice | StockQuantity |
++-----------------+---------------------+-----------+-----------+---------------+
+| DigiKey         | DK-1N4148-ON        | Tube      |      0.09 |           500 |
++-----------------+---------------------+-----------+-----------+---------------+
+1 row in set (0.029 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_11.png</b>.</p></div>
+<div class="stmt"><pre class="sql">SELECT DistributorName, Distributor_PartNum, Packaging, UnitPrice, StockQuantity
+FROM Listing WHERE Distributor_PartNum = &#x27;DK-1N4148-ON&#x27;;</pre><pre class="out">+-----------------+---------------------+-----------+-----------+---------------+
+| DistributorName | Distributor_PartNum | Packaging | UnitPrice | StockQuantity |
++-----------------+---------------------+-----------+-----------+---------------+
+| DigiKey         | DK-1N4148-ON        | Tube      |      0.09 |           500 |
++-----------------+---------------------+-----------+-----------+---------------+
+1 row in set (0.017 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_12.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- V2, attempt 2 (fails): insert an OUT-of-stock listing through the view.
+-- Expected: ERROR 1369, &quot;CHECK OPTION failed &#x27;ep_sourcer_test.InStockListing&#x27;&quot;.
+-- Without WITH CHECK OPTION this row would be inserted into Listing and then
+-- vanish from the view (a &quot;migrating&quot; row).
+INSERT INTO InStockListing (DistributorName, Distributor_PartNum, ManufacturerName,
+                            Manufacturer_PartNum, Packaging, UnitPrice, StockQuantity,
+                            EstShipTime, LastUpdated)
+VALUES (&#x27;DigiKey&#x27;, &#x27;DK-1N4148-OUT&#x27;, &#x27;onsemi&#x27;, &#x27;1N4148&#x27;, &#x27;Bulk&#x27;, 0.08, 0, 3, CURRENT_TIMESTAMP);</pre><pre class="out err">ERROR 1369 (HY000) at line 54: CHECK OPTION failed &#x27;ep_sourcer_test.instocklisting&#x27;</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_13.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- V2, attempt 3 (fails): an UPDATE through the view that would move the row
+-- out of the view (stock sold out). Expected: ERROR 1369 (CHECK OPTION).
+UPDATE InStockListing
+SET StockQuantity = 0
+WHERE DistributorName = &#x27;DigiKey&#x27; AND Distributor_PartNum = &#x27;DK-1N4148-ON&#x27;;</pre><pre class="out err">ERROR 1369 (HY000) at line 58: CHECK OPTION failed &#x27;ep_sourcer_test.instocklisting&#x27;</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_14.png</b>.</p></div>
+<div class="stmt"><pre class="sql">-- V2, attempt 4 (succeeds): an UPDATE that keeps the row inside the view.
+UPDATE InStockListing
+SET UnitPrice = 0.08, StockQuantity = 450
+WHERE DistributorName = &#x27;DigiKey&#x27; AND Distributor_PartNum = &#x27;DK-1N4148-ON&#x27;;</pre><pre class="out">Query OK, 1 row affected (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 0</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_15.png</b>.</p></div>
+<div class="stmt"><pre class="sql">SELECT DistributorName, Distributor_PartNum, UnitPrice, StockQuantity
+FROM Listing WHERE Distributor_PartNum LIKE &#x27;DK-1N4148-%&#x27;;</pre><pre class="out">+-----------------+---------------------+-----------+---------------+
+| DistributorName | Distributor_PartNum | UnitPrice | StockQuantity |
++-----------------+---------------------+-----------+---------------+
+| DigiKey         | DK-1N4148-ON        |      0.08 |           450 |
++-----------------+---------------------+-----------+---------------+
+1 row in set (0.011 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_16.png</b>.</p></div>
+<div class="stmt"><pre class="sql">ROLLBACK;</pre><pre class="out">Query OK, 0 rows affected (0.021 sec)</pre><p class="shotlabel">System response recorded by capture_responses.py (mysql client, MySQL 26.10). Placeholder for screenshot <b>screenshots/t6_17.png</b>.</p></div>
+<h3 class="pb">6.1&nbsp; Are the views updatable?</h3>
+<h4>The ISO rules (Connolly &amp; Begg, ch. 7) used below</h4>
+<p>A view is updatable only if: 1. DISTINCT is not specified; 2. every element in the SELECT list is a column name (no expressions, constants or aggregates), and no column appears more than once; 3. the FROM clause names exactly one table (no joins, UNION, INTERSECT or EXCEPT); if that table is a view, it must be updatable too; 4. the WHERE clause has no nested SELECT that refers to the table in FROM; 5. there is no GROUP BY or HAVING.</p>
+<p>In addition, an INSERT through a view fails if the view leaves out a NOT NULL column with no default, and <b>WITH CHECK OPTION</b> rejects an INSERT or UPDATE through the view that would produce a row the view&#x27;s WHERE clause does not select.</p>
+<h4>V1: BOMTotals (not updatable)</h4>
+<pre class="sql">CREATE VIEW BOMTotals (CustomerEmail, BOM_name, NumberOfParts, UnpricedParts, TotalCost) AS
+SELECT b.CustomerEmail, b.BOM_name,
+       COUNT(bl.Manufacturer_PartNum),
+       COUNT(bl.Manufacturer_PartNum) - COUNT(l.UnitPrice),
+       COALESCE(SUM(bl.Quantity * l.UnitPrice), 0)
+FROM BOM b LEFT JOIN BOMLine bl ON ... LEFT JOIN (BOMSelection s JOIN Listing l ON ...) ON ...
+GROUP BY b.CustomerEmail, b.BOM_name;</pre>
+<ul class="tight"><li><b>Purpose:</b> the derived attributes of BOM from Assignment 2, computed once for all 802 BOMs, so the app&#x27;s BOM page does not repeat the Q3 join. The derived values are never stored (A2 decision), so the view stays correct after any change to lines, selections or prices. The column list after the view name names the computed columns.</li><li><b>Logic:</b> the same as Q3 without the customer filter (see Q3 for the outer-join and COUNT reasoning).</li><li><b>Relational algebra:</b> BOMTotals = π<sub>CustomerEmail, BOM_name, NumberOfParts, NumberOfParts−Priced, TotalCost</sub>(γ<sub>CustomerEmail, BOM_name; COUNT(Manufacturer_PartNum)→NumberOfParts, COUNT(UnitPrice)→Priced, SUM(Quantity·UnitPrice)→TotalCost</sub>(BOM ⟕ BOMLine ⟕ (BOMSelection ⋈ Listing)))</li><li><b>Query on the view:</b> shared projects whose BOM is fully priced (UnpricedParts = 0) and has at least 7 parts, joined with SharedProject for the title. Result: 4 projects, from $420.36 down to $15.42. A view is used in FROM like a base relation; the DBMS merges or materialises the view definition when the query runs.</li><li><b>Modification attempts and responses:</b></li><li style="margin-left:12px"><code>INSERT INTO BOMTotals ... VALUES (&#x27;alex.chen0@example.com&#x27;, &#x27;New BOM&#x27;, 0, 0, 0.00)</code> → <code>ERROR 1471: The target table BOMTotals of the INSERT is not insertable-into</code></li><li style="margin-left:12px"><code>UPDATE BOMTotals SET TotalCost = 0 WHERE ...</code> → <code>ERROR 1288: The target table BOMTotals of the UPDATE is not updatable</code></li><li><b>Why it is not updatable (ISO rules):</b></li><li style="margin-left:12px"><b>Rule 2 is broken:</b> NumberOfParts, UnpricedParts and TotalCost are aggregates and expressions, not column names. Setting TotalCost = 0 would mean changing an unknown mix of quantities and prices in two other relations.</li><li style="margin-left:12px"><b>Rule 3 is broken:</b> FROM joins four relations (BOM, BOMLine, BOMSelection, Listing), two of them through outer joins.</li><li style="margin-left:12px"><b>Rule 5 is broken:</b> it has GROUP BY. Each view row stands for a whole group of base tuples, so there is no single base tuple an inserted row could become.</li><li style="margin-left:12px">Rules 1 and 4 hold (no DISTINCT, no subquery in WHERE), but one broken rule is enough.</li><li style="margin-left:12px"><b>MySQL agrees:</b> MySQL can update some join views (when one base table is changed and the view has no aggregates), but any view with GROUP BY or aggregate functions is neither updatable nor insertable, which is what errors 1288 and 1471 say.</li></ul>
+<h4>V2: InStockListing (updatable, WITH CHECK OPTION)</h4>
+<pre class="sql">CREATE VIEW InStockListing AS
+SELECT DistributorName, Distributor_PartNum, ManufacturerName, Manufacturer_PartNum,
+       Packaging, UnitPrice, StockQuantity, EstShipTime, LastUpdated
+FROM Listing
+WHERE StockQuantity &gt; 0
+WITH CHECK OPTION;</pre>
+<ul class="tight"><li><b>Purpose:</b> the listings that can be bought now; the default data source for <i>Price Match</i> and the &quot;in stock only&quot; filter. It also lets an &quot;add an in-stock offer&quot; screen insert through the view while being unable to create out-of-stock rows.</li><li><b>Relational algebra:</b> InStockListing = σ<sub>StockQuantity&gt;0</sub>(Listing) (all attributes kept, so the projection is the identity).</li><li><b>Query on the view:</b> every in-stock offer for 1N4148, joined with Distributor for the shipping fee. Result: 6 offers, from $0.09 to $0.25.</li><li><b>Modification attempts and responses:</b></li><li style="margin-left:12px">INSERT of a DigiKey listing for onsemi 1N4148 with StockQuantity 500 → <code>Query OK, 1 row affected</code>. The follow-up SELECTs show the tuple both in the view <b>and in the base relation Listing</b>: an insert through a view is an insert into its base table.</li><li style="margin-left:12px">INSERT of a listing with StockQuantity 0 → <code>ERROR 1369: CHECK OPTION failed &#x27;ep_sourcer_test.instocklisting&#x27;</code>.</li><li style="margin-left:12px">UPDATE setting that listing&#x27;s StockQuantity to 0 → <code>ERROR 1369</code> again.</li><li style="margin-left:12px">UPDATE setting its price to 0.08 and stock to 450 → <code>Rows matched: 1  Changed: 1</code> (the row stays inside the view).</li><li><b>Why it is updatable (ISO rules):</b></li><li style="margin-left:12px">Rule 1: no DISTINCT. Rule 2: every SELECT element is a plain column of Listing, each once. Rule 3: FROM names one base table. Rule 4: the WHERE clause (<code>StockQuantity &gt; 0</code>) has no subquery. Rule 5: no GROUP BY or HAVING. All five hold.</li><li style="margin-left:12px">Every view row therefore corresponds to exactly one Listing tuple, so the DBMS knows which base tuple to update, delete or insert.</li><li style="margin-left:12px"><b>INSERT works</b> because the view keeps every NOT NULL column of Listing; if it left out, say, EstShipTime, an INSERT through it would fail because that column has no default.</li><li style="margin-left:12px"><b>WITH CHECK OPTION</b> is why attempts 2 and 3 fail: the resulting rows would have StockQuantity = 0, which the view&#x27;s WHERE clause does not select. Without it, attempt 2 would succeed and the new row would immediately &quot;disappear&quot; from the view (a migrating row), and attempt 3 would move an existing row out of the view.</li><li style="margin-left:12px">The base-table constraints still apply through the view: the INSERT is checked against pk_Listing, ak_Listing_1 (C2), both FKs and the CHECKs, exactly as a direct INSERT into Listing would be.</li></ul>
+<h4>Why the pair contrasts well</h4>
+<table width="100%" style="width:100%">
+<thead><tr><th></th><th>BOMTotals</th><th>InStockListing</th></tr></thead><tbody>
+<tr><td>Base relations</td><td>4 (with outer joins)</td><td>1</td></tr>
+<tr><td>SELECT list</td><td>2 columns + 3 aggregates/expressions</td><td>9 plain columns</td></tr>
+<tr><td>GROUP BY</td><td>yes</td><td>no</td></tr>
+<tr><td>ISO updatable</td><td>no (rules 2, 3, 5)</td><td>yes (all 5 rules hold)</td></tr>
+<tr><td>MySQL response to INSERT</td><td>ERROR 1471</td><td>success, or ERROR 1369 when the row leaves the view</td></tr>
+</tbody></table>
+<h2 class="sec pb">7.&nbsp; Notes on ISO SQL</h2>
+<p>All statements use ISO SQL as covered in lectures: unquoted identifiers, ISO types, named constraints, <code>DATE '...'</code> and <code>TIMESTAMP '...'</code> literals, <code>CURRENT_DATE</code>/<code>CURRENT_TIMESTAMP</code>, <code>COALESCE</code> and <code>CAST</code>. The MySQL-specific features below were unavoidable; each is marked <code>-- MySQL-specific:</code> in the files.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:30%"><col style="width:22%"><col style="width:48%"></colgroup>
+<thead><tr><th>Feature</th><th>Where</th><th>Why it is needed / ISO form</th></tr></thead><tbody>
+<tr><td>DROP TABLE IF EXISTS, DROP VIEW IF EXISTS</td><td>task3.sql, task8.sql</td><td>Lets the scripts be rerun. ISO has DROP TABLE/VIEW without IF EXISTS.</td></tr>
+<tr><td>CREATE INDEX</td><td>task3.sql</td><td>Indexes are not part of ISO SQL (physical design), but CREATE INDEX is the form taught in the course.</td></tr>
+<tr><td>CREATE DOMAIN, CREATE ASSERTION</td><td>task3.sql (comments)</td><td>ISO features MySQL lacks. Written as comments next to the MySQL substitute.</td></tr>
+<tr><td>C4 CHECK (row comparison)</td><td>task3.sql (comment)</td><td>MySQL error 3823: a CHECK may not use columns with FK referential actions.</td></tr>
+<tr><td>Workbench / --force</td><td>task7.sql, task8.sql</td><td>The scripts contain statements that fail on purpose; the client must continue after an error.</td></tr>
+</tbody></table>
+<h2 class="sec pb">8.&nbsp; AI Use</h2>
+<p>As the handout allows, an AI assistant (Claude) drafted the data generator and helped draft the SQL. Following the AI policy, <code>explanation.md</code> explains the logic, syntax, execution order and relational algebra of every statement in Tasks 4 to 6, and <code>ai_log.md</code> records what the AI did, how each output was checked against the loaded data, and what it got wrong. Every statement in this report was run on MySQL 26.10, and the group has read and verified each one.</p>
+<h2 class="sec pb">9.&nbsp; Team Contribution Efforts</h2>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:22%"><col style="width:78%"></colgroup>
+<thead><tr><th>Team member</th><th>Contribution</th></tr></thead><tbody>
+<tr><td>Shaan Wrench</td><td><ul class="tight"><li>[to be completed by the group]</li></ul></td></tr>
+<tr><td>Mats Leis</td><td><ul class="tight"><li>[to be completed by the group]</li></ul></td></tr>
+<tr><td>Ayman Hossain</td><td><ul class="tight"><li>[to be completed by the group]</li></ul></td></tr>
+<tr><td>Samuel Huang</td><td><ul class="tight"><li>[to be completed by the group]</li></ul></td></tr>
+<tr><td>Anish Jami</td><td><ul class="tight"><li>[to be completed by the group]</li></ul></td></tr>
+</tbody></table>
+</body></html>

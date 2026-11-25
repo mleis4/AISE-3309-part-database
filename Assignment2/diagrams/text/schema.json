@@ -1,0 +1,1529 @@
+{
+  "generated_from": "build_report.py (RELS, build_erd(), report HTML)",
+  "consistency_problems": [],
+  "diagrams": [
+    {
+      "file": "erd_engineering_part_sourcer.svg",
+      "figure": "Figure 1. ER diagram of the Engineering Part Sourcer (UML database notation).",
+      "described_by": "er_model"
+    },
+    {
+      "file": "schema_foreign_keys.svg",
+      "figure": "Figure 2. Referential integrity. Each arrow goes from a foreign key to the relation whose primary key it references.",
+      "described_by": "relations[*].foreign_keys"
+    },
+    {
+      "file": "fd_Customer.svg",
+      "figure": "FD diagram of Customer (section 3.3.1)",
+      "described_by": "relations[name=Customer].functional_dependencies"
+    },
+    {
+      "file": "fd_Part.svg",
+      "figure": "FD diagram of Part (section 3.3.1)",
+      "described_by": "relations[name=Part].functional_dependencies"
+    },
+    {
+      "file": "fd_Distributor.svg",
+      "figure": "FD diagram of Distributor (section 3.3.1)",
+      "described_by": "relations[name=Distributor].functional_dependencies"
+    },
+    {
+      "file": "fd_Listing.svg",
+      "figure": "FD diagram of Listing (section 3.3.1)",
+      "described_by": "relations[name=Listing].functional_dependencies"
+    },
+    {
+      "file": "fd_ShoppingCart.svg",
+      "figure": "FD diagram of ShoppingCart (section 3.3.1)",
+      "described_by": "relations[name=ShoppingCart].functional_dependencies"
+    },
+    {
+      "file": "fd_BOM.svg",
+      "figure": "FD diagram of BOM (section 3.3.1)",
+      "described_by": "relations[name=BOM].functional_dependencies"
+    },
+    {
+      "file": "fd_SharedProject.svg",
+      "figure": "FD diagram of SharedProject (section 3.3.1)",
+      "described_by": "relations[name=SharedProject].functional_dependencies"
+    },
+    {
+      "file": "fd_PartAlternative.svg",
+      "figure": "FD diagram of PartAlternative (section 3.3.1)",
+      "described_by": "relations[name=PartAlternative].functional_dependencies"
+    },
+    {
+      "file": "fd_BOMLine.svg",
+      "figure": "FD diagram of BOMLine (section 3.3.1)",
+      "described_by": "relations[name=BOMLine].functional_dependencies"
+    },
+    {
+      "file": "fd_BOMSelection.svg",
+      "figure": "FD diagram of BOMSelection (section 3.3.1)",
+      "described_by": "relations[name=BOMSelection].functional_dependencies"
+    },
+    {
+      "file": "fd_CartLine.svg",
+      "figure": "FD diagram of CartLine (section 3.3.1)",
+      "described_by": "relations[name=CartLine].functional_dependencies"
+    },
+    {
+      "file": "fd_Review.svg",
+      "figure": "FD diagram of Review (section 3.3.1)",
+      "described_by": "relations[name=Review].functional_dependencies"
+    },
+    {
+      "file": "fd_BOMLine_merged_alternative.svg",
+      "figure": "Figure 3. FDs of the rejected merged BOMLine. FD2 has a determinant that is not a superkey.",
+      "described_by": "rejected_designs[0]"
+    }
+  ],
+  "er_model": {
+    "multiplicity_rule": "The multiplicity at an end is how many instances of THAT end's entity relate to ONE instance of the other end. Customer 1..1 / BOM 0..* means every BOM has exactly one Customer and a Customer has zero or more BOMs.",
+    "notation_legend": [
+      "{PK} primary key     {AK} alternate key",
+      "Two {PK} attributes form one composite key",
+      "{PPK} partial key of a weak entity",
+      "/Attr   derived attribute",
+      "Indented attributes are parts of a composite",
+      "0..*   multiplicity (min..max)",
+      "Dashed box: attributes of the relationship",
+      "Composition (identifying relationship)",
+      "Specialization, points to the superclass"
+    ],
+    "entities": [
+      {
+        "name": "Customer",
+        "kind": "Strong",
+        "identifier": "Email {PK}; Username {AK}",
+        "identifier_reason": "An account is registered with a unique email address. The system also rejects a username that is already taken.",
+        "attributes": [
+          {
+            "name": "Email",
+            "keys": [
+              "PK"
+            ],
+            "derived": false
+          },
+          {
+            "name": "Username",
+            "keys": [
+              "AK"
+            ],
+            "derived": false
+          },
+          {
+            "name": "Password",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "Name",
+            "keys": [],
+            "derived": false,
+            "components": [
+              "FirstName",
+              "LastName"
+            ]
+          },
+          {
+            "name": "BillingAddress",
+            "keys": [],
+            "derived": false,
+            "components": [
+              "HouseAddress",
+              "UnitNum",
+              "City",
+              "Province",
+              "Country",
+              "PostCode"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "BOM",
+        "kind": "Weak (owner: Customer)",
+        "identifier": "BOM_name {PPK}",
+        "identifier_reason": "A customer names each BOM. Names are unique only per customer.",
+        "attributes": [
+          {
+            "name": "BOM_name",
+            "keys": [
+              "PPK"
+            ],
+            "derived": false
+          },
+          {
+            "name": "Date_created",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "NumberOfParts",
+            "keys": [],
+            "derived": true
+          },
+          {
+            "name": "UnpricedParts",
+            "keys": [],
+            "derived": true
+          },
+          {
+            "name": "TotalCost",
+            "keys": [],
+            "derived": true
+          }
+        ]
+      },
+      {
+        "name": "SharedProject",
+        "kind": "Subclass of BOM",
+        "identifier": "Inherited from BOM; Title {AK} per owner",
+        "identifier_reason": "A shared project is a BOM that its owner has published. Titles are unique per customer, not across all customers: two users can each share a project called \"Line follower robot\", but one user cannot share two projects with the same title. In the relation the alternate key is (CustomerEmail, Title).",
+        "attributes": [
+          {
+            "name": "Title",
+            "keys": [
+              "AK"
+            ],
+            "derived": false
+          },
+          {
+            "name": "Description",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "Date_shared",
+            "keys": [],
+            "derived": false
+          }
+        ]
+      },
+      {
+        "name": "ShoppingCart",
+        "kind": "Weak (owner: Customer)",
+        "identifier": "None",
+        "identifier_reason": "A customer has at most one cart, so the owner identifies it.",
+        "attributes": [
+          {
+            "name": "Date_created",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "Subtotal",
+            "keys": [],
+            "derived": true
+          },
+          {
+            "name": "ShippingPrice",
+            "keys": [],
+            "derived": true
+          },
+          {
+            "name": "TotalPrice",
+            "keys": [],
+            "derived": true
+          }
+        ]
+      },
+      {
+        "name": "Distributor",
+        "kind": "Strong",
+        "identifier": "Name {PK}; Website {AK}",
+        "identifier_reason": "Distributors are known by their company name (DigiKey, Mouser). Each distributor has exactly one website and no two distributors share one, so Website is also unique.",
+        "attributes": [
+          {
+            "name": "Name",
+            "keys": [
+              "PK"
+            ],
+            "derived": false
+          },
+          {
+            "name": "Website",
+            "keys": [
+              "AK"
+            ],
+            "derived": false
+          },
+          {
+            "name": "ShippingFee",
+            "keys": [],
+            "derived": false
+          }
+        ]
+      },
+      {
+        "name": "Listing",
+        "kind": "Weak (owner: Distributor)",
+        "identifier": "Distributor_PartNum {PPK}",
+        "identifier_reason": "A distributor's part number (SKU) is unique only inside that distributor's catalogue. Each packaging of a part (cut tape, reel, bulk) has its own SKU, so it is its own listing.",
+        "attributes": [
+          {
+            "name": "Distributor_PartNum",
+            "keys": [
+              "PPK"
+            ],
+            "derived": false
+          },
+          {
+            "name": "Packaging",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "UnitPrice",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "StockQuantity",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "EstShipTime",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "LastUpdated",
+            "keys": [],
+            "derived": false
+          }
+        ]
+      },
+      {
+        "name": "Part",
+        "kind": "Strong",
+        "identifier": "(ManufacturerName, Manufacturer_PartNum) {PK}",
+        "identifier_reason": "A manufacturer part number is unique only within one manufacturer's products. Two manufacturers can both have a part \"1001\", so the manufacturer's name is part of the key.",
+        "attributes": [
+          {
+            "name": "ManufacturerName",
+            "keys": [
+              "PK"
+            ],
+            "derived": false
+          },
+          {
+            "name": "Manufacturer_PartNum",
+            "keys": [
+              "PK"
+            ],
+            "derived": false
+          },
+          {
+            "name": "Name",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "Description",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "Category",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "Dimensions",
+            "keys": [],
+            "derived": false,
+            "components": [
+              "Length",
+              "Width",
+              "Height"
+            ]
+          },
+          {
+            "name": "Datasheet_link",
+            "keys": [],
+            "derived": false
+          },
+          {
+            "name": "AvgStarRating",
+            "keys": [],
+            "derived": true
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "Creates",
+        "ends": [
+          {
+            "entity": "Customer",
+            "multiplicity": "1..1"
+          },
+          {
+            "entity": "BOM",
+            "multiplicity": "0..*"
+          }
+        ],
+        "identifying": true,
+        "recursive": false,
+        "participation": "BOM total (identifying); Customer partial",
+        "attributes": []
+      },
+      {
+        "name": "Owns",
+        "ends": [
+          {
+            "entity": "Customer",
+            "multiplicity": "1..1"
+          },
+          {
+            "entity": "ShoppingCart",
+            "multiplicity": "0..1"
+          }
+        ],
+        "identifying": true,
+        "recursive": false,
+        "participation": "ShoppingCart total (identifying); Customer partial",
+        "attributes": []
+      },
+      {
+        "name": "Reviews",
+        "ends": [
+          {
+            "entity": "Customer",
+            "multiplicity": "0..*"
+          },
+          {
+            "entity": "Part",
+            "multiplicity": "0..*"
+          }
+        ],
+        "identifying": false,
+        "recursive": false,
+        "participation": "Partial on both sides",
+        "attributes": [
+          "ReviewText",
+          "StarRating"
+        ]
+      },
+      {
+        "name": "Publishes",
+        "ends": [
+          {
+            "entity": "Distributor",
+            "multiplicity": "1..1"
+          },
+          {
+            "entity": "Listing",
+            "multiplicity": "0..*"
+          }
+        ],
+        "identifying": true,
+        "recursive": false,
+        "participation": "Listing total (identifying); Distributor partial",
+        "attributes": []
+      },
+      {
+        "name": "Offers",
+        "ends": [
+          {
+            "entity": "Listing",
+            "multiplicity": "0..*"
+          },
+          {
+            "entity": "Part",
+            "multiplicity": "1..1"
+          }
+        ],
+        "identifying": false,
+        "recursive": false,
+        "participation": "Listing total; Part partial",
+        "attributes": []
+      },
+      {
+        "name": "AlternativeTo",
+        "ends": [
+          {
+            "entity": "Part",
+            "multiplicity": "0..*"
+          },
+          {
+            "entity": "Part",
+            "multiplicity": "0..*"
+          }
+        ],
+        "identifying": false,
+        "recursive": true,
+        "participation": "Partial on both sides (recursive)",
+        "attributes": []
+      },
+      {
+        "name": "Contains",
+        "ends": [
+          {
+            "entity": "BOM",
+            "multiplicity": "0..*"
+          },
+          {
+            "entity": "Part",
+            "multiplicity": "0..*"
+          }
+        ],
+        "identifying": false,
+        "recursive": false,
+        "participation": "Partial on both sides",
+        "attributes": [
+          "Quantity"
+        ]
+      },
+      {
+        "name": "Selects",
+        "ends": [
+          {
+            "entity": "BOM",
+            "multiplicity": "0..*"
+          },
+          {
+            "entity": "Listing",
+            "multiplicity": "0..*"
+          }
+        ],
+        "identifying": false,
+        "recursive": false,
+        "participation": "Partial on both sides",
+        "attributes": []
+      },
+      {
+        "name": "Holds",
+        "ends": [
+          {
+            "entity": "ShoppingCart",
+            "multiplicity": "0..*"
+          },
+          {
+            "entity": "Listing",
+            "multiplicity": "0..*"
+          }
+        ],
+        "identifying": false,
+        "recursive": false,
+        "participation": "Partial on both sides",
+        "attributes": [
+          "Quantity"
+        ]
+      }
+    ],
+    "specializations": [
+      {
+        "superclass": "BOM",
+        "subclass": "SharedProject",
+        "constraint": "{Optional}: a BOM does not have to be shared",
+        "subclass_adds": "Subclass adds Title, Description, Date_shared"
+      }
+    ]
+  },
+  "relations": [
+    {
+      "name": "Customer",
+      "attributes": [
+        "Email",
+        "Username",
+        "Password",
+        "FirstName",
+        "LastName",
+        "HouseAddress",
+        "UnitNum",
+        "City",
+        "Province",
+        "Country",
+        "PostCode"
+      ],
+      "primary_key": [
+        "Email"
+      ],
+      "alternate_keys": [
+        [
+          "Username"
+        ]
+      ],
+      "candidate_keys": [
+        [
+          "Email"
+        ],
+        [
+          "Username"
+        ]
+      ],
+      "foreign_keys": [],
+      "derived_not_stored": [],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "Email"
+          ],
+          "dependents": [
+            "Username",
+            "Password",
+            "FirstName",
+            "LastName",
+            "HouseAddress",
+            "UnitNum",
+            "City",
+            "Province",
+            "Country",
+            "PostCode"
+          ],
+          "determinant_is": "PK"
+        },
+        {
+          "label": "FD2",
+          "determinant": [
+            "Username"
+          ],
+          "dependents": [
+            "Email",
+            "Password",
+            "FirstName",
+            "LastName",
+            "HouseAddress",
+            "UnitNum",
+            "City",
+            "Province",
+            "Country",
+            "PostCode"
+          ],
+          "determinant_is": "AK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "Both candidate keys (Email and Username) are single attributes, so no partial dependency is possible.",
+        "3NF": "The only determinants are Email (PK) and Username (AK), and both are superkeys. No non-key attribute determines another (see the customer address issue above).",
+        "BCNF": true
+      },
+      "diagram": "fd_Customer.svg"
+    },
+    {
+      "name": "Part",
+      "attributes": [
+        "ManufacturerName",
+        "Manufacturer_PartNum",
+        "Name",
+        "Description",
+        "Category",
+        "Length",
+        "Width",
+        "Height",
+        "Datasheet_link"
+      ],
+      "primary_key": [
+        "ManufacturerName",
+        "Manufacturer_PartNum"
+      ],
+      "alternate_keys": [],
+      "candidate_keys": [
+        [
+          "ManufacturerName",
+          "Manufacturer_PartNum"
+        ]
+      ],
+      "foreign_keys": [],
+      "derived_not_stored": [
+        {
+          "name": "AvgStarRating",
+          "rule": "AVG(Review.StarRating) over the part's reviews (no value when the part has no review)"
+        }
+      ],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "dependents": [
+            "Name",
+            "Description",
+            "Category",
+            "Length",
+            "Width",
+            "Height",
+            "Datasheet_link"
+          ],
+          "determinant_is": "PK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "The non-key attributes describe one specific part. A manufacturer makes many parts, and another manufacturer can use the same part number, so neither key attribute alone determines them.",
+        "3NF": "Category does not determine Name, the dimensions or the datasheet, and two parts can share a Name. The only determinant is the key.",
+        "BCNF": true
+      },
+      "diagram": "fd_Part.svg"
+    },
+    {
+      "name": "Distributor",
+      "attributes": [
+        "Name",
+        "Website",
+        "ShippingFee"
+      ],
+      "primary_key": [
+        "Name"
+      ],
+      "alternate_keys": [
+        [
+          "Website"
+        ]
+      ],
+      "candidate_keys": [
+        [
+          "Name"
+        ],
+        [
+          "Website"
+        ]
+      ],
+      "foreign_keys": [],
+      "derived_not_stored": [],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "Name"
+          ],
+          "dependents": [
+            "Website",
+            "ShippingFee"
+          ],
+          "determinant_is": "PK"
+        },
+        {
+          "label": "FD2",
+          "determinant": [
+            "Website"
+          ],
+          "dependents": [
+            "Name",
+            "ShippingFee"
+          ],
+          "determinant_is": "AK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "Both candidate keys (Name and Website) are single attributes, so no partial dependency is possible.",
+        "3NF": "Website determines Name and ShippingFee, but Website is a candidate key (no two distributors share a website), so its determinant is a superkey.",
+        "BCNF": true
+      },
+      "diagram": "fd_Distributor.svg"
+    },
+    {
+      "name": "Listing",
+      "attributes": [
+        "DistributorName",
+        "Distributor_PartNum",
+        "ManufacturerName",
+        "Manufacturer_PartNum",
+        "Packaging",
+        "UnitPrice",
+        "StockQuantity",
+        "EstShipTime",
+        "LastUpdated"
+      ],
+      "primary_key": [
+        "DistributorName",
+        "Distributor_PartNum"
+      ],
+      "alternate_keys": [
+        [
+          "DistributorName",
+          "ManufacturerName",
+          "Manufacturer_PartNum",
+          "Packaging"
+        ]
+      ],
+      "candidate_keys": [
+        [
+          "DistributorName",
+          "Distributor_PartNum"
+        ],
+        [
+          "DistributorName",
+          "ManufacturerName",
+          "Manufacturer_PartNum",
+          "Packaging"
+        ]
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "DistributorName"
+          ],
+          "references": "Distributor",
+          "referenced_columns": [
+            "Name"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "Composition: a distributor's listings are removed with the distributor.",
+          "implements": "Publishes"
+        },
+        {
+          "columns": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "references": "Part",
+          "referenced_columns": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "on_delete": "RESTRICT",
+          "on_update": "CASCADE",
+          "reason": "A part that is still offered cannot be deleted.",
+          "implements": "Offers"
+        }
+      ],
+      "derived_not_stored": [],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "DistributorName",
+            "Distributor_PartNum"
+          ],
+          "dependents": [
+            "ManufacturerName",
+            "Manufacturer_PartNum",
+            "Packaging",
+            "UnitPrice",
+            "StockQuantity",
+            "EstShipTime",
+            "LastUpdated"
+          ],
+          "determinant_is": "PK"
+        },
+        {
+          "label": "FD2",
+          "determinant": [
+            "DistributorName",
+            "ManufacturerName",
+            "Manufacturer_PartNum",
+            "Packaging"
+          ],
+          "dependents": [
+            "Distributor_PartNum",
+            "UnitPrice",
+            "StockQuantity",
+            "EstShipTime",
+            "LastUpdated"
+          ],
+          "determinant_is": "AK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "Checked against both candidate keys. A distributor part number (SKU) is unique only within its distributor, so price, stock, shipping time and the part offered need the whole primary key. For the alternate key, one distributor sells the same part as cut tape and as a reel at different prices and stock levels, so the distributor and the part without the packaging do not determine them, and neither does any other proper subset. No attribute depends on a proper subset of either key.",
+        "3NF": "UnitPrice, StockQuantity, EstShipTime and LastUpdated are independent of each other. Both determinants are candidate keys, so both are superkeys.",
+        "BCNF": true
+      },
+      "diagram": "fd_Listing.svg"
+    },
+    {
+      "name": "ShoppingCart",
+      "attributes": [
+        "CustomerEmail",
+        "Date_created"
+      ],
+      "primary_key": [
+        "CustomerEmail"
+      ],
+      "alternate_keys": [],
+      "candidate_keys": [
+        [
+          "CustomerEmail"
+        ]
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "CustomerEmail"
+          ],
+          "references": "Customer",
+          "referenced_columns": [
+            "Email"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "Composition: the cart is removed with its customer.",
+          "implements": "Owns"
+        }
+      ],
+      "derived_not_stored": [
+        {
+          "name": "Subtotal",
+          "rule": "SUM(CartLine.Quantity × Listing.UnitPrice); 0 for an empty cart"
+        },
+        {
+          "name": "ShippingPrice",
+          "rule": "SUM(Distributor.ShippingFee) over the distinct distributors in the cart; 0 for an empty cart"
+        },
+        {
+          "name": "TotalPrice",
+          "rule": "/Subtotal + /ShippingPrice (before tax)"
+        }
+      ],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "CustomerEmail"
+          ],
+          "dependents": [
+            "Date_created"
+          ],
+          "determinant_is": "PK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "Single-attribute key, so no partial dependency is possible.",
+        "3NF": "One non-key attribute, so no transitive dependency is possible.",
+        "BCNF": true
+      },
+      "diagram": "fd_ShoppingCart.svg"
+    },
+    {
+      "name": "BOM",
+      "attributes": [
+        "CustomerEmail",
+        "BOM_name",
+        "Date_created"
+      ],
+      "primary_key": [
+        "CustomerEmail",
+        "BOM_name"
+      ],
+      "alternate_keys": [],
+      "candidate_keys": [
+        [
+          "CustomerEmail",
+          "BOM_name"
+        ]
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "CustomerEmail"
+          ],
+          "references": "Customer",
+          "referenced_columns": [
+            "Email"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "Composition: a customer's BOMs are removed with the customer.",
+          "implements": "Creates"
+        }
+      ],
+      "derived_not_stored": [
+        {
+          "name": "NumberOfParts",
+          "rule": "COUNT of the BOM's BOMLine rows"
+        },
+        {
+          "name": "UnpricedParts",
+          "rule": "COUNT of the BOM's BOMLine rows that have no selected listing"
+        },
+        {
+          "name": "TotalCost",
+          "rule": "SUM(BOMLine.Quantity × Listing.UnitPrice) over the lines that have a selected listing. Parts only, without shipping or tax. It is the complete cost of the BOM only when /UnpricedParts = 0; otherwise it is shown as a partial total"
+        }
+      ],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "CustomerEmail",
+            "BOM_name"
+          ],
+          "dependents": [
+            "Date_created"
+          ],
+          "determinant_is": "PK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "Date_created belongs to one named BOM of one customer. A customer has many BOMs and a name can be reused by other customers, so neither key attribute alone determines it.",
+        "3NF": "One non-key attribute, so no transitive dependency is possible.",
+        "BCNF": true
+      },
+      "diagram": "fd_BOM.svg"
+    },
+    {
+      "name": "SharedProject",
+      "attributes": [
+        "CustomerEmail",
+        "BOM_name",
+        "Title",
+        "Description",
+        "Date_shared"
+      ],
+      "primary_key": [
+        "CustomerEmail",
+        "BOM_name"
+      ],
+      "alternate_keys": [
+        [
+          "CustomerEmail",
+          "Title"
+        ]
+      ],
+      "candidate_keys": [
+        [
+          "CustomerEmail",
+          "BOM_name"
+        ],
+        [
+          "CustomerEmail",
+          "Title"
+        ]
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "CustomerEmail",
+            "BOM_name"
+          ],
+          "references": "BOM",
+          "referenced_columns": [
+            "CustomerEmail",
+            "BOM_name"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "Specialization: the subclass row is removed with its BOM.",
+          "implements": "Specialization"
+        }
+      ],
+      "derived_not_stored": [],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "CustomerEmail",
+            "BOM_name"
+          ],
+          "dependents": [
+            "Title",
+            "Description",
+            "Date_shared"
+          ],
+          "determinant_is": "PK"
+        },
+        {
+          "label": "FD2",
+          "determinant": [
+            "CustomerEmail",
+            "Title"
+          ],
+          "dependents": [
+            "BOM_name",
+            "Description",
+            "Date_shared"
+          ],
+          "determinant_is": "AK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "Title, Description and Date_shared describe one shared BOM, which is identified only by the whole primary key. For the alternate key (CustomerEmail, Title), different customers can use the same title, so Title alone determines nothing, and CustomerEmail alone does not either, because a customer can share several projects.",
+        "3NF": "(CustomerEmail, Title) determines the other attributes, but it is a candidate key, so it is a superkey. Description and Date_shared determine nothing.",
+        "BCNF": true
+      },
+      "diagram": "fd_SharedProject.svg"
+    },
+    {
+      "name": "PartAlternative",
+      "attributes": [
+        "Part1_ManufacturerName",
+        "Part1_PartNum",
+        "Part2_ManufacturerName",
+        "Part2_PartNum"
+      ],
+      "primary_key": [
+        "Part1_ManufacturerName",
+        "Part1_PartNum",
+        "Part2_ManufacturerName",
+        "Part2_PartNum"
+      ],
+      "alternate_keys": [],
+      "candidate_keys": [
+        [
+          "Part1_ManufacturerName",
+          "Part1_PartNum",
+          "Part2_ManufacturerName",
+          "Part2_PartNum"
+        ]
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "Part1_ManufacturerName",
+            "Part1_PartNum"
+          ],
+          "references": "Part",
+          "referenced_columns": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "The pair has no meaning once either part is gone.",
+          "implements": "AlternativeTo"
+        },
+        {
+          "columns": [
+            "Part2_ManufacturerName",
+            "Part2_PartNum"
+          ],
+          "references": "Part",
+          "referenced_columns": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "The pair has no meaning once either part is gone.",
+          "implements": "AlternativeTo"
+        }
+      ],
+      "derived_not_stored": [],
+      "functional_dependencies": [],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "All-key relation: there are no non-key attributes.",
+        "3NF": "All-key relation: there are no non-key attributes.",
+        "BCNF": true
+      },
+      "diagram": "fd_PartAlternative.svg"
+    },
+    {
+      "name": "BOMLine",
+      "attributes": [
+        "CustomerEmail",
+        "BOM_name",
+        "ManufacturerName",
+        "Manufacturer_PartNum",
+        "Quantity"
+      ],
+      "primary_key": [
+        "CustomerEmail",
+        "BOM_name",
+        "ManufacturerName",
+        "Manufacturer_PartNum"
+      ],
+      "alternate_keys": [],
+      "candidate_keys": [
+        [
+          "CustomerEmail",
+          "BOM_name",
+          "ManufacturerName",
+          "Manufacturer_PartNum"
+        ]
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "CustomerEmail",
+            "BOM_name"
+          ],
+          "references": "BOM",
+          "referenced_columns": [
+            "CustomerEmail",
+            "BOM_name"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "A BOM's lines are removed with the BOM.",
+          "implements": "Contains"
+        },
+        {
+          "columns": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "references": "Part",
+          "referenced_columns": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "on_delete": "RESTRICT",
+          "on_update": "CASCADE",
+          "reason": "A part that is used in a BOM cannot be deleted.",
+          "implements": "Contains"
+        }
+      ],
+      "derived_not_stored": [],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "CustomerEmail",
+            "BOM_name",
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "dependents": [
+            "Quantity"
+          ],
+          "determinant_is": "PK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "Quantity is how many of one part one BOM needs. It changes with the BOM and with the part, so it depends on the whole key.",
+        "3NF": "One non-key attribute, so no transitive dependency is possible.",
+        "BCNF": true
+      },
+      "diagram": "fd_BOMLine.svg"
+    },
+    {
+      "name": "BOMSelection",
+      "attributes": [
+        "CustomerEmail",
+        "BOM_name",
+        "DistributorName",
+        "Distributor_PartNum"
+      ],
+      "primary_key": [
+        "CustomerEmail",
+        "BOM_name",
+        "DistributorName",
+        "Distributor_PartNum"
+      ],
+      "alternate_keys": [],
+      "candidate_keys": [
+        [
+          "CustomerEmail",
+          "BOM_name",
+          "DistributorName",
+          "Distributor_PartNum"
+        ]
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "CustomerEmail",
+            "BOM_name"
+          ],
+          "references": "BOM",
+          "referenced_columns": [
+            "CustomerEmail",
+            "BOM_name"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "A BOM's selections are removed with the BOM.",
+          "implements": "Selects"
+        },
+        {
+          "columns": [
+            "DistributorName",
+            "Distributor_PartNum"
+          ],
+          "references": "Listing",
+          "referenced_columns": [
+            "DistributorName",
+            "Distributor_PartNum"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "When a listing is withdrawn the line returns to \"no supplier selected\".",
+          "implements": "Selects"
+        }
+      ],
+      "derived_not_stored": [],
+      "functional_dependencies": [],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "All-key relation: there are no non-key attributes.",
+        "3NF": "All-key relation: there are no non-key attributes.",
+        "BCNF": true
+      },
+      "diagram": "fd_BOMSelection.svg"
+    },
+    {
+      "name": "CartLine",
+      "attributes": [
+        "CustomerEmail",
+        "DistributorName",
+        "Distributor_PartNum",
+        "Quantity"
+      ],
+      "primary_key": [
+        "CustomerEmail",
+        "DistributorName",
+        "Distributor_PartNum"
+      ],
+      "alternate_keys": [],
+      "candidate_keys": [
+        [
+          "CustomerEmail",
+          "DistributorName",
+          "Distributor_PartNum"
+        ]
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "CustomerEmail"
+          ],
+          "references": "ShoppingCart",
+          "referenced_columns": [
+            "CustomerEmail"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "A cart's lines are removed with the cart.",
+          "implements": "Holds"
+        },
+        {
+          "columns": [
+            "DistributorName",
+            "Distributor_PartNum"
+          ],
+          "references": "Listing",
+          "referenced_columns": [
+            "DistributorName",
+            "Distributor_PartNum"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "A withdrawn listing can no longer be bought, so it leaves every cart.",
+          "implements": "Holds"
+        }
+      ],
+      "derived_not_stored": [],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "CustomerEmail",
+            "DistributorName",
+            "Distributor_PartNum"
+          ],
+          "dependents": [
+            "Quantity"
+          ],
+          "determinant_is": "PK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "Quantity is how many units of one listing one cart holds, so it depends on the whole key.",
+        "3NF": "One non-key attribute, so no transitive dependency is possible.",
+        "BCNF": true
+      },
+      "diagram": "fd_CartLine.svg"
+    },
+    {
+      "name": "Review",
+      "attributes": [
+        "CustomerEmail",
+        "ManufacturerName",
+        "Manufacturer_PartNum",
+        "ReviewText",
+        "StarRating"
+      ],
+      "primary_key": [
+        "CustomerEmail",
+        "ManufacturerName",
+        "Manufacturer_PartNum"
+      ],
+      "alternate_keys": [],
+      "candidate_keys": [
+        [
+          "CustomerEmail",
+          "ManufacturerName",
+          "Manufacturer_PartNum"
+        ]
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "CustomerEmail"
+          ],
+          "references": "Customer",
+          "referenced_columns": [
+            "Email"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "A customer's reviews are removed with the account.",
+          "implements": "Reviews"
+        },
+        {
+          "columns": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "references": "Part",
+          "referenced_columns": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "reason": "Reviews of a removed part are removed.",
+          "implements": "Reviews"
+        }
+      ],
+      "derived_not_stored": [],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "CustomerEmail",
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "dependents": [
+            "ReviewText",
+            "StarRating"
+          ],
+          "determinant_is": "PK"
+        }
+      ],
+      "normal_forms": {
+        "1NF": "Every attribute holds a single atomic value.",
+        "2NF": "A customer reviews many parts and a part has many reviewers, so the text and the rating depend on the whole key.",
+        "3NF": "ReviewText does not determine StarRating, or the reverse.",
+        "BCNF": true
+      },
+      "diagram": "fd_Review.svg"
+    }
+  ],
+  "rejected_designs": [
+    {
+      "name": "BOMLine (merged with BOMSelection) - REJECTED",
+      "diagram": "fd_BOMLine_merged_alternative.svg",
+      "attributes": [
+        "CustomerEmail",
+        "BOM_name",
+        "ManufacturerName",
+        "Manufacturer_PartNum",
+        "Quantity",
+        "DistributorName",
+        "Distributor_PartNum"
+      ],
+      "primary_key": [
+        "CustomerEmail",
+        "BOM_name",
+        "ManufacturerName",
+        "Manufacturer_PartNum"
+      ],
+      "functional_dependencies": [
+        {
+          "label": "FD1",
+          "determinant": [
+            "CustomerEmail",
+            "BOM_name",
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ],
+          "dependents": [
+            "Quantity",
+            "DistributorName",
+            "Distributor_PartNum"
+          ]
+        },
+        {
+          "label": "FD2",
+          "determinant": [
+            "DistributorName",
+            "Distributor_PartNum"
+          ],
+          "dependents": [
+            "ManufacturerName",
+            "Manufacturer_PartNum"
+          ]
+        }
+      ],
+      "verdict": "In 3NF but not BCNF: FD2's determinant (DistributorName, Distributor_PartNum) is not a superkey. The schema keeps BOMLine and BOMSelection separate."
+    }
+  ],
+  "constraints": [
+    {
+      "id": "C1",
+      "text": "StarRating is an integer from 1 to 5. Every Quantity is greater than 0. UnitPrice, StockQuantity and ShippingFee are not negative."
+    },
+    {
+      "id": "C2",
+      "text": "A distributor has at most one listing for a given part in a given packaging. The same part can be listed several times by one distributor, once per packaging (for example cut tape and reel), and each of those listings has its own Distributor_PartNum, price and stock."
+    },
+    {
+      "id": "C3",
+      "text": "A BOM selects only listings of parts it contains, and at most one listing for each of those parts."
+    },
+    {
+      "id": "C4",
+      "text": "AlternativeTo is symmetric, and a part is not an alternative to itself."
+    },
+    {
+      "id": "C5",
+      "text": "A SharedProject's BOM contains at least one part at all times."
+    },
+    {
+      "id": "C6",
+      "text": "A customer reviews a part at most once. Purchases are completed on the distributor's own website, so the system does not record them and cannot check that the reviewer bought the part."
+    },
+    {
+      "id": "C7",
+      "text": "The part offered by a listing never changes. An offer for a different part is a new listing."
+    }
+  ],
+  "constraint_maintenance": [
+    {
+      "rule": "C3",
+      "operation": "INSERT or UPDATE on BOMSelection",
+      "action": "Rejected unless the listing's part has a BOMLine in the same BOM and the BOM has no other selection for that part."
+    },
+    {
+      "rule": "C3",
+      "operation": "DELETE on BOMLine",
+      "action": "The BOM's selection for that part, if any, is deleted with the line."
+    },
+    {
+      "rule": "C3, C7",
+      "operation": "UPDATE of the part columns of Listing",
+      "action": "Rejected when made directly. A listing never changes its part, so an existing selection cannot start pointing at a different part. The one exception is the ON UPDATE CASCADE from Part when a part's own key is corrected: the listing still refers to the same part."
+    },
+    {
+      "rule": "C3",
+      "operation": "DELETE on Listing",
+      "action": "Its BOMSelection rows are removed by ON DELETE CASCADE. The line stays and counts in /UnpricedParts."
+    },
+    {
+      "rule": "C5",
+      "operation": "INSERT on SharedProject",
+      "action": "Rejected if the BOM has no BOMLine."
+    },
+    {
+      "rule": "C5",
+      "operation": "DELETE on BOMLine",
+      "action": "Rejected if it is the last line of a shared BOM. The owner must stop sharing the project first. This applies to deleting a line on its own: when the BOM or its customer is deleted, the lines and the SharedProject row are removed together by the cascades."
+    }
+  ],
+  "not_defined_in_assignment_2": [
+    "SQL data types",
+    "indexes",
+    "trigger code"
+  ]
+}

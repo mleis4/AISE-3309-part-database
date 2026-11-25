@@ -1,0 +1,935 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>AISE 3309 Assignment 02 - Group 6</title><style>
+@page { size: Letter; margin: 0.75in 0.8in; @bottom-center { content: counter(page); font-family: 'Segoe UI', Arial, sans-serif; font-size: 9pt; } }
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; font-size: 10pt; line-height: 1.4; color: #000; margin: 0; }
+.cover { text-align: center; }
+.banner { background: #1565c0; color: #fff; padding: 46px 10px 40px; font-size: 15pt; font-weight: 600; border-radius: 0 0 50% 50% / 0 0 26px 26px; }
+.ctitle { color: #1565c0; font-size: 22pt; font-weight: 700; margin: 150px 0 40px; }
+.csub1 { color: #1565c0; font-size: 18pt; font-weight: 700; margin: 0; }
+.csub2 { color: #1565c0; font-size: 12pt; margin: 4px 0 40px; }
+.cover table { width: 78%; margin: 0 auto; text-align: left; }
+h2.sec { background: #cfe2f6; border-top: 3px solid #1e88e5; color: #1565c0; font-weight: 500; font-size: 14pt; padding: 4px 10px; margin: 22px 0 12px; break-after: avoid; }
+h3 { color: #1565c0; font-size: 12pt; margin: 18px 0 6px; break-after: avoid; }
+h4 { font-size: 10.5pt; margin: 12px 0 4px; break-after: avoid; }
+p { margin: 6px 0; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0 12px; font-size: 9pt; }
+th, td { border: 1px solid #000; padding: 4px 6px; vertical-align: top; text-align: left; }
+th { background: #bdd7ee; text-align: center; }
+tr { break-inside: avoid; }
+.toctitle { color: #1565c0; text-align: center; font-size: 22pt; font-weight: 700; margin: 10px 0 24px; }
+.tr { display: flex; align-items: baseline; margin: 5px 0; }
+.tr.l1 { font-weight: 600; margin-top: 10px; }
+.tr.l2 { margin-left: 26px; }
+.dots { flex: 1; border-bottom: 1px dotted #000; margin: 0 6px; }
+.fig { text-align: center; margin: 8px 0; break-inside: avoid; }
+.fig svg { max-width: 100%; height: auto; }
+.cap { text-align: center; font-size: 9pt; font-style: italic; margin: 2px 0 12px; }
+.rel { margin: 9px 0; padding: 5px 9px; border-left: 3px solid #1e88e5; background: #f6f9fd; break-inside: avoid; }
+.relhead { font-size: 10pt; }
+.relkey { margin-left: 22px; font-size: 9pt; }
+.pk { text-decoration: underline; font-weight: 600; }
+.nf { break-inside: avoid; margin-bottom: 12px; }
+.nf .fig { text-align: left; }
+.fdlist { font-size: 9pt; margin: 2px 0; }
+.expr { margin: 6px 0 6px 22px; font-weight: 600; }
+ul.tight { margin: 4px 0 4px 0; padding-left: 20px; }
+ul.tight li { margin: 1px 0; }
+.pb { break-before: page; page-break-before: always; }
+</style></head><body>
+<div class="cover"><div class="banner">Western Engineering<br>Electrical and Computer Engineering</div><p class="ctitle">AISE 3309: Database Management Systems</p><p class="csub1">Assignment 02</p><p class="csub2">Conceptual Model, Relational Schema and Schema Evaluation</p>
+<table><tr><td><b>Group #:</b></td><td>6 (Lab 2, AISE 3309A 002)</td></tr><tr><td><b>Project Name:</b></td><td>Engineering Part Sourcer</td></tr><tr><th style="width:50%">Team Member Name</th><th>Team Member ID</th></tr><tr><td>1.&nbsp; Shaan Wrench</td><td>251422184</td></tr><tr><td>2.&nbsp; Mats Leis</td><td>251409940</td></tr><tr><td>3.&nbsp; Ayman Hossain</td><td>251430600</td></tr><tr><td>4.&nbsp; Samuel Huang</td><td>251418742</td></tr><tr><td>5.&nbsp; Anish Jami</td><td>251419182</td></tr></table></div>
+<p class="toctitle" style="page-break-before:always">Table of Contents</p>
+<div class="tr l1"><span>1. Task 1: Conceptual Model (ER Diagram)</span><span class="dots"></span><span>3</span></div>
+<div class="tr l2"><span>1.1 Entity types and identifiers</span><span class="dots"></span><span>4</span></div>
+<div class="tr l2"><span>1.2 Relationship types</span><span class="dots"></span><span>4</span></div>
+<div class="tr l2"><span>1.3 Enhanced ER features, constraints and assumptions</span><span class="dots"></span><span>5</span></div>
+<div class="tr l2"><span>1.4 Changes from the Assignment 1 data requirements</span><span class="dots"></span><span>5</span></div>
+<div class="tr l1"><span>2. Task 2: Relational Schema</span><span class="dots"></span><span>7</span></div>
+<div class="tr l2"><span>2.1 Transformation steps</span><span class="dots"></span><span>7</span></div>
+<div class="tr l2"><span>2.2 Relations</span><span class="dots"></span><span>7</span></div>
+<div class="tr l2"><span>2.3 Referential integrity</span><span class="dots"></span><span>9</span></div>
+<div class="tr l2"><span>2.4 Delete rules and constraint maintenance</span><span class="dots"></span><span>10</span></div>
+<div class="tr l1"><span>3. Task 3: Schema Evaluation</span><span class="dots"></span><span>12</span></div>
+<div class="tr l2"><span>3.3.1 Schema flaws and 3NF</span><span class="dots"></span><span>12</span></div>
+<div class="tr l2"><span>3.3.2 Opportunities for combining relations</span><span class="dots"></span><span>16</span></div>
+<div class="tr l2"><span>3.3.3 BCNF evaluation</span><span class="dots"></span><span>17</span></div>
+<div class="tr l1"><span>4. Team Contribution Efforts</span><span class="dots"></span><span>21</span></div>
+<h2 class="sec pb">1.&nbsp; Task 1: Conceptual Model (ER Diagram)</h2>
+<p>Figure 1 is the conceptual model of the Engineering Part Sourcer in UML database notation. It has <b>7 entity types</b>: Customer, Part, Distributor, Listing, ShoppingCart, BOM and SharedProject.</p>
+<div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1115 1153" width="1115" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="1115" height="1153" fill="#fff"/>
+<rect x="440" y="30" width="260" height="287" fill="#fff" stroke="#000" stroke-width="1.4"/>
+<rect x="440" y="30" width="260" height="32" fill="#dce9f7" stroke="#000" stroke-width="1.4"/>
+<text x="570.0" y="52.0" font-size="16" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">Customer</text>
+<text x="450.0" y="80.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Email {PK}</text>
+<text x="450.0" y="99.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Username {AK}</text>
+<text x="450.0" y="118.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Password</text>
+<text x="450.0" y="137.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Name</text>
+<text x="466.0" y="156.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">FirstName</text>
+<text x="466.0" y="175.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">LastName</text>
+<text x="450.0" y="194.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">BillingAddress</text>
+<text x="466.0" y="213.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">HouseAddress</text>
+<text x="466.0" y="232.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">UnitNum</text>
+<text x="466.0" y="251.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">City</text>
+<text x="466.0" y="270.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Province</text>
+<text x="466.0" y="289.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Country</text>
+<text x="466.0" y="308.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">PostCode</text>
+<rect x="300" y="410" width="200" height="135" fill="#fff" stroke="#000" stroke-width="1.4"/>
+<rect x="300" y="410" width="200" height="32" fill="#dce9f7" stroke="#000" stroke-width="1.4"/>
+<text x="400.0" y="432.0" font-size="16" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">BOM</text>
+<text x="310.0" y="460.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">BOM_name {PPK}</text>
+<text x="310.0" y="479.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Date_created</text>
+<text x="310.0" y="498.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">/NumberOfParts</text>
+<text x="310.0" y="517.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">/UnpricedParts</text>
+<text x="310.0" y="536.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">/TotalCost</text>
+<rect x="20" y="429" width="190" height="97" fill="#fff" stroke="#000" stroke-width="1.4"/>
+<rect x="20" y="429" width="190" height="32" fill="#dce9f7" stroke="#000" stroke-width="1.4"/>
+<text x="115.0" y="451.0" font-size="16" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">SharedProject</text>
+<text x="30.0" y="479.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Title {AK}</text>
+<text x="30.0" y="498.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Description</text>
+<text x="30.0" y="517.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Date_shared</text>
+<rect x="570" y="410" width="200" height="116" fill="#fff" stroke="#000" stroke-width="1.4"/>
+<rect x="570" y="410" width="200" height="32" fill="#dce9f7" stroke="#000" stroke-width="1.4"/>
+<text x="670.0" y="432.0" font-size="16" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">ShoppingCart</text>
+<text x="580.0" y="460.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Date_created</text>
+<text x="580.0" y="479.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">/Subtotal</text>
+<text x="580.0" y="498.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">/ShippingPrice</text>
+<text x="580.0" y="517.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">/TotalPrice</text>
+<rect x="900" y="680" width="170" height="97" fill="#fff" stroke="#000" stroke-width="1.4"/>
+<rect x="900" y="680" width="170" height="32" fill="#dce9f7" stroke="#000" stroke-width="1.4"/>
+<text x="985.0" y="702.0" font-size="16" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">Distributor</text>
+<text x="910.0" y="730.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Name {PK}</text>
+<text x="910.0" y="749.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Website {AK}</text>
+<text x="910.0" y="768.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">ShippingFee</text>
+<rect x="570" y="670" width="220" height="135" fill="#fff" stroke="#000" stroke-width="1.4"/>
+<rect x="570" y="670" width="220" height="32" fill="#dce9f7" stroke="#000" stroke-width="1.4"/>
+<text x="680.0" y="692.0" font-size="16" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">Listing</text>
+<text x="580.0" y="720.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Distributor_PartNum {PPK}</text>
+<text x="580.0" y="739.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">UnitPrice</text>
+<text x="580.0" y="758.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">StockQuantity</text>
+<text x="580.0" y="777.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">EstShipTime</text>
+<text x="580.0" y="796.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">LastUpdated</text>
+<rect x="300" y="890" width="240" height="249" fill="#fff" stroke="#000" stroke-width="1.4"/>
+<rect x="300" y="890" width="240" height="32" fill="#dce9f7" stroke="#000" stroke-width="1.4"/>
+<text x="420.0" y="912.0" font-size="16" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">Part</text>
+<text x="310.0" y="940.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">ManufacturerName {PK}</text>
+<text x="310.0" y="959.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Manufacturer_PartNum {PK}</text>
+<text x="310.0" y="978.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Name</text>
+<text x="310.0" y="997.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Description</text>
+<text x="310.0" y="1016.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Category</text>
+<text x="310.0" y="1035.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Dimensions</text>
+<text x="326.0" y="1054.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Length</text>
+<text x="326.0" y="1073.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Width</text>
+<text x="326.0" y="1092.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Height</text>
+<text x="310.0" y="1111.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Datasheet_link</text>
+<text x="310.0" y="1130.0" font-size="14" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">/AvgStarRating</text>
+<polyline points="470.0,317.0 470.0,410.0" fill="none" stroke="#000" stroke-width="1.3"/>
+<polygon points="470,317 477,328 470,339 463,328" fill="#000"/>
+<text x="482.0" y="337.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">1..1</text>
+<text x="482.0" y="369.0" font-size="13" text-anchor="start" font-weight="normal" font-style="italic" fill="#000">Creates ▼</text>
+<text x="478.0" y="403.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<polyline points="670.0,317.0 670.0,410.0" fill="none" stroke="#000" stroke-width="1.3"/>
+<polygon points="670,317 677,328 670,339 663,328" fill="#000"/>
+<text x="682.0" y="337.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">1..1</text>
+<text x="682.0" y="369.0" font-size="13" text-anchor="start" font-weight="normal" font-style="italic" fill="#000">Owns ▼</text>
+<text x="678.0" y="403.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..1</text>
+<polyline points="700.0,120.0 1095.0,120.0 1095.0,1105.0 540.0,1105.0" fill="none" stroke="#000" stroke-width="1.3"/>
+<text x="706.0" y="112.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<text x="890.0" y="112.0" font-size="13" text-anchor="middle" font-weight="normal" font-style="italic" fill="#000">Reviews ►</text>
+<text x="546.0" y="1099.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<rect x="950" y="300" width="130" height="44" fill="#fff" stroke="#000" stroke-width="1" stroke-dasharray="5,4"/>
+<text x="958.0" y="318.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">ReviewText</text>
+<text x="958.0" y="336.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">StarRating</text>
+<polyline points="1095.0,322.0 1080.0,322.0" fill="none" stroke="#000" stroke-width="1.3" stroke-dasharray="5,4"/>
+<polyline points="300.0,477.5 210.0,477.5" fill="none" stroke="#000" stroke-width="1.3"/>
+<polygon points="286.0,477.5 264.0,465.5 264.0,489.5" fill="#fff" stroke="#000" stroke-width="1.3"/>
+<text x="255.0" y="511.5" font-size="13" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">{Optional}</text>
+<polyline points="400.0,545.0 400.0,890.0" fill="none" stroke="#000" stroke-width="1.3"/>
+<text x="392.0" y="562.0" font-size="13" text-anchor="end" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<text x="392.0" y="660.0" font-size="13" text-anchor="end" font-weight="normal" font-style="italic" fill="#000">Contains ▼</text>
+<text x="392.0" y="882.0" font-size="13" text-anchor="end" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<rect x="285" y="747" width="82" height="26" fill="#fff" stroke="#000" stroke-width="1" stroke-dasharray="5,4"/>
+<text x="293.0" y="765.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Quantity</text>
+<polyline points="400.0,760.0 367.0,760.0" fill="none" stroke="#000" stroke-width="1.3" stroke-dasharray="5,4"/>
+<polyline points="500.0,495.0 535.0,495.0 535.0,715.0 570.0,715.0" fill="none" stroke="#000" stroke-width="1.3"/>
+<text x="505.0" y="489.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<text x="543.0" y="580.0" font-size="13" text-anchor="start" font-weight="normal" font-style="italic" fill="#000">Selects ▼</text>
+<text x="541.0" y="709.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<polyline points="670.0,526.0 670.0,670.0" fill="none" stroke="#000" stroke-width="1.3"/>
+<text x="678.0" y="543.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<text x="662.0" y="640.0" font-size="13" text-anchor="end" font-weight="normal" font-style="italic" fill="#000">Holds ▼</text>
+<text x="678.0" y="663.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<rect x="705" y="588" width="82" height="26" fill="#fff" stroke="#000" stroke-width="1" stroke-dasharray="5,4"/>
+<text x="713.0" y="606.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Quantity</text>
+<polyline points="670.0,601.0 705.0,601.0" fill="none" stroke="#000" stroke-width="1.3" stroke-dasharray="5,4"/>
+<polyline points="900.0,728.5 790.0,728.5" fill="none" stroke="#000" stroke-width="1.3"/>
+<polygon points="900,728 889,721 878,728 889,735" fill="#000"/>
+<text x="872.0" y="718.5" font-size="13" text-anchor="end" font-weight="normal" font-style="normal" fill="#000">1..1</text>
+<text x="845.0" y="748.5" font-size="13" text-anchor="middle" font-weight="normal" font-style="italic" fill="#000">◄ Publishes</text>
+<text x="796.0" y="722.5" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<polyline points="670.0,805.0 670.0,990.0 540.0,990.0" fill="none" stroke="#000" stroke-width="1.3"/>
+<text x="678.0" y="822.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<text x="662.0" y="905.0" font-size="13" text-anchor="end" font-weight="normal" font-style="italic" fill="#000">Offers ▼</text>
+<text x="546.0" y="984.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">1..1</text>
+<polyline points="300.0,960.0 235.0,960.0 235.0,1060.0 300.0,1060.0" fill="none" stroke="#000" stroke-width="1.3"/>
+<text x="267.0" y="954.0" font-size="13" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<text x="267.0" y="1077.0" font-size="13" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">0..*</text>
+<text x="227.0" y="1014.0" font-size="13" text-anchor="end" font-weight="normal" font-style="italic" fill="#000">AlternativeTo</text>
+<rect x="715" y="836" width="360" height="248" fill="#fafafa" stroke="#666" stroke-width="1"/>
+<text x="727.0" y="858.0" font-size="14" text-anchor="start" font-weight="bold" font-style="normal" fill="#000">Notation</text>
+<text x="727.0" y="882.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">{PK} primary key     {AK} alternate key</text>
+<text x="727.0" y="902.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Two {PK} attributes form one composite key</text>
+<text x="727.0" y="922.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">{PPK} partial key of a weak entity</text>
+<text x="727.0" y="942.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">/Attr   derived attribute</text>
+<text x="727.0" y="962.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Indented attributes are parts of a composite</text>
+<text x="727.0" y="982.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">0..*   multiplicity (min..max)</text>
+<text x="727.0" y="1002.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Dashed box: attributes of the relationship</text>
+<polygon points="737,1010 744,1021 737,1032 730,1021" fill="#000"/>
+<text x="755.0" y="1026.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Composition (identifying relationship)</text>
+<polygon points="747,1046 727,1036 727,1056" fill="#fff" stroke="#000" stroke-width="1.3"/>
+<text x="755.0" y="1051.0" font-size="13" text-anchor="start" font-weight="normal" font-style="normal" fill="#000">Specialization, points to the superclass</text>
+</svg></div><div class="cap">Figure 1. ER diagram of the Engineering Part Sourcer (UML database notation).</div>
+<h3 class="pb">1.1&nbsp; Entity types and identifiers</h3>
+<p>An entity has its own identifier only where the real-world thing has one. The surrogate IDs from Assignment 1 (BOM ID, Cart_ID, Listing_ID, DistributorID) are removed.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:14%"><col style="width:17%"><col style="width:25%"><col style="width:44%"></colgroup>
+<thead><tr><th>Entity type</th><th>Kind</th><th>Identifier</th><th>Why this identifier</th></tr></thead><tbody>
+<tr><td>Customer</td><td>Strong</td><td>Email {PK}; Username {AK}</td><td>An account is registered with a unique email address. The system also rejects a username that is already taken.</td></tr>
+<tr><td>Part</td><td>Strong</td><td>(ManufacturerName, Manufacturer_PartNum) {PK}</td><td>A manufacturer part number is unique only within one manufacturer's products. Two manufacturers can both have a part "1001", so the manufacturer's name is part of the key.</td></tr>
+<tr><td>Distributor</td><td>Strong</td><td>Name {PK}; Website {AK}</td><td>Distributors are known by their company name (DigiKey, Mouser). Each distributor has exactly one website and no two distributors share one, so Website is also unique.</td></tr>
+<tr><td>Listing</td><td>Weak (owner: Distributor)</td><td>Distributor_PartNum {PPK}</td><td>A distributor's part number (SKU) is unique only inside that distributor's catalogue.</td></tr>
+<tr><td>BOM</td><td>Weak (owner: Customer)</td><td>BOM_name {PPK}</td><td>A customer names each BOM. Names are unique only per customer.</td></tr>
+<tr><td>ShoppingCart</td><td>Weak (owner: Customer)</td><td>None</td><td>A customer has at most one cart, so the owner identifies it.</td></tr>
+<tr><td>SharedProject</td><td>Subclass of BOM</td><td>Inherited from BOM; Title {AK}</td><td>A shared project is a BOM that its owner has published. Other users find a project on the sharing page by its title, so the system rejects a title that is already in use, as it does for usernames.</td></tr>
+</tbody></table>
+<h3>1.2&nbsp; Relationship types</h3>
+<p>The multiplicity beside an entity is the number of its instances related to one instance at the other end.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:27%"><col style="width:14%"><col style="width:36%"><col style="width:23%"></colgroup>
+<thead><tr><th>Relationship</th><th>Multiplicity</th><th>Participation</th><th>Attributes</th></tr></thead><tbody>
+<tr><td>Customer <i>Creates</i> BOM</td><td>1..1 to 0..*</td><td>BOM total (identifying); Customer partial</td><td>None</td></tr>
+<tr><td>Customer <i>Owns</i> ShoppingCart</td><td>1..1 to 0..1</td><td>ShoppingCart total (identifying); Customer partial</td><td>None</td></tr>
+<tr><td>Customer <i>Reviews</i> Part</td><td>0..* to 0..*</td><td>Partial on both sides</td><td>ReviewText, StarRating</td></tr>
+<tr><td>Distributor <i>Publishes</i> Listing</td><td>1..1 to 0..*</td><td>Listing total (identifying); Distributor partial</td><td>None</td></tr>
+<tr><td>Listing <i>Offers</i> Part</td><td>0..* to 1..1</td><td>Listing total; Part partial</td><td>None</td></tr>
+<tr><td>Part <i>AlternativeTo</i> Part</td><td>0..* to 0..*</td><td>Partial on both sides (recursive)</td><td>None</td></tr>
+<tr><td>BOM <i>Contains</i> Part</td><td>0..* to 0..*</td><td>Partial on both sides</td><td>Quantity</td></tr>
+<tr><td>BOM <i>Selects</i> Listing</td><td>0..* to 0..*</td><td>Partial on both sides</td><td>None</td></tr>
+<tr><td>ShoppingCart <i>Holds</i> Listing</td><td>0..* to 0..*</td><td>Partial on both sides</td><td>Quantity</td></tr>
+<tr><td>BOM / SharedProject</td><td>Specialization</td><td>{Optional}: a BOM does not have to be shared</td><td>Subclass adds Title, Description, Date_shared</td></tr>
+</tbody></table>
+<h3>1.3&nbsp; Enhanced ER features, constraints and assumptions</h3>
+<ul class="tight"><li><b>Specialization.</b> SharedProject is a subclass of BOM. Participation is {Optional} because most BOMs stay private. There is one subclass, so a disjoint/overlapping constraint does not apply. The subclass inherits the BOM's owner and parts, so the customer who shared a project and the parts it uses are not recorded twice.</li><li><b>Composition.</b> BOM and ShoppingCart are parts of a Customer, and Listing is part of a Distributor. They cannot exist without the owner and are deleted with it (section 2.4).</li><li><b>Composite attributes.</b> Customer.Name, Customer.BillingAddress and Part.Dimensions.</li><li><b>Derived attributes.</b> /AvgStarRating, /NumberOfParts, /UnpricedParts, /TotalCost, /Subtotal, /ShippingPrice and /TotalPrice (defined in Task 2).</li></ul>
+<p>Constraints that the diagram cannot show:</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:6%"><col style="width:94%"></colgroup>
+<thead><tr><th>#</th><th>Constraint</th></tr></thead><tbody>
+<tr><td>C1</td><td>StarRating is an integer from 1 to 5. Every Quantity is greater than 0. UnitPrice, StockQuantity and ShippingFee are not negative.</td></tr>
+<tr><td>C2</td><td>Project simplification: a distributor has at most one listing for a given part. Assignment 1 describes a listing as "one distributor's offer for one part"; we go one step further and exclude packaging and price-break variants of the same part (reel, cut tape, bulk), storing only the distributor's standard offer.</td></tr>
+<tr><td>C3</td><td>A BOM selects only listings of parts it contains, and at most one listing for each of those parts.</td></tr>
+<tr><td>C4</td><td>AlternativeTo is symmetric, and a part is not an alternative to itself.</td></tr>
+<tr><td>C5</td><td>A SharedProject's BOM contains at least one part at all times.</td></tr>
+<tr><td>C6</td><td>A customer reviews a part at most once. Purchases are completed on the distributor's own website, so the system does not record them and cannot check that the reviewer bought the part.</td></tr>
+<tr><td>C7</td><td>The part offered by a listing never changes. An offer for a different part is a new listing.</td></tr>
+</tbody></table>
+<p>Assumptions about stored values:</p>
+<ul class="tight"><li>All money values (UnitPrice, ShippingFee and the derived totals) are in Canadian dollars and exclude tax.</li><li>Length, Width and Height are in millimetres. EstShipTime is in days.</li><li>Customer.Password holds a salted hash of the password, never the password itself.</li><li>ShoppingCart.Date_created is the date the cart was created, which is when its first item was added.</li></ul>
+<h3>1.4&nbsp; Changes from the Assignment 1 data requirements</h3>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:30%"><col style="width:35%"><col style="width:35%"></colgroup>
+<thead><tr><th>Assignment 1</th><th>Problem</th><th>This model</th></tr></thead><tbody>
+<tr><td>BOM ID, Cart_ID, Listing_ID, DistributorID</td><td>Arbitrary surrogate identifiers</td><td>Removed. Real identifiers or weak entities are used.</td></tr>
+<tr><td>Part identified by Manufacturer_PartNum alone</td><td>Part numbers are unique only within a manufacturer</td><td>ManufacturerName added, and the key is (ManufacturerName, Manufacturer_PartNum).</td></tr>
+<tr><td>Part.Distributor</td><td>Repeats what Listing records, and a part has many distributors</td><td>Removed. Distributors are reached through Listing.</td></tr>
+<tr><td>Distributor "All parts", ShoppingCart "Parts"</td><td>Multi-valued attributes that are really relationships</td><td>Publishes and Holds relationships.</td></tr>
+<tr><td>Customer Reviews Distributor, with Distributor "Customer reviews" and /5-star rating</td><td>The purchase happens on the distributor's website, outside the system. What customers can judge inside the system is the part they looked up and used.</td><td>Customer Reviews Part. /AvgStarRating is a derived attribute of Part.</td></tr>
+<tr><td>Listing Has Part</td><td>"Has" does not say what the relationship means</td><td>Renamed Listing Offers Part.</td></tr>
+<tr><td>Listing.Quantity</td><td>Same name as the relationship attribute Quantity</td><td>Renamed StockQuantity.</td></tr>
+<tr><td>ShoppingCart.Date_Added</td><td>Unclear whether it is the date of the cart or of one item</td><td>Renamed Date_created (date of the cart).</td></tr>
+<tr><td>/Shipping price with no source data</td><td>A derived attribute needs stored data to be derived from</td><td>Distributor.ShippingFee added (flat fee per order from that distributor).</td></tr>
+<tr><td>Project sharing (functional specification only)</td><td>No entity stored a shared project</td><td>SharedProject added as a subclass of BOM.</td></tr>
+<tr><td>BOM maker "select supplier listings"</td><td>No relationship recorded the chosen supplier, so /TotalCost could not be derived</td><td>Selects relationship between BOM and Listing, and /UnpricedParts to show how complete /TotalCost is.</td></tr>
+</tbody></table>
+<h2 class="sec pb">2.&nbsp; Task 2: Relational Schema</h2>
+<h3>2.1&nbsp; Transformation steps</h3>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:19%"><col style="width:27%"><col style="width:54%"></colgroup>
+<thead><tr><th>Step</th><th>ER construct</th><th>Result</th></tr></thead><tbody>
+<tr><td>1. Strong entity types</td><td>Customer, Part, Distributor</td><td>One relation each. Composite attributes are replaced by their simple components (Name by 2, BillingAddress by 6, Dimensions by 3). Part has a composite PK.</td></tr>
+<tr><td>2. Weak entity types</td><td>Listing, BOM, ShoppingCart</td><td>One relation each. The owner's PK is added as an FK, and the PK is the owner's PK plus the partial key. ShoppingCart has no partial key, so its PK is CustomerEmail.</td></tr>
+<tr><td>3. 1:1 relationships</td><td>Owns</td><td>Already mapped in step 2: the FK CustomerEmail in ShoppingCart is also its PK, which enforces one cart per customer.</td></tr>
+<tr><td>4. 1:* relationships</td><td>Creates, Publishes, Offers</td><td>The PK of the "one" side is posted to the "many" side. Creates and Publishes were mapped in step 2. Offers adds (ManufacturerName, Manufacturer_PartNum) to Listing, NOT NULL.</td></tr>
+<tr><td>5. *:* relationships</td><td>AlternativeTo, Contains, Selects, Holds, Reviews</td><td>A new junction relation each: PartAlternative, BOMLine, BOMSelection, CartLine, Review. The PK is the combination of the two FKs, and relationship attributes become columns.</td></tr>
+<tr><td>6. Multi-valued attributes</td><td>None in the final ER diagram</td><td>The multi-valued attributes of Assignment 1 were already modelled as relationships.</td></tr>
+<tr><td>7. Specialization</td><td>BOM / SharedProject, {Optional}</td><td>Separate relations for superclass and subclass. SharedProject's PK is the BOM PK, which is also an FK to BOM.</td></tr>
+<tr><td>Derived attributes</td><td>Seven attributes marked /</td><td>Not stored. Each is listed under its relation with the rule that computes it.</td></tr>
+</tbody></table>
+<h3>2.2&nbsp; Relations</h3>
+<p>Notation: <b>Relation</b> (attributes), with primary key attributes underlined, followed by the keys. FK attributes are named after the referenced relation where the original name would be ambiguous (CustomerEmail references Customer.Email, DistributorName references Distributor.Name).</p>
+<div class="rel"><div class="relhead"><b>Customer</b> (<span class="pk">Email</span>, Username, Password, FirstName, LastName, HouseAddress, UnitNum, City, Province, Country, PostCode)</div>
+<div class="relkey"><b>Primary Key</b> Email</div>
+<div class="relkey"><b>Alternate Key</b> Username</div>
+<div class="relkey"><b>Foreign Key</b> none</div>
+<div class="relkey"><b>Derived</b> none</div></div>
+<div class="rel"><div class="relhead"><b>Part</b> (<span class="pk">ManufacturerName</span>, <span class="pk">Manufacturer_PartNum</span>, Name, Description, Category, Length, Width, Height, Datasheet_link)</div>
+<div class="relkey"><b>Primary Key</b> ManufacturerName, Manufacturer_PartNum</div>
+<div class="relkey"><b>Alternate Key</b> none</div>
+<div class="relkey"><b>Foreign Key</b> none</div>
+<div class="relkey"><b>Derived</b> /AvgStarRating = AVG(Review.StarRating) over the part&#x27;s reviews (no value when the part has no review)</div></div>
+<div class="rel"><div class="relhead"><b>Distributor</b> (<span class="pk">Name</span>, Website, ShippingFee)</div>
+<div class="relkey"><b>Primary Key</b> Name</div>
+<div class="relkey"><b>Alternate Key</b> Website</div>
+<div class="relkey"><b>Foreign Key</b> none</div>
+<div class="relkey"><b>Derived</b> none</div></div>
+<div class="rel"><div class="relhead"><b>Listing</b> (<span class="pk">DistributorName</span>, <span class="pk">Distributor_PartNum</span>, ManufacturerName, Manufacturer_PartNum, UnitPrice, StockQuantity, EstShipTime, LastUpdated)</div>
+<div class="relkey"><b>Primary Key</b> DistributorName, Distributor_PartNum</div>
+<div class="relkey"><b>Alternate Key</b> DistributorName, ManufacturerName, Manufacturer_PartNum</div>
+<div class="relkey"><b>Foreign Key</b> DistributorName <b>references</b> Distributor(Name)</div>
+<div class="relkey"><b>Foreign Key</b> ManufacturerName, Manufacturer_PartNum <b>references</b> Part(ManufacturerName, Manufacturer_PartNum)</div>
+<div class="relkey"><b>Derived</b> none</div></div>
+<div class="rel"><div class="relhead"><b>ShoppingCart</b> (<span class="pk">CustomerEmail</span>, Date_created)</div>
+<div class="relkey"><b>Primary Key</b> CustomerEmail</div>
+<div class="relkey"><b>Alternate Key</b> none</div>
+<div class="relkey"><b>Foreign Key</b> CustomerEmail <b>references</b> Customer(Email)</div>
+<div class="relkey"><b>Derived</b> /Subtotal = SUM(CartLine.Quantity × Listing.UnitPrice); 0 for an empty cart</div>
+<div class="relkey"><b>Derived</b> /ShippingPrice = SUM(Distributor.ShippingFee) over the distinct distributors in the cart; 0 for an empty cart</div>
+<div class="relkey"><b>Derived</b> /TotalPrice = /Subtotal + /ShippingPrice (before tax)</div></div>
+<div class="rel"><div class="relhead"><b>BOM</b> (<span class="pk">CustomerEmail</span>, <span class="pk">BOM_name</span>, Date_created)</div>
+<div class="relkey"><b>Primary Key</b> CustomerEmail, BOM_name</div>
+<div class="relkey"><b>Alternate Key</b> none</div>
+<div class="relkey"><b>Foreign Key</b> CustomerEmail <b>references</b> Customer(Email)</div>
+<div class="relkey"><b>Derived</b> /NumberOfParts = COUNT of the BOM&#x27;s BOMLine rows</div>
+<div class="relkey"><b>Derived</b> /UnpricedParts = COUNT of the BOM&#x27;s BOMLine rows that have no selected listing</div>
+<div class="relkey"><b>Derived</b> /TotalCost = SUM(BOMLine.Quantity × Listing.UnitPrice) over the lines that have a selected listing. Parts only, without shipping or tax. It is the complete cost of the BOM only when /UnpricedParts = 0; otherwise it is shown as a partial total</div></div>
+<div class="rel"><div class="relhead"><b>SharedProject</b> (<span class="pk">CustomerEmail</span>, <span class="pk">BOM_name</span>, Title, Description, Date_shared)</div>
+<div class="relkey"><b>Primary Key</b> CustomerEmail, BOM_name</div>
+<div class="relkey"><b>Alternate Key</b> Title</div>
+<div class="relkey"><b>Foreign Key</b> CustomerEmail, BOM_name <b>references</b> BOM(CustomerEmail, BOM_name)</div>
+<div class="relkey"><b>Derived</b> none</div></div>
+<div class="rel"><div class="relhead"><b>PartAlternative</b> (<span class="pk">Part1_ManufacturerName</span>, <span class="pk">Part1_PartNum</span>, <span class="pk">Part2_ManufacturerName</span>, <span class="pk">Part2_PartNum</span>)</div>
+<div class="relkey"><b>Primary Key</b> Part1_ManufacturerName, Part1_PartNum, Part2_ManufacturerName, Part2_PartNum</div>
+<div class="relkey"><b>Alternate Key</b> none</div>
+<div class="relkey"><b>Foreign Key</b> Part1_ManufacturerName, Part1_PartNum <b>references</b> Part(ManufacturerName, Manufacturer_PartNum)</div>
+<div class="relkey"><b>Foreign Key</b> Part2_ManufacturerName, Part2_PartNum <b>references</b> Part(ManufacturerName, Manufacturer_PartNum)</div>
+<div class="relkey"><b>Derived</b> none</div></div>
+<div class="rel"><div class="relhead"><b>BOMLine</b> (<span class="pk">CustomerEmail</span>, <span class="pk">BOM_name</span>, <span class="pk">ManufacturerName</span>, <span class="pk">Manufacturer_PartNum</span>, Quantity)</div>
+<div class="relkey"><b>Primary Key</b> CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum</div>
+<div class="relkey"><b>Alternate Key</b> none</div>
+<div class="relkey"><b>Foreign Key</b> CustomerEmail, BOM_name <b>references</b> BOM(CustomerEmail, BOM_name)</div>
+<div class="relkey"><b>Foreign Key</b> ManufacturerName, Manufacturer_PartNum <b>references</b> Part(ManufacturerName, Manufacturer_PartNum)</div>
+<div class="relkey"><b>Derived</b> none</div></div>
+<div class="rel"><div class="relhead"><b>BOMSelection</b> (<span class="pk">CustomerEmail</span>, <span class="pk">BOM_name</span>, <span class="pk">DistributorName</span>, <span class="pk">Distributor_PartNum</span>)</div>
+<div class="relkey"><b>Primary Key</b> CustomerEmail, BOM_name, DistributorName, Distributor_PartNum</div>
+<div class="relkey"><b>Alternate Key</b> none</div>
+<div class="relkey"><b>Foreign Key</b> CustomerEmail, BOM_name <b>references</b> BOM(CustomerEmail, BOM_name)</div>
+<div class="relkey"><b>Foreign Key</b> DistributorName, Distributor_PartNum <b>references</b> Listing(DistributorName, Distributor_PartNum)</div>
+<div class="relkey"><b>Derived</b> none</div></div>
+<div class="rel"><div class="relhead"><b>CartLine</b> (<span class="pk">CustomerEmail</span>, <span class="pk">DistributorName</span>, <span class="pk">Distributor_PartNum</span>, Quantity)</div>
+<div class="relkey"><b>Primary Key</b> CustomerEmail, DistributorName, Distributor_PartNum</div>
+<div class="relkey"><b>Alternate Key</b> none</div>
+<div class="relkey"><b>Foreign Key</b> CustomerEmail <b>references</b> ShoppingCart(CustomerEmail)</div>
+<div class="relkey"><b>Foreign Key</b> DistributorName, Distributor_PartNum <b>references</b> Listing(DistributorName, Distributor_PartNum)</div>
+<div class="relkey"><b>Derived</b> none</div></div>
+<div class="rel"><div class="relhead"><b>Review</b> (<span class="pk">CustomerEmail</span>, <span class="pk">ManufacturerName</span>, <span class="pk">Manufacturer_PartNum</span>, ReviewText, StarRating)</div>
+<div class="relkey"><b>Primary Key</b> CustomerEmail, ManufacturerName, Manufacturer_PartNum</div>
+<div class="relkey"><b>Alternate Key</b> none</div>
+<div class="relkey"><b>Foreign Key</b> CustomerEmail <b>references</b> Customer(Email)</div>
+<div class="relkey"><b>Foreign Key</b> ManufacturerName, Manufacturer_PartNum <b>references</b> Part(ManufacturerName, Manufacturer_PartNum)</div>
+<div class="relkey"><b>Derived</b> none</div></div>
+<h3>2.3&nbsp; Referential integrity</h3>
+<p>Every foreign key references the complete primary key of an existing relation, and every FK column is NOT NULL. Each FK column has the same domain as the primary key column it references. The last column names the ER construct that the foreign key implements: all nine relationship types and the specialization of Figure 1 are preserved.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:14%"><col style="width:30%"><col style="width:30%"><col style="width:11%"><col style="width:15%"></colgroup>
+<thead><tr><th>Relation</th><th>Foreign key</th><th>References</th><th>Full PK of target?</th><th>Implements</th></tr></thead><tbody>
+<tr><td>Listing</td><td>DistributorName</td><td>Distributor(Name)</td><td>Yes</td><td>Publishes</td></tr>
+<tr><td>Listing</td><td>ManufacturerName, Manufacturer_PartNum</td><td>Part(ManufacturerName, Manufacturer_PartNum)</td><td>Yes</td><td>Offers</td></tr>
+<tr><td>ShoppingCart</td><td>CustomerEmail</td><td>Customer(Email)</td><td>Yes</td><td>Owns</td></tr>
+<tr><td>BOM</td><td>CustomerEmail</td><td>Customer(Email)</td><td>Yes</td><td>Creates</td></tr>
+<tr><td>SharedProject</td><td>CustomerEmail, BOM_name</td><td>BOM(CustomerEmail, BOM_name)</td><td>Yes</td><td>Specialization</td></tr>
+<tr><td>PartAlternative</td><td>Part1_ManufacturerName, Part1_PartNum</td><td>Part(ManufacturerName, Manufacturer_PartNum)</td><td>Yes</td><td>AlternativeTo</td></tr>
+<tr><td>PartAlternative</td><td>Part2_ManufacturerName, Part2_PartNum</td><td>Part(ManufacturerName, Manufacturer_PartNum)</td><td>Yes</td><td>AlternativeTo</td></tr>
+<tr><td>BOMLine</td><td>CustomerEmail, BOM_name</td><td>BOM(CustomerEmail, BOM_name)</td><td>Yes</td><td>Contains</td></tr>
+<tr><td>BOMLine</td><td>ManufacturerName, Manufacturer_PartNum</td><td>Part(ManufacturerName, Manufacturer_PartNum)</td><td>Yes</td><td>Contains</td></tr>
+<tr><td>BOMSelection</td><td>CustomerEmail, BOM_name</td><td>BOM(CustomerEmail, BOM_name)</td><td>Yes</td><td>Selects</td></tr>
+<tr><td>BOMSelection</td><td>DistributorName, Distributor_PartNum</td><td>Listing(DistributorName, Distributor_PartNum)</td><td>Yes</td><td>Selects</td></tr>
+<tr><td>CartLine</td><td>CustomerEmail</td><td>ShoppingCart(CustomerEmail)</td><td>Yes</td><td>Holds</td></tr>
+<tr><td>CartLine</td><td>DistributorName, Distributor_PartNum</td><td>Listing(DistributorName, Distributor_PartNum)</td><td>Yes</td><td>Holds</td></tr>
+<tr><td>Review</td><td>CustomerEmail</td><td>Customer(Email)</td><td>Yes</td><td>Reviews</td></tr>
+<tr><td>Review</td><td>ManufacturerName, Manufacturer_PartNum</td><td>Part(ManufacturerName, Manufacturer_PartNum)</td><td>Yes</td><td>Reviews</td></tr>
+</tbody></table>
+<div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1005 415" width="1005" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="1005" height="415" fill="#fff"/>
+<polyline points="480.0,190.0 480.0,56.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="555.0,208.0 625.0,208.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="107.0,190.0 186.0,56.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="283.7,190.0 212.6,56.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="113.3,360.0 263.4,226.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="870.0,360.0 720.0,226.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="890.0,360.0 740.0,226.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="290.0,360.0 290.0,226.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="318.7,360.0 642.6,226.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="466.7,360.0 316.6,226.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="480.0,360.0 480.0,226.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="640.0,360.0 160.0,226.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="656.7,360.0 506.6,226.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="880.0,190.0 260.0,56.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<polyline points="835.0,208.0 775.0,208.0" fill="none" stroke="#000" stroke-width="1.3" marker-end="url(#ah)"/>
+<rect x="125.0" y="20" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="200.0" y="43.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">Customer</text>
+<rect x="405.0" y="20" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="480.0" y="43.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">Distributor</text>
+<rect x="25.0" y="190" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="100.0" y="213.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">ShoppingCart</text>
+<rect x="215.0" y="190" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="290.0" y="213.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">BOM</text>
+<rect x="405.0" y="190" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="480.0" y="213.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">Listing</text>
+<rect x="625.0" y="190" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="700.0" y="213.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">Part</text>
+<rect x="835.0" y="190" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="910.0" y="213.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">Review</text>
+<rect x="25.0" y="360" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="100.0" y="383.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">SharedProject</text>
+<rect x="215.0" y="360" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="290.0" y="383.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">BOMLine</text>
+<rect x="405.0" y="360" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="480.0" y="383.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">BOMSelection</text>
+<rect x="595.0" y="360" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="670.0" y="383.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">CartLine</text>
+<rect x="805.0" y="360" width="150" height="36" rx="3" fill="#dce9f7" stroke="#000" stroke-width="1.3"/>
+<text x="880.0" y="383.0" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000">PartAlternative</text>
+</svg></div><div class="cap">Figure 2. Referential integrity. Each arrow goes from a foreign key to the relation whose primary key it references.</div>
+<h3>2.4&nbsp; Delete rules and constraint maintenance</h3>
+<p>Every foreign key uses ON UPDATE CASCADE, so a changed email, distributor name or part key reaches all references. The delete rules below implement the compositions and the specialization of the ER diagram.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:16%"><col style="width:14%"><col style="width:12%"><col style="width:58%"></colgroup>
+<thead><tr><th>Relation</th><th>References</th><th>ON DELETE</th><th>Reason</th></tr></thead><tbody>
+<tr><td>Listing</td><td>Distributor</td><td>CASCADE</td><td>Composition: a distributor's listings are removed with the distributor.</td></tr>
+<tr><td>Listing</td><td>Part</td><td>RESTRICT</td><td>A part that is still offered cannot be deleted.</td></tr>
+<tr><td>ShoppingCart</td><td>Customer</td><td>CASCADE</td><td>Composition: the cart is removed with its customer.</td></tr>
+<tr><td>BOM</td><td>Customer</td><td>CASCADE</td><td>Composition: a customer's BOMs are removed with the customer.</td></tr>
+<tr><td>SharedProject</td><td>BOM</td><td>CASCADE</td><td>Specialization: the subclass row is removed with its BOM.</td></tr>
+<tr><td>PartAlternative</td><td>Part</td><td>CASCADE</td><td>The pair has no meaning once either part is gone.</td></tr>
+<tr><td>PartAlternative</td><td>Part</td><td>CASCADE</td><td>The pair has no meaning once either part is gone.</td></tr>
+<tr><td>BOMLine</td><td>BOM</td><td>CASCADE</td><td>A BOM's lines are removed with the BOM.</td></tr>
+<tr><td>BOMLine</td><td>Part</td><td>RESTRICT</td><td>A part that is used in a BOM cannot be deleted.</td></tr>
+<tr><td>BOMSelection</td><td>BOM</td><td>CASCADE</td><td>A BOM's selections are removed with the BOM.</td></tr>
+<tr><td>BOMSelection</td><td>Listing</td><td>CASCADE</td><td>When a listing is withdrawn the line returns to "no supplier selected".</td></tr>
+<tr><td>CartLine</td><td>ShoppingCart</td><td>CASCADE</td><td>A cart's lines are removed with the cart.</td></tr>
+<tr><td>CartLine</td><td>Listing</td><td>CASCADE</td><td>A withdrawn listing can no longer be bought, so it leaves every cart.</td></tr>
+<tr><td>Review</td><td>Customer</td><td>CASCADE</td><td>A customer's reviews are removed with the account.</td></tr>
+<tr><td>Review</td><td>Part</td><td>CASCADE</td><td>Reviews of a removed part are removed.</td></tr>
+</tbody></table>
+<p>C1 and C4 are CHECK constraints (PartAlternative stores each pair once, with the Part1 key ordered before the Part2 key). C2 is the alternate key of Listing, and C6 is the primary key of Review. C3, C5 and C7 cannot be written as keys or CHECKs, so each operation that could break them is handled as follows:</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:9%"><col style="width:33%"><col style="width:58%"></colgroup>
+<thead><tr><th>Rule</th><th>Operation</th><th>Action</th></tr></thead><tbody>
+<tr><td>C3</td><td>INSERT or UPDATE on BOMSelection</td><td>Rejected unless the listing's part has a BOMLine in the same BOM and the BOM has no other selection for that part.</td></tr>
+<tr><td>C3</td><td>DELETE on BOMLine</td><td>The BOM's selection for that part, if any, is deleted with the line.</td></tr>
+<tr><td>C3, C7</td><td>UPDATE of the part columns of Listing</td><td>Rejected when made directly. A listing never changes its part, so an existing selection cannot start pointing at a different part. The one exception is the ON UPDATE CASCADE from Part when a part's own key is corrected: the listing still refers to the same part.</td></tr>
+<tr><td>C3</td><td>DELETE on Listing</td><td>Its BOMSelection rows are removed by ON DELETE CASCADE. The line stays and counts in /UnpricedParts.</td></tr>
+<tr><td>C5</td><td>INSERT on SharedProject</td><td>Rejected if the BOM has no BOMLine.</td></tr>
+<tr><td>C5</td><td>DELETE on BOMLine</td><td>Rejected if it is the last line of a shared BOM. The owner must stop sharing the project first. This applies to deleting a line on its own: when the BOM or its customer is deleted, the lines and the SharedProject row are removed together by the cascades.</td></tr>
+</tbody></table>
+<h2 class="sec pb">3.&nbsp; Task 3: Schema Evaluation</h2>
+<h3>3.3.1&nbsp; Schema flaws and 3NF</h3>
+<h4>Flaws, redundancy and anomalies</h4>
+<p>We examined the schema for repeated facts and for insert, update and delete anomalies.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:17%"><col style="width:53%"><col style="width:30%"></colgroup>
+<thead><tr><th>Issue</th><th>Assessment</th><th>Decision</th></tr></thead><tbody>
+<tr><td>Customer address</td><td>In Canada a PostCode usually implies City and Province, which would be a transitive dependency. It is not a dependency in this system: customers can be in any country, postal code formats are not unique across countries, and one code can cover more than one municipality.</td><td>Not treated as an FD. The address stays in Customer and is always read as a whole.</td></tr>
+<tr><td>Derived values</td><td>Storing /TotalCost, /Subtotal or /AvgStarRating would create a second copy that goes out of date whenever a price, quantity or review changes (update anomaly).</td><td>None is stored. They are computed by queries or views.</td></tr>
+<tr><td>Natural keys used as FKs</td><td>Email, distributor Name and the part key appear in several relations. Changing one must change every reference.</td><td>Accepted, because surrogate IDs are not allowed. The FKs use ON UPDATE CASCADE (2.4).</td></tr>
+<tr><td>PartAlternative</td><td>A symmetric pair could be stored twice as (A, B) and (B, A), which is redundant and can become inconsistent.</td><td>Each pair is stored once (C4).</td></tr>
+<tr><td>BOMLine and BOMSelection</td><td>The link between a selection and its line is not a foreign key. It goes through the part of the listing, so C3 needs triggers on several operations.</td><td>Accepted and specified in 2.4. Sections 3.3.2 and 3.3.3 explain why the two relations are not merged.</td></tr>
+<tr><td>Shared project parts</td><td>A separate part list per shared project would repeat the BOM's lines.</td><td>Avoided by the specialization. A shared project uses its BOM's BOMLine rows.</td></tr>
+<tr><td>Insert and delete anomalies</td><td>A part can exist with no listing, a distributor with no listings, and a customer with no BOM or cart. Deleting the last listing of a part does not delete the part.</td><td>No anomaly. Each fact is stored in one relation.</td></tr>
+</tbody></table>
+<h4>Normalization of every relation</h4>
+<p>Each diagram shows the relation's attributes (primary key shaded and underlined) and its functional dependencies. A dot marks a determinant attribute and an arrow points to each dependent attribute. The tests used are:</p>
+<ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> no non-prime attribute depends on a proper subset of any candidate key.</li><li><b>3NF:</b> for every non-trivial FD X → A, X is a superkey or A is a prime attribute.</li></ul><p>A prime attribute is one that belongs to some candidate key. The tests are applied to every candidate key, not only the primary key.</p>
+<div class="nf"><h4>1. Customer</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 788 84" width="788" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="788" height="84" fill="#fff"/>
+<rect x="44.0" y="2" width="49.5" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="68.8" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Email</text>
+<rect x="93.5" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="128.3" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Username</text>
+<rect x="163.1" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="197.9" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Password</text>
+<rect x="232.7" y="2" width="76.3" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="270.9" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">FirstName</text>
+<rect x="309.0" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="343.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">LastName</text>
+<rect x="378.6" y="2" width="96.4" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="426.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">HouseAddress</text>
+<rect x="475.0" y="2" width="62.9" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="506.4" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">UnitNum</text>
+<rect x="537.9" y="2" width="42.8" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="559.3" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">City</text>
+<rect x="580.7" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="615.5" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Province</text>
+<rect x="650.3" y="2" width="62.9" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="681.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Country</text>
+<rect x="713.2" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="748.0" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">PostCode</text>
+<polyline points="62.8,28.0 62.8,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="62.8" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="122.3,50.0 122.3,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="122.3,29.0 118.8,37.0 125.8,37.0" fill="#0b4ea2"/>
+<polyline points="191.9,50.0 191.9,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="191.9,29.0 188.4,37.0 195.4,37.0" fill="#0b4ea2"/>
+<polyline points="264.9,50.0 264.9,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="264.9,29.0 261.4,37.0 268.4,37.0" fill="#0b4ea2"/>
+<polyline points="337.8,50.0 337.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="337.8,29.0 334.3,37.0 341.3,37.0" fill="#0b4ea2"/>
+<polyline points="420.8,50.0 420.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="420.8,29.0 417.3,37.0 424.3,37.0" fill="#0b4ea2"/>
+<polyline points="500.4,50.0 500.4,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="500.4,29.0 496.9,37.0 503.9,37.0" fill="#0b4ea2"/>
+<polyline points="553.3,50.0 553.3,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="553.3,29.0 549.8,37.0 556.8,37.0" fill="#0b4ea2"/>
+<polyline points="609.5,50.0 609.5,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="609.5,29.0 606.0,37.0 613.0,37.0" fill="#0b4ea2"/>
+<polyline points="675.8,50.0 675.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="675.8,29.0 672.2,37.0 679.2,37.0" fill="#0b4ea2"/>
+<polyline points="742.0,50.0 742.0,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="742.0,29.0 738.5,37.0 745.5,37.0" fill="#0b4ea2"/>
+<polyline points="62.8,50.0 742.0,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+<polyline points="134.3,28.0 134.3,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="134.3" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="74.8,72.0 74.8,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="74.8,29.0 71.2,37.0 78.2,37.0" fill="#b03a2e"/>
+<polyline points="203.9,72.0 203.9,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="203.9,29.0 200.4,37.0 207.4,37.0" fill="#b03a2e"/>
+<polyline points="276.9,72.0 276.9,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="276.9,29.0 273.4,37.0 280.4,37.0" fill="#b03a2e"/>
+<polyline points="349.8,72.0 349.8,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="349.8,29.0 346.3,37.0 353.3,37.0" fill="#b03a2e"/>
+<polyline points="432.8,72.0 432.8,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="432.8,29.0 429.3,37.0 436.3,37.0" fill="#b03a2e"/>
+<polyline points="512.5,72.0 512.5,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="512.5,29.0 509.0,37.0 516.0,37.0" fill="#b03a2e"/>
+<polyline points="565.3,72.0 565.3,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="565.3,29.0 561.8,37.0 568.8,37.0" fill="#b03a2e"/>
+<polyline points="621.5,72.0 621.5,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="621.5,29.0 618.0,37.0 625.0,37.0" fill="#b03a2e"/>
+<polyline points="687.8,72.0 687.8,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="687.8,29.0 684.2,37.0 691.2,37.0" fill="#b03a2e"/>
+<polyline points="754.0,72.0 754.0,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="754.0,29.0 750.5,37.0 757.5,37.0" fill="#b03a2e"/>
+<polyline points="74.8,72.0 754.0,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<text x="4.0" y="76.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#b03a2e">FD2</text>
+</svg></div><p class="fdlist">FD1: Email → Username, Password, FirstName, LastName, HouseAddress, UnitNum, City, Province, Country, PostCode<br>FD2: Username → Email, Password, FirstName, LastName, HouseAddress, UnitNum, City, Province, Country, PostCode<br><b>Candidate keys:</b> {Email}; {Username}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> Both candidate keys (Email and Username) are single attributes, so no partial dependency is possible.</li><li><b>3NF:</b> The only determinants are Email (PK) and Username (AK), and both are superkeys. No non-key attribute determines another (see the customer address issue above).</li></ul></div>
+<div class="nf"><h4>2. Part</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 797 62" width="797" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="797" height="62" fill="#fff"/>
+<rect x="44.0" y="2" width="123.2" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="105.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">ManufacturerName</text>
+<rect x="167.2" y="2" width="150.0" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="242.2" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Manufacturer_PartNum</text>
+<rect x="317.2" y="2" width="42.8" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="338.6" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Name</text>
+<rect x="360.0" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="404.9" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Description</text>
+<rect x="449.7" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="484.5" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Category</text>
+<rect x="519.3" y="2" width="56.2" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="547.4" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Length</text>
+<rect x="575.5" y="2" width="49.5" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="600.2" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Width</text>
+<rect x="625.0" y="2" width="56.2" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="653.1" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Height</text>
+<rect x="681.2" y="2" width="109.8" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="736.1" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Datasheet_link</text>
+<polyline points="105.6,28.0 105.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="105.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="242.2,28.0 242.2,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="242.2" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="338.6,50.0 338.6,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="338.6,29.0 335.1,37.0 342.1,37.0" fill="#0b4ea2"/>
+<polyline points="404.9,50.0 404.9,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="404.9,29.0 401.4,37.0 408.4,37.0" fill="#0b4ea2"/>
+<polyline points="484.5,50.0 484.5,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="484.5,29.0 481.0,37.0 488.0,37.0" fill="#0b4ea2"/>
+<polyline points="547.4,50.0 547.4,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="547.4,29.0 543.9,37.0 550.9,37.0" fill="#0b4ea2"/>
+<polyline points="600.2,50.0 600.2,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="600.2,29.0 596.8,37.0 603.8,37.0" fill="#0b4ea2"/>
+<polyline points="653.1,50.0 653.1,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="653.1,29.0 649.6,37.0 656.6,37.0" fill="#0b4ea2"/>
+<polyline points="736.1,50.0 736.1,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="736.1,29.0 732.6,37.0 739.6,37.0" fill="#0b4ea2"/>
+<polyline points="105.6,50.0 736.1,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+</svg></div><p class="fdlist">FD1: (ManufacturerName, Manufacturer_PartNum) → Name, Description, Category, Length, Width, Height, Datasheet_link<br><b>Candidate keys:</b> {ManufacturerName, Manufacturer_PartNum}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> The non-key attributes describe one specific part. A manufacturer makes many parts, and another manufacturer can use the same part number, so neither key attribute alone determines them.</li><li><b>3NF:</b> Category does not determine Name, the dimensions or the datasheet, and two parts can share a Name. The only determinant is the key.</li></ul></div>
+<div class="nf"><h4>3. Distributor</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 245 84" width="245" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="245" height="84" fill="#fff"/>
+<rect x="44.0" y="2" width="42.8" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="65.4" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Name</text>
+<rect x="86.8" y="2" width="62.9" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="118.2" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Website</text>
+<rect x="149.7" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="194.5" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">ShippingFee</text>
+<polyline points="59.4,28.0 59.4,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="59.4" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="112.2,50.0 112.2,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="112.2,29.0 108.8,37.0 115.8,37.0" fill="#0b4ea2"/>
+<polyline points="188.5,50.0 188.5,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="188.5,29.0 185.0,37.0 192.0,37.0" fill="#0b4ea2"/>
+<polyline points="59.4,50.0 188.5,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+<polyline points="124.2,28.0 124.2,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="124.2" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="71.4,72.0 71.4,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="71.4,29.0 67.9,37.0 74.9,37.0" fill="#b03a2e"/>
+<polyline points="200.5,72.0 200.5,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="200.5,29.0 197.0,37.0 204.0,37.0" fill="#b03a2e"/>
+<polyline points="71.4,72.0 200.5,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<text x="4.0" y="76.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#b03a2e">FD2</text>
+</svg></div><p class="fdlist">FD1: Name → Website, ShippingFee<br>FD2: Website → Name, ShippingFee<br><b>Candidate keys:</b> {Name}; {Website}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> Both candidate keys (Name and Website) are single attributes, so no partial dependency is possible.</li><li><b>3NF:</b> Website determines Name and ShippingFee, but Website is a candidate key (no two distributors share a website), so its determinant is a superkey.</li></ul></div>
+<div class="nf"><h4>4. Listing</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 941 84" width="941" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="941" height="84" fill="#fff"/>
+<rect x="44.0" y="2" width="116.5" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="102.2" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">DistributorName</text>
+<rect x="160.5" y="2" width="143.3" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="232.2" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Distributor_PartNum</text>
+<rect x="303.8" y="2" width="123.2" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="365.4" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">ManufacturerName</text>
+<rect x="427.0" y="2" width="150.0" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="502.0" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Manufacturer_PartNum</text>
+<rect x="577.0" y="2" width="76.3" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="615.1" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">UnitPrice</text>
+<rect x="653.3" y="2" width="103.1" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="704.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">StockQuantity</text>
+<rect x="756.4" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="801.2" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">EstShipTime</text>
+<rect x="846.1" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="891.0" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">LastUpdated</text>
+<polyline points="96.2,28.0 96.2,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="96.2" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="226.2,28.0 226.2,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="226.2" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="359.4,50.0 359.4,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="359.4,29.0 355.9,37.0 362.9,37.0" fill="#0b4ea2"/>
+<polyline points="496.0,50.0 496.0,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="496.0,29.0 492.5,37.0 499.5,37.0" fill="#0b4ea2"/>
+<polyline points="609.1,50.0 609.1,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="609.1,29.0 605.6,37.0 612.6,37.0" fill="#0b4ea2"/>
+<polyline points="698.8,50.0 698.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="698.8,29.0 695.3,37.0 702.3,37.0" fill="#0b4ea2"/>
+<polyline points="795.2,50.0 795.2,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="795.2,29.0 791.8,37.0 798.8,37.0" fill="#0b4ea2"/>
+<polyline points="885.0,50.0 885.0,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="885.0,29.0 881.5,37.0 888.5,37.0" fill="#0b4ea2"/>
+<polyline points="96.2,50.0 885.0,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+<polyline points="108.2,28.0 108.2,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="108.2" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="371.4,28.0 371.4,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="371.4" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="508.0,28.0 508.0,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="508.0" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="238.2,72.0 238.2,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="238.2,29.0 234.7,37.0 241.7,37.0" fill="#b03a2e"/>
+<polyline points="621.1,72.0 621.1,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="621.1,29.0 617.6,37.0 624.6,37.0" fill="#b03a2e"/>
+<polyline points="710.8,72.0 710.8,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="710.8,29.0 707.3,37.0 714.3,37.0" fill="#b03a2e"/>
+<polyline points="807.2,72.0 807.2,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="807.2,29.0 803.8,37.0 810.8,37.0" fill="#b03a2e"/>
+<polyline points="897.0,72.0 897.0,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="897.0,29.0 893.5,37.0 900.5,37.0" fill="#b03a2e"/>
+<polyline points="108.2,72.0 897.0,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<text x="4.0" y="76.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#b03a2e">FD2</text>
+</svg></div><p class="fdlist">FD1: (DistributorName, Distributor_PartNum) → ManufacturerName, Manufacturer_PartNum, UnitPrice, StockQuantity, EstShipTime, LastUpdated<br>FD2: (DistributorName, ManufacturerName, Manufacturer_PartNum) → Distributor_PartNum, UnitPrice, StockQuantity, EstShipTime, LastUpdated<br><b>Candidate keys:</b> {DistributorName, Distributor_PartNum}; {DistributorName, ManufacturerName, Manufacturer_PartNum}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> Checked against both candidate keys. A distributor part number (SKU) is unique only within its distributor, so price, stock, shipping time and the part offered need the whole primary key. For the alternate key, a distributor alone or a part alone does not fix a price or a stock level. No attribute depends on a proper subset of either key.</li><li><b>3NF:</b> UnitPrice, StockQuantity, EstShipTime and LastUpdated are independent of each other. Both determinants are candidate keys, so both are superkeys.</li></ul></div>
+<div class="nf"><h4>5. ShoppingCart</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249 62" width="249" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="249" height="62" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="96.4" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="195.3" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Date_created</text>
+<polyline points="95.6,28.0 95.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="95.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="195.3,50.0 195.3,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="195.3,29.0 191.8,37.0 198.8,37.0" fill="#0b4ea2"/>
+<polyline points="95.6,50.0 195.3,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+</svg></div><p class="fdlist">FD1: CustomerEmail → Date_created<br><b>Candidate keys:</b> {CustomerEmail}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> Single-attribute key, so no partial dependency is possible.</li><li><b>3NF:</b> One non-key attribute, so no transitive dependency is possible.</li></ul></div>
+<div class="nf"><h4>6. BOM</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 319 62" width="319" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="319" height="62" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="69.6" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="181.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">BOM_name</text>
+<rect x="216.7" y="2" width="96.4" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="264.9" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Date_created</text>
+<polyline points="95.6,28.0 95.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="95.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="181.9,28.0 181.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="181.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="264.9,50.0 264.9,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="264.9,29.0 261.4,37.0 268.4,37.0" fill="#0b4ea2"/>
+<polyline points="95.6,50.0 264.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+</svg></div><p class="fdlist">FD1: (CustomerEmail, BOM_name) → Date_created<br><b>Candidate keys:</b> {CustomerEmail, BOM_name}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> Date_created belongs to one named BOM of one customer. A customer has many BOMs and a name can be reused by other customers, so neither key attribute alone determines it.</li><li><b>3NF:</b> One non-key attribute, so no transitive dependency is possible.</li></ul></div>
+<div class="nf"><h4>7. SharedProject</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 451 84" width="451" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="451" height="84" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="69.6" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="181.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">BOM_name</text>
+<rect x="216.7" y="2" width="49.5" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="241.5" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Title</text>
+<rect x="266.2" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="311.1" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Description</text>
+<rect x="355.9" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="400.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Date_shared</text>
+<polyline points="89.6,28.0 89.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="89.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="175.9,28.0 175.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="175.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="235.5,50.0 235.5,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="235.5,29.0 232.0,37.0 239.0,37.0" fill="#0b4ea2"/>
+<polyline points="305.1,50.0 305.1,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="305.1,29.0 301.6,37.0 308.6,37.0" fill="#0b4ea2"/>
+<polyline points="394.8,50.0 394.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="394.8,29.0 391.3,37.0 398.3,37.0" fill="#0b4ea2"/>
+<polyline points="89.6,50.0 394.8,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+<polyline points="247.5,28.0 247.5,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="247.5" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="101.6,72.0 101.6,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="101.6,29.0 98.1,37.0 105.1,37.0" fill="#b03a2e"/>
+<polyline points="187.9,72.0 187.9,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="187.9,29.0 184.4,37.0 191.4,37.0" fill="#b03a2e"/>
+<polyline points="317.1,72.0 317.1,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="317.1,29.0 313.6,37.0 320.6,37.0" fill="#b03a2e"/>
+<polyline points="406.8,72.0 406.8,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="406.8,29.0 403.3,37.0 410.3,37.0" fill="#b03a2e"/>
+<polyline points="101.6,72.0 406.8,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<text x="4.0" y="76.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#b03a2e">FD2</text>
+</svg></div><p class="fdlist">FD1: (CustomerEmail, BOM_name) → Title, Description, Date_shared<br>FD2: Title → CustomerEmail, BOM_name, Description, Date_shared<br><b>Candidate keys:</b> {CustomerEmail, BOM_name}; {Title}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> Title, Description and Date_shared describe one shared BOM, which is identified only by the whole primary key. The alternate key Title is a single attribute.</li><li><b>3NF:</b> Title determines the other attributes, but Title is a candidate key, so it is a superkey. Description and Date_shared determine nothing.</li></ul></div>
+<div class="nf"><h4>8. PartAlternative</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 583 58" width="583" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="583" height="58" fill="#fff"/>
+<rect x="44.0" y="2" width="163.4" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="125.7" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Part1_ManufacturerName</text>
+<rect x="207.4" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="258.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Part1_PartNum</text>
+<rect x="310.5" y="2" width="163.4" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="392.2" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Part2_ManufacturerName</text>
+<rect x="473.9" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="525.4" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Part2_PartNum</text>
+<text x="44.0" y="48.0" font-size="12" text-anchor="start" font-weight="normal" font-style="italic" fill="#000">All-key relation: the only FDs are trivial.</text>
+</svg></div><p class="fdlist">No non-trivial FDs.<br><b>Candidate keys:</b> {Part1_ManufacturerName, Part1_PartNum, Part2_ManufacturerName, Part2_PartNum}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> All-key relation: there are no non-key attributes.</li><li><b>3NF:</b> All-key relation: there are no non-key attributes.</li></ul></div>
+<div class="nf"><h4>9. BOMLine</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 565 62" width="565" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="565" height="62" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="69.6" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="181.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">BOM_name</text>
+<rect x="216.7" y="2" width="123.2" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="278.3" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">ManufacturerName</text>
+<rect x="339.9" y="2" width="150.0" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="414.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Manufacturer_PartNum</text>
+<rect x="489.9" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="524.7" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Quantity</text>
+<polyline points="95.6,28.0 95.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="95.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="181.9,28.0 181.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="181.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="278.3,28.0 278.3,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="278.3" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="414.9,28.0 414.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="414.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="524.7,50.0 524.7,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="524.7,29.0 521.2,37.0 528.2,37.0" fill="#0b4ea2"/>
+<polyline points="95.6,50.0 524.7,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+</svg></div><p class="fdlist">FD1: (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum) → Quantity<br><b>Candidate keys:</b> {CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> Quantity is how many of one part one BOM needs. It changes with the BOM and with the part, so it depends on the whole key.</li><li><b>3NF:</b> One non-key attribute, so no transitive dependency is possible.</li></ul></div>
+<div class="nf"><h4>10. BOMSelection</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 482 58" width="482" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="482" height="58" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="69.6" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="181.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">BOM_name</text>
+<rect x="216.7" y="2" width="116.5" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="275.0" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">DistributorName</text>
+<rect x="333.2" y="2" width="143.3" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="404.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Distributor_PartNum</text>
+<text x="44.0" y="48.0" font-size="12" text-anchor="start" font-weight="normal" font-style="italic" fill="#000">All-key relation: the only FDs are trivial.</text>
+</svg></div><p class="fdlist">No non-trivial FDs.<br><b>Candidate keys:</b> {CustomerEmail, BOM_name, DistributorName, Distributor_PartNum}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> All-key relation: there are no non-key attributes.</li><li><b>3NF:</b> All-key relation: there are no non-key attributes.</li></ul></div>
+<div class="nf"><h4>11. CartLine</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 482 62" width="482" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="482" height="62" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="116.5" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="205.4" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">DistributorName</text>
+<rect x="263.6" y="2" width="143.3" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="335.2" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Distributor_PartNum</text>
+<rect x="406.9" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="441.7" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Quantity</text>
+<polyline points="95.6,28.0 95.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="95.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="205.4,28.0 205.4,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="205.4" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="335.2,28.0 335.2,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="335.2" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="441.7,50.0 441.7,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="441.7,29.0 438.2,37.0 445.2,37.0" fill="#0b4ea2"/>
+<polyline points="95.6,50.0 441.7,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+</svg></div><p class="fdlist">FD1: (CustomerEmail, DistributorName, Distributor_PartNum) → Quantity<br><b>Candidate keys:</b> {CustomerEmail, DistributorName, Distributor_PartNum}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> Quantity is how many units of one listing one cart holds, so it depends on the whole key.</li><li><b>3NF:</b> One non-key attribute, so no transitive dependency is possible.</li></ul></div>
+<div class="nf"><h4>12. Review</h4><div class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 592 62" width="592" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="592" height="62" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="123.2" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="208.7" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">ManufacturerName</text>
+<rect x="270.3" y="2" width="150.0" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="345.3" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Manufacturer_PartNum</text>
+<rect x="420.3" y="2" width="83.0" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="461.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">ReviewText</text>
+<rect x="503.3" y="2" width="83.0" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="544.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">StarRating</text>
+<polyline points="95.6,28.0 95.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="95.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="208.7,28.0 208.7,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="208.7" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="345.3,28.0 345.3,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="345.3" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="461.8,50.0 461.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="461.8,29.0 458.3,37.0 465.3,37.0" fill="#0b4ea2"/>
+<polyline points="544.8,50.0 544.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="544.8,29.0 541.3,37.0 548.3,37.0" fill="#0b4ea2"/>
+<polyline points="95.6,50.0 544.8,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+</svg></div><p class="fdlist">FD1: (CustomerEmail, ManufacturerName, Manufacturer_PartNum) → ReviewText, StarRating<br><b>Candidate keys:</b> {CustomerEmail, ManufacturerName, Manufacturer_PartNum}</p><ul class="tight"><li><b>1NF:</b> every attribute holds a single atomic value.</li><li><b>2NF:</b> A customer reviews many parts and a part has many reviewers, so the text and the rating depend on the whole key.</li><li><b>3NF:</b> ReviewText does not determine StarRating, or the reverse.</li></ul></div>
+<p><b>Result:</b> all 12 relations are in 1NF, 2NF and 3NF. There is no violation to resolve, so no relation is decomposed here.</p>
+<h3>3.3.2&nbsp; Opportunities for combining relations</h3>
+<p>Two relations can be combined without repeating rows when they describe the same things, which happens for 1:1 relationships, superclass/subclass pairs and relationship relations over the same entities. We found three candidates.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:22%"><col style="width:30%"><col style="width:48%"></colgroup>
+<thead><tr><th>Candidate</th><th>Combined without redundancy?</th><th>Decision and query justification</th></tr></thead><tbody>
+<tr><td>Customer + ShoppingCart (1:1, same key)</td><td>Yes. Date_created would become a nullable column of Customer and no row is repeated.</td><td><b>Rejected.</b> Sign-in reads Customer on every visit and never needs the cart. Cart queries join CartLine to Listing and do not need the customer's credentials or address. A customer with no cart would store a NULL, and CartLine's FK would have to point at Customer, which hides the rule that lines belong to a cart.</td></tr>
+<tr><td>BOM + SharedProject (superclass/subclass, same key)</td><td>Yes. Title, Description and Date_shared would become nullable columns of BOM.</td><td><b>Rejected.</b> The most common query on shared projects is browsing or searching all of them by title, and it reads only the small SharedProject relation. Opening a private BOM never needs the sharing columns. Most BOMs are private, so the merged relation would be mostly NULLs, and Title could not be a simple NOT NULL alternate key.</td></tr>
+<tr><td>BOMLine + BOMSelection (a selection belongs to one line of the BOM)</td><td>No. No row is repeated, since the merged relation is BOMLine with nullable DistributorName and Distributor_PartNum. But the part of the selected listing would then be stored both in the line and in Listing.</td><td><b>Rejected.</b> Merging would remove one join from the BOM cost query (BOMSelection), although Listing is still needed for UnitPrice. It would also let the key enforce "one listing per line". We still keep them separate: the merged relation is not in BCNF (3.3.3), the supplier choice is optional so two columns of a composite FK would be NULL on many lines, and the frequent BOM queries (open a BOM, upload a CSV, copy a shared project) read parts and quantities only.</td></tr>
+</tbody></table>
+<p>No other pair can be combined. Every remaining pair is linked by a 1:* or *:* relationship, so merging would repeat the attributes of one side: Distributor with Listing would repeat Website and ShippingFee on every listing, Part with Listing would repeat the part description for every distributor, and BOM with BOMLine would repeat Date_created on every line.</p>
+<h3>3.3.3&nbsp; BCNF evaluation</h3>
+<p>A relation is in BCNF when the determinant of every non-trivial functional dependency is a superkey. The determinants below are the ones in the FD diagrams of 3.3.1.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:15%"><col style="width:52%"><col style="width:23%"><col style="width:10%"></colgroup>
+<thead><tr><th>Relation</th><th>Determinants</th><th>Every determinant a superkey?</th><th>Result</th></tr></thead><tbody>
+<tr><td>Customer</td><td>Email; Username</td><td>Yes: PK, AK</td><td>BCNF</td></tr>
+<tr><td>Part</td><td>(ManufacturerName, Manufacturer_PartNum)</td><td>Yes: PK</td><td>BCNF</td></tr>
+<tr><td>Distributor</td><td>Name; Website</td><td>Yes: PK, AK</td><td>BCNF</td></tr>
+<tr><td>Listing</td><td>(DistributorName, Distributor_PartNum); (DistributorName, ManufacturerName, Manufacturer_PartNum)</td><td>Yes: PK, AK</td><td>BCNF</td></tr>
+<tr><td>ShoppingCart</td><td>CustomerEmail</td><td>Yes: PK</td><td>BCNF</td></tr>
+<tr><td>BOM</td><td>(CustomerEmail, BOM_name)</td><td>Yes: PK</td><td>BCNF</td></tr>
+<tr><td>SharedProject</td><td>(CustomerEmail, BOM_name); Title</td><td>Yes: PK, AK</td><td>BCNF</td></tr>
+<tr><td>PartAlternative</td><td>None (all-key)</td><td>Yes: no non-trivial FD</td><td>BCNF</td></tr>
+<tr><td>BOMLine</td><td>(CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum)</td><td>Yes: PK</td><td>BCNF</td></tr>
+<tr><td>BOMSelection</td><td>None (all-key)</td><td>Yes: no non-trivial FD</td><td>BCNF</td></tr>
+<tr><td>CartLine</td><td>(CustomerEmail, DistributorName, Distributor_PartNum)</td><td>Yes: PK</td><td>BCNF</td></tr>
+<tr><td>Review</td><td>(CustomerEmail, ManufacturerName, Manufacturer_PartNum)</td><td>Yes: PK</td><td>BCNF</td></tr>
+</tbody></table>
+<p><b>All 12 relations are in BCNF, so no relation of the schema is decomposed.</b> Customer, Distributor, Listing and SharedProject each have two candidate keys. In every case both are determinants of the whole relation, so the overlapping keys in Listing (both contain DistributorName) cause no violation.</p>
+<h4>The design that would not be in BCNF</h4>
+<p>The merge considered in 3.3.2 gives BOMLine (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum, Quantity, DistributorName, Distributor_PartNum):</p>
+<div class="fig" style="text-align:left"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 825 84" width="825" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="825" height="84" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="69.6" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="181.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">BOM_name</text>
+<rect x="216.7" y="2" width="123.2" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="278.3" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">ManufacturerName</text>
+<rect x="339.9" y="2" width="150.0" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="414.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Manufacturer_PartNum</text>
+<rect x="489.9" y="2" width="69.6" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="524.7" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Quantity</text>
+<rect x="559.5" y="2" width="116.5" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="617.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">DistributorName</text>
+<rect x="676.0" y="2" width="143.3" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="747.6" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Distributor_PartNum</text>
+<polyline points="89.6,28.0 89.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="89.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="175.9,28.0 175.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="175.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="272.3,28.0 272.3,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="272.3" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="408.9,28.0 408.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="408.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="518.7,50.0 518.7,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="518.7,29.0 515.2,37.0 522.2,37.0" fill="#0b4ea2"/>
+<polyline points="611.8,50.0 611.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="611.8,29.0 608.2,37.0 615.2,37.0" fill="#0b4ea2"/>
+<polyline points="741.6,50.0 741.6,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="741.6,29.0 738.1,37.0 745.1,37.0" fill="#0b4ea2"/>
+<polyline points="89.6,50.0 741.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+<polyline points="623.8,28.0 623.8,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="623.8" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="753.6,28.0 753.6,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="753.6" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="284.3,72.0 284.3,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="284.3,29.0 280.8,37.0 287.8,37.0" fill="#b03a2e"/>
+<polyline points="420.9,72.0 420.9,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="420.9,29.0 417.4,37.0 424.4,37.0" fill="#b03a2e"/>
+<polyline points="284.3,72.0 753.6,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<text x="4.0" y="76.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#b03a2e">FD2</text>
+</svg></div><div class="cap">Figure 3. FDs of the rejected merged BOMLine. FD2 has a determinant that is not a superkey.</div>
+<ul class="tight"><li>FD1: (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum) → Quantity, DistributorName, Distributor_PartNum. The determinant is the key.</li><li>FD2: (DistributorName, Distributor_PartNum) → ManufacturerName, Manufacturer_PartNum. A listing offers exactly one part. This determinant is not a superkey, so the relation is <b>not in BCNF</b>.</li><li>It is still in 3NF, because the attributes on the right of FD2 belong to the key (they are prime).</li></ul>
+<p><b>Its BCNF decomposition.</b> Decomposing on FD2 gives:</p><ul class="tight"><li>R1 (DistributorName, Distributor_PartNum, ManufacturerName, Manufacturer_PartNum)</li><li>R2 (CustomerEmail, BOM_name, DistributorName, Distributor_PartNum, Quantity)</li></ul><p>This decomposition is lossless, because the common attributes (DistributorName, Distributor_PartNum) are the key of R1. R1 is a projection of Listing, so it would not need to be stored again. R2 does not fit the system, for two reasons. A line could exist only after a listing is chosen, but an uploaded BOM has parts and quantities with no supplier yet. And FD1 is not preserved: Quantity would be keyed by the listing, and nothing would stop a BOM from holding two listings of the same part.</p>
+<p><b>What the schema does instead.</b> The schema never forms the merged relation. It maps the two relationships of the ER diagram separately: BOMLine for Contains (part and quantity) and BOMSelection for Selects (chosen listing). Both are in BCNF. These two relations are not by themselves a decomposition of the merged relation. They share only (CustomerEmail, BOM_name), so joining just the two would pair every part of a BOM with every selected listing of that BOM: a BOM with two parts and two selections would give four rows, two of them wrong. The pairing is recovered through Listing, which records the part of each listing:</p><p class="expr">BOMLine ⟕ (BOMSelection ⋈ Listing)</p><p>The inner join attaches its part to each selection. The left outer join is on (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum), and it keeps the lines that have no selection. By C3 every selection matches exactly one line and a line matches at most one selection, so this expression returns exactly the rows of the merged relation, with nothing lost and no spurious row.</p>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:14%"><col style="width:43%"><col style="width:43%"></colgroup>
+<thead><tr><th></th><th>Merged BOMLine (3NF only)</th><th>BOMLine + BOMSelection (BCNF, chosen)</th></tr></thead><tbody>
+<tr><td>Redundancy</td><td>The part of the chosen listing is stored in BOMLine and again in Listing. A row could name a listing of a different part unless an extra check prevents it.</td><td>The part of a listing is stored once, in Listing.</td></tr>
+<tr><td>NULLs</td><td>DistributorName and Distributor_PartNum are NULL until a supplier is chosen, and are part of a composite FK.</td><td>None. A line with no chosen supplier has no BOMSelection row.</td></tr>
+<tr><td>Constraint C3</td><td>"One listing per line" is enforced by the key. "The listing is for the line's part" still needs a check.</td><td>Both parts of C3 need triggers (2.4).</td></tr>
+<tr><td>Queries</td><td>BOM cost: BOMLine ⋈ Listing (one join fewer).</td><td>BOM cost: BOMLine ⟕ (BOMSelection ⋈ Listing), joined on key attributes. Listing the parts of a BOM or of a shared project reads BOMLine only in both designs.</td></tr>
+</tbody></table>
+<p><b>Decision:</b> keep the BCNF design. The most frequent BOM operations (open a BOM, upload a BOM from CSV, copy a shared project) work on parts and quantities only and never touch the supplier choice. The price we accept is one extra join in the cost query, on indexed key columns, and the triggers listed in 2.4. In return no fact is stored twice and no column is NULL.</p>
+<h4>Anticipated common queries and how the design serves them</h4>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:32%"><col style="width:27%"><col style="width:41%"></colgroup>
+<thead><tr><th>Query (Assignment 1 function)</th><th>Relations used</th><th>Why the design fits</th></tr></thead><tbody>
+<tr><td>Search parts by name, part number or keyword (Part Search)</td><td>Part</td><td>Part holds only seller-independent data, so one row per part is searched. It was not merged with Listing.</td></tr>
+<tr><td>Compare offers for N units of a part (Price Match)</td><td>Listing ⋈ Distributor</td><td>All offers for a part are the Listing rows with its part key. A price or stock change updates one row.</td></tr>
+<tr><td>Filter by category, dimensions, distributor, price, stock (Filter)</td><td>Part ⋈ Listing</td><td>Part attributes and Listing attributes are reached with one key join.</td></tr>
+<tr><td>Open, edit or upload a BOM (BOM upload, BOM maker)</td><td>BOM, BOMLine</td><td>Lines are keyed by BOM and part, so the supplier choice is not involved (BCNF decision).</td></tr>
+<tr><td>BOM line costs, total and stock warnings (BOM maker)</td><td>BOMLine ⟕ (BOMSelection ⋈ Listing)</td><td>The outer join keeps lines with no supplier, so they are reported as unpriced instead of being left out of the total. Costs are computed from the single stored price of each listing, and LastUpdated shows how old that price is.</td></tr>
+<tr><td>Cart subtotals grouped by distributor (Cart)</td><td>CartLine ⋈ Listing ⋈ Distributor</td><td>CartLine carries DistributorName in its key, so grouping needs no extra lookup. Kept apart from Customer (3.3.2).</td></tr>
+<tr><td>Sign in (Sign in)</td><td>Customer</td><td>One small row by Email or Username. No cart or BOM data is read.</td></tr>
+<tr><td>Browse shared projects and copy their parts (Project Sharing)</td><td>SharedProject, then BOMLine ⋈ Part</td><td>Browsing reads only SharedProject (3.3.2). The parts come from the BOM's lines, with no second copy.</td></tr>
+<tr><td>Part rating</td><td>Review</td><td>AVG(StarRating) grouped by the part key.</td></tr>
+<tr><td>Alternative parts</td><td>PartAlternative ⋈ Part</td><td>Each pair is stored once and queried in both directions.</td></tr>
+</tbody></table>
+<h2 class="sec pb">4.&nbsp; Team Contribution Efforts</h2>
+<table width="100%" style="width:100%">
+<colgroup><col style="width:22%"><col style="width:78%"></colgroup>
+<thead><tr><th>Team member</th><th>Contribution</th></tr></thead><tbody>
+<tr><td>Shaan Wrench</td><td><ul class="tight"><li>Task 3.3.1: assessed the schema for flaws, redundancy and anomalies, listed the functional dependencies and made the FD diagrams and the 1NF/2NF/3NF argument for each of the 12 relations.</li><li>Took part in the group review of the full draft and helped correct the issues it found across Tasks 1 to 3.</li></ul></td></tr>
+<tr><td>Mats Leis</td><td><ul class="tight"><li>Task 2: did the ER-to-relational transformation, wrote the 12 relations with their primary, alternate and foreign keys and derived attributes, and made the referential integrity tables and diagram (2.1 to 2.4).</li><li>Compiled the report and diagrams into one document.</li><li>Took part in the group review of the full draft and helped correct the issues it found across Tasks 1 to 3.</li></ul></td></tr>
+<tr><td>Ayman Hossain</td><td><ul class="tight"><li>Task 1: defined the relationship types, multiplicities and participation, the Enhanced ER features (specialization, composition) and the constraints and assumptions (1.2 and 1.3).</li><li>Took part in the group review of the full draft and helped correct the issues it found across Tasks 1 to 3.</li></ul></td></tr>
+<tr><td>Samuel Huang</td><td><ul class="tight"><li>Task 1: defined the 7 entity types of the ER diagram, their attributes and identifiers (1.1), and documented the changes from the Assignment 1 data requirements (1.4).</li><li>Took part in the group review of the full draft and helped correct the issues it found across Tasks 1 to 3.</li></ul></td></tr>
+<tr><td>Anish Jami</td><td><ul class="tight"><li>Task 3.3.2 and 3.3.3: evaluated the candidates for combining relations, did the BCNF evaluation and the merged BOMLine analysis, and wrote the anticipated-query justification against the Assignment 1 functions.</li><li>Took part in the group review of the full draft and helped correct the issues it found across Tasks 1 to 3.</li></ul></td></tr>
+</tbody></table>
+</body></html>

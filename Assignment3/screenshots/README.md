@@ -1,0 +1,87 @@
+# Screenshots for the Assignment 3 report
+
+Put each Workbench screenshot here as a PNG with exactly the name below. `build_report.py` embeds it next to its statement. Until a file exists, the report shows the response recorded by `capture_responses.py` as a placeholder.
+
+Names: `t<task>_...`. For Tasks 2, 3, 5 and 6 the number is the statement's position in its file (comments are not counted), so `t5_04.png` is the 4th statement of task7.sql.
+
+Still missing (79):
+
+- t1_create_BOM.png
+- t1_create_BOMLine.png
+- t1_create_BOMSelection.png
+- t1_create_CartLine.png
+- t1_create_Customer.png
+- t1_create_Distributor.png
+- t1_create_Listing.png
+- t1_create_Part.png
+- t1_create_PartAlternative.png
+- t1_create_Review.png
+- t1_create_SharedProject.png
+- t1_create_ShoppingCart.png
+- t1_describe_BOM.png
+- t1_describe_BOMLine.png
+- t1_describe_BOMSelection.png
+- t1_describe_CartLine.png
+- t1_describe_Customer.png
+- t1_describe_Distributor.png
+- t1_describe_Listing.png
+- t1_describe_Part.png
+- t1_describe_PartAlternative.png
+- t1_describe_Review.png
+- t1_describe_SharedProject.png
+- t1_describe_ShoppingCart.png
+- t1_drop.png
+- t1_index_ix_Listing_Part_Price.png
+- t1_index_ix_Part_Category.png
+- t2_01.png
+- t2_02.png
+- t2_03.png
+- t2_04.png
+- t2_05.png
+- t2_06.png
+- t2_07.png
+- t2_08.png
+- t2_09.png
+- t3_01.png
+- t3_02.png
+- t4_q1.png
+- t4_q2.png
+- t4_q3.png
+- t4_q4.png
+- t4_q5.png
+- t4_q6.png
+- t4_q7.png
+- t5_01.png
+- t5_02.png
+- t5_03.png
+- t5_04.png
+- t5_05.png
+- t5_06.png
+- t5_07.png
+- t5_08.png
+- t5_09.png
+- t5_10.png
+- t5_11.png
+- t5_12.png
+- t5_13.png
+- t5_14.png
+- t5_15.png
+- t5_16.png
+- t5_17.png
+- t6_01.png
+- t6_02.png
+- t6_03.png
+- t6_04.png
+- t6_05.png
+- t6_06.png
+- t6_07.png
+- t6_08.png
+- t6_09.png
+- t6_10.png
+- t6_11.png
+- t6_12.png
+- t6_13.png
+- t6_14.png
+- t6_15.png
+- t6_16.png
+- t6_17.png

@@ -1,0 +1,87 @@
+[
+ {
+  "comments": "-- task8.sql: Task 6, two views, a query on each, and modification attempts\n-- ============================================================================\n-- Run after SQL/task3.sql, SQL/task4.sql and SRC/load_data.sql.\n-- V1 BOMTotals is NOT updatable (joins, outer join, GROUP BY, aggregates).\n-- V2 InStockListing IS updatable (one base table, plain columns, simple\n-- WHERE) and uses WITH CHECK OPTION. The updatability of each is explained\n-- in explanation.md (section V) with the ISO rules from C&B.\n--\n-- Several statements fail on purpose. In the mysql client run this file with\n-- --force; in Workbench, turn on \"Continue SQL script execution on errors\".\n-- The modifications run in a transaction that ends with ROLLBACK, so the\n-- views stay but the data is left as loaded.\n-- ============================================================================\n\n-- MySQL-specific: DROP VIEW IF EXISTS (ISO has DROP VIEW <name> with no\n-- IF EXISTS). It lets this script be rerun.",
+  "sql": "DROP VIEW IF EXISTS BOMTotals;",
+  "response": "Query OK, 0 rows affected (0.016 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DROP VIEW IF EXISTS InStockListing;",
+  "response": "Query OK, 0 rows affected (0.014 sec)"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- V1: BOMTotals. One row per BOM with the three derived attributes of BOM\n-- from Assignment 2: /NumberOfParts, /UnpricedParts and /TotalCost.\n-- Purpose: the BOM list page shows every BOM's size and cost without the\n-- application repeating this join; the derived values are never stored.\n-- ---------------------------------------------------------------------------",
+  "sql": "CREATE VIEW BOMTotals (CustomerEmail, BOM_name, NumberOfParts, UnpricedParts, TotalCost) AS\nSELECT b.CustomerEmail, b.BOM_name,\n       COUNT(bl.Manufacturer_PartNum),\n       COUNT(bl.Manufacturer_PartNum) - COUNT(l.UnitPrice),\n       COALESCE(SUM(bl.Quantity * l.UnitPrice), 0)\nFROM BOM b\n     LEFT JOIN BOMLine bl\n            ON bl.CustomerEmail = b.CustomerEmail\n           AND bl.BOM_name = b.BOM_name\n     LEFT JOIN (BOMSelection s\n                JOIN Listing l\n                  ON l.DistributorName = s.DistributorName\n                 AND l.Distributor_PartNum = s.Distributor_PartNum)\n            ON s.CustomerEmail = bl.CustomerEmail\n           AND s.BOM_name = bl.BOM_name\n           AND l.ManufacturerName = bl.ManufacturerName\n           AND l.Manufacturer_PartNum = bl.Manufacturer_PartNum\nGROUP BY b.CustomerEmail, b.BOM_name;",
+  "response": "Query OK, 0 rows affected (0.022 sec)"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- V2: InStockListing. The listings that can be bought right now.\n-- Purpose: the default for Price Match and the \"in stock only\" filter.\n-- Every column of Listing is kept (including all NOT NULL ones) so a full\n-- tuple can be inserted through the view. WITH CHECK OPTION stops an INSERT\n-- or UPDATE through the view from producing a row the view cannot see.\n-- ---------------------------------------------------------------------------",
+  "sql": "CREATE VIEW InStockListing AS\nSELECT DistributorName, Distributor_PartNum, ManufacturerName, Manufacturer_PartNum,\n       Packaging, UnitPrice, StockQuantity, EstShipTime, LastUpdated\nFROM Listing\nWHERE StockQuantity > 0\nWITH CHECK OPTION;",
+  "response": "Query OK, 0 rows affected (0.015 sec)"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- Queries on the views\n-- ---------------------------------------------------------------------------\n-- Query on V1: shared projects whose BOM is fully priced (no unpriced line)\n-- and has at least 7 parts, most expensive first. A view can be joined like\n-- a base table.",
+  "sql": "SELECT sp.Title, t.CustomerEmail, t.NumberOfParts, t.TotalCost\nFROM BOMTotals t\n     JOIN SharedProject sp ON sp.CustomerEmail = t.CustomerEmail\n                          AND sp.BOM_name = t.BOM_name\nWHERE t.UnpricedParts = 0\n  AND t.NumberOfParts >= 7\nORDER BY t.TotalCost DESC;",
+  "response": "+---------------------------+----------------------------+---------------+-----------+\n| Title                     | CustomerEmail              | NumberOfParts | TotalCost |\n+---------------------------+----------------------------+---------------+-----------+\n| Open Lab Signal Generator | liam.martin18@example.com  |             7 |    420.36 |\n| Open Lab Signal Generator | riley.taylor5@example.com  |             8 |    256.63 |\n| Open Smart Thermostat     | sam.gagnon216@example.com  |             7 |     95.55 |\n| Open LED Matrix Clock     | leila.patel143@example.com |             8 |     15.42 |\n+---------------------------+----------------------------+---------------+-----------+\n4 rows in set (0.702 sec)"
+ },
+ {
+  "comments": "-- Query on V2: every in-stock offer for the generic 1N4148 diode, with the\n-- distributor's shipping fee.",
+  "sql": "SELECT v.ManufacturerName, v.DistributorName, v.Distributor_PartNum, v.Packaging,\n       v.UnitPrice, v.StockQuantity, d.ShippingFee\nFROM InStockListing v\n     JOIN Distributor d ON d.Name = v.DistributorName\nWHERE v.Manufacturer_PartNum = '1N4148'\nORDER BY v.UnitPrice;",
+  "response": "+------------------+--------------------+---------------------+-------------+-----------+---------------+-------------+\n| ManufacturerName | DistributorName    | Distributor_PartNum | Packaging   | UnitPrice | StockQuantity | ShippingFee |\n+------------------+--------------------+---------------------+-------------+-----------+---------------+-------------+\n| Nexperia         | Allied Electronics | AL-000026           | Cut Tape    |      0.09 |            45 |        9.00 |\n| Nexperia         | Allied Electronics | AL-000039           | Tube        |      0.09 |            10 |        9.00 |\n| onsemi           | Allied Electronics | AL-000013           | Tube        |      0.10 |            13 |        9.00 |\n| onsemi           | Sager Electronics  | SG-000026           | Cut Tape    |      0.10 |        225341 |        7.25 |\n| Vishay           | Sager Electronics  | SG-000013           | Tape & Reel |      0.24 |             2 |        7.25 |\n| Vishay           | Avnet              | AV-000013           | Tray        |      0.25 |        119605 |        0.00 |\n+------------------+--------------------+---------------------+-------------+-----------+---------------+-------------+\n6 rows in set (0.060 sec)"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- Modification attempts\n-- ---------------------------------------------------------------------------",
+  "sql": "START TRANSACTION;",
+  "response": "Query OK, 0 rows affected (0.004 sec)"
+ },
+ {
+  "comments": "-- V1, attempt 1 (fails): INSERT into the aggregate view.\n-- Expected: ERROR 1471, \"The target table BOMTotals of the INSERT is not\n-- insertable-into\". There is no base tuple a row of totals could become.",
+  "sql": "INSERT INTO BOMTotals (CustomerEmail, BOM_name, NumberOfParts, UnpricedParts, TotalCost)\nVALUES ('alex.chen0@example.com', 'New BOM', 0, 0, 0.00);",
+  "response": "ERROR 1471 (HY000) at line 41: The target table BOMTotals of the INSERT is not insertable-into"
+ },
+ {
+  "comments": "-- V1, attempt 2 (fails): UPDATE a computed column.\n-- Expected: ERROR 1288, \"The target table BOMTotals of the UPDATE is not\n-- updatable\". TotalCost is a SUM over many tuples of two other relations.",
+  "sql": "UPDATE BOMTotals\nSET TotalCost = 0\nWHERE CustomerEmail = 'alex.chen0@example.com' AND BOM_name = 'Weather Station v2';",
+  "response": "ERROR 1288 (HY000) at line 43: The target table BOMTotals of the UPDATE is not updatable"
+ },
+ {
+  "comments": "-- V2, attempt 1 (succeeds): insert an in-stock listing through the view.\n-- The row goes into the base relation Listing.",
+  "sql": "INSERT INTO InStockListing (DistributorName, Distributor_PartNum, ManufacturerName,\n                            Manufacturer_PartNum, Packaging, UnitPrice, StockQuantity,\n                            EstShipTime, LastUpdated)\nVALUES ('DigiKey', 'DK-1N4148-ON', 'onsemi', '1N4148', 'Tube', 0.09, 500, 3, CURRENT_TIMESTAMP);",
+  "response": "Query OK, 1 row affected (0.007 sec)"
+ },
+ {
+  "comments": "-- The new tuple is visible both in the view and in the base table",
+  "sql": "SELECT DistributorName, Distributor_PartNum, Packaging, UnitPrice, StockQuantity\nFROM InStockListing WHERE Distributor_PartNum = 'DK-1N4148-ON';",
+  "response": "+-----------------+---------------------+-----------+-----------+---------------+\n| DistributorName | Distributor_PartNum | Packaging | UnitPrice | StockQuantity |\n+-----------------+---------------------+-----------+-----------+---------------+\n| DigiKey         | DK-1N4148-ON        | Tube      |      0.09 |           500 |\n+-----------------+---------------------+-----------+-----------+---------------+\n1 row in set (0.029 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "SELECT DistributorName, Distributor_PartNum, Packaging, UnitPrice, StockQuantity\nFROM Listing WHERE Distributor_PartNum = 'DK-1N4148-ON';",
+  "response": "+-----------------+---------------------+-----------+-----------+---------------+\n| DistributorName | Distributor_PartNum | Packaging | UnitPrice | StockQuantity |\n+-----------------+---------------------+-----------+-----------+---------------+\n| DigiKey         | DK-1N4148-ON        | Tube      |      0.09 |           500 |\n+-----------------+---------------------+-----------+-----------+---------------+\n1 row in set (0.017 sec)"
+ },
+ {
+  "comments": "-- V2, attempt 2 (fails): insert an OUT-of-stock listing through the view.\n-- Expected: ERROR 1369, \"CHECK OPTION failed 'ep_sourcer_test.InStockListing'\".\n-- Without WITH CHECK OPTION this row would be inserted into Listing and then\n-- vanish from the view (a \"migrating\" row).",
+  "sql": "INSERT INTO InStockListing (DistributorName, Distributor_PartNum, ManufacturerName,\n                            Manufacturer_PartNum, Packaging, UnitPrice, StockQuantity,\n                            EstShipTime, LastUpdated)\nVALUES ('DigiKey', 'DK-1N4148-OUT', 'onsemi', '1N4148', 'Bulk', 0.08, 0, 3, CURRENT_TIMESTAMP);",
+  "response": "ERROR 1369 (HY000) at line 54: CHECK OPTION failed 'ep_sourcer_test.instocklisting'"
+ },
+ {
+  "comments": "-- V2, attempt 3 (fails): an UPDATE through the view that would move the row\n-- out of the view (stock sold out). Expected: ERROR 1369 (CHECK OPTION).",
+  "sql": "UPDATE InStockListing\nSET StockQuantity = 0\nWHERE DistributorName = 'DigiKey' AND Distributor_PartNum = 'DK-1N4148-ON';",
+  "response": "ERROR 1369 (HY000) at line 58: CHECK OPTION failed 'ep_sourcer_test.instocklisting'"
+ },
+ {
+  "comments": "-- V2, attempt 4 (succeeds): an UPDATE that keeps the row inside the view.",
+  "sql": "UPDATE InStockListing\nSET UnitPrice = 0.08, StockQuantity = 450\nWHERE DistributorName = 'DigiKey' AND Distributor_PartNum = 'DK-1N4148-ON';",
+  "response": "Query OK, 1 row affected (0.002 sec)\nRows matched: 1  Changed: 1  Warnings: 0"
+ },
+ {
+  "comments": "",
+  "sql": "SELECT DistributorName, Distributor_PartNum, UnitPrice, StockQuantity\nFROM Listing WHERE Distributor_PartNum LIKE 'DK-1N4148-%';",
+  "response": "+-----------------+---------------------+-----------+---------------+\n| DistributorName | Distributor_PartNum | UnitPrice | StockQuantity |\n+-----------------+---------------------+-----------+---------------+\n| DigiKey         | DK-1N4148-ON        |      0.08 |           450 |\n+-----------------+---------------------+-----------+---------------+\n1 row in set (0.011 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "ROLLBACK;",
+  "response": "Query OK, 0 rows affected (0.021 sec)"
+ }
+]

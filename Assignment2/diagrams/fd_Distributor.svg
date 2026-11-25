@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 245 84" width="245" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="245" height="84" fill="#fff"/>
+<rect x="44.0" y="2" width="42.8" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="65.4" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Name</text>
+<rect x="86.8" y="2" width="62.9" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="118.2" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Website</text>
+<rect x="149.7" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="194.5" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">ShippingFee</text>
+<polyline points="59.4,28.0 59.4,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="59.4" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="112.2,50.0 112.2,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="112.2,29.0 108.8,37.0 115.8,37.0" fill="#0b4ea2"/>
+<polyline points="188.5,50.0 188.5,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="188.5,29.0 185.0,37.0 192.0,37.0" fill="#0b4ea2"/>
+<polyline points="59.4,50.0 188.5,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+<polyline points="124.2,28.0 124.2,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="124.2" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="71.4,72.0 71.4,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="71.4,29.0 67.9,37.0 74.9,37.0" fill="#b03a2e"/>
+<polyline points="200.5,72.0 200.5,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="200.5,29.0 197.0,37.0 204.0,37.0" fill="#b03a2e"/>
+<polyline points="71.4,72.0 200.5,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<text x="4.0" y="76.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#b03a2e">FD2</text>
+</svg>

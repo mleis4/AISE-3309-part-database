@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 451 84" width="451" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="451" height="84" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="69.6" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="181.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">BOM_name</text>
+<rect x="216.7" y="2" width="49.5" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="241.5" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Title</text>
+<rect x="266.2" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="311.1" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Description</text>
+<rect x="355.9" y="2" width="89.7" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="400.8" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Date_shared</text>
+<polyline points="89.6,28.0 89.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="89.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="175.9,28.0 175.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="175.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="235.5,50.0 235.5,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="235.5,29.0 232.0,37.0 239.0,37.0" fill="#0b4ea2"/>
+<polyline points="305.1,50.0 305.1,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="305.1,29.0 301.6,37.0 308.6,37.0" fill="#0b4ea2"/>
+<polyline points="394.8,50.0 394.8,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="394.8,29.0 391.3,37.0 398.3,37.0" fill="#0b4ea2"/>
+<polyline points="89.6,50.0 394.8,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+<polyline points="101.6,28.0 101.6,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="101.6" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="247.5,28.0 247.5,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<circle cx="247.5" cy="29.0" r="3" fill="#b03a2e"/>
+<polyline points="187.9,72.0 187.9,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="187.9,29.0 184.4,37.0 191.4,37.0" fill="#b03a2e"/>
+<polyline points="317.1,72.0 317.1,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="317.1,29.0 313.6,37.0 320.6,37.0" fill="#b03a2e"/>
+<polyline points="406.8,72.0 406.8,34.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<polygon points="406.8,29.0 403.3,37.0 410.3,37.0" fill="#b03a2e"/>
+<polyline points="101.6,72.0 406.8,72.0" fill="none" stroke="#b03a2e" stroke-width="1.3"/>
+<text x="4.0" y="76.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#b03a2e">FD2</text>
+</svg>

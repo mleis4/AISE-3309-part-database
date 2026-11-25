@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 482 58" width="482" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="482" height="58" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="69.6" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="181.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">BOM_name</text>
+<rect x="216.7" y="2" width="116.5" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="275.0" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">DistributorName</text>
+<rect x="333.2" y="2" width="143.3" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="404.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">Distributor_PartNum</text>
+<text x="44.0" y="48.0" font-size="12" text-anchor="start" font-weight="normal" font-style="italic" fill="#000">All-key relation: the only FDs are trivial.</text>
+</svg>

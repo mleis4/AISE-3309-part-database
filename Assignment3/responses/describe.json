@@ -1,0 +1,62 @@
+[
+ {
+  "comments": "",
+  "sql": "DESCRIBE Customer;",
+  "response": "+--------------+--------------+------+-----+---------+-------+\n| Field        | Type         | Null | Key | Default | Extra |\n+--------------+--------------+------+-----+---------+-------+\n| Email        | varchar(254) | NO   | PRI | NULL    |       |\n| Username     | varchar(30)  | NO   | UNI | NULL    |       |\n| Password     | varchar(255) | NO   |     | NULL    |       |\n| FirstName    | varchar(50)  | NO   |     | NULL    |       |\n| LastName     | varchar(50)  | NO   |     | NULL    |       |\n| HouseAddress | varchar(100) | NO   |     | NULL    |       |\n| UnitNum      | varchar(10)  | YES  |     | NULL    |       |\n| City         | varchar(50)  | NO   |     | NULL    |       |\n| Province     | varchar(50)  | NO   |     | NULL    |       |\n| Country      | varchar(56)  | NO   |     | NULL    |       |\n| PostCode     | varchar(10)  | NO   |     | NULL    |       |\n+--------------+--------------+------+-----+---------+-------+\n11 rows in set (0.009 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE Part;",
+  "response": "+----------------------+---------------+------+-----+---------+-------+\n| Field                | Type          | Null | Key | Default | Extra |\n+----------------------+---------------+------+-----+---------+-------+\n| ManufacturerName     | varchar(60)   | NO   | PRI | NULL    |       |\n| Manufacturer_PartNum | varchar(60)   | NO   | PRI | NULL    |       |\n| Name                 | varchar(100)  | NO   |     | NULL    |       |\n| Description          | varchar(1000) | YES  |     | NULL    |       |\n| Category             | varchar(50)   | NO   | MUL | NULL    |       |\n| Length               | decimal(8,2)  | YES  |     | NULL    |       |\n| Width                | decimal(8,2)  | YES  |     | NULL    |       |\n| Height               | decimal(8,2)  | YES  |     | NULL    |       |\n| Datasheet_link       | varchar(2048) | YES  |     | NULL    |       |\n+----------------------+---------------+------+-----+---------+-------+\n9 rows in set (0.006 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE Distributor;",
+  "response": "+-------------+---------------+------+-----+---------+-------+\n| Field       | Type          | Null | Key | Default | Extra |\n+-------------+---------------+------+-----+---------+-------+\n| Name        | varchar(60)   | NO   | PRI | NULL    |       |\n| Website     | varchar(255)  | NO   | UNI | NULL    |       |\n| ShippingFee | decimal(10,2) | NO   |     | NULL    |       |\n+-------------+---------------+------+-----+---------+-------+\n3 rows in set (0.005 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE Listing;",
+  "response": "+----------------------+---------------+------+-----+---------+-------+\n| Field                | Type          | Null | Key | Default | Extra |\n+----------------------+---------------+------+-----+---------+-------+\n| DistributorName      | varchar(60)   | NO   | PRI | NULL    |       |\n| Distributor_PartNum  | varchar(60)   | NO   | PRI | NULL    |       |\n| ManufacturerName     | varchar(60)   | NO   | MUL | NULL    |       |\n| Manufacturer_PartNum | varchar(60)   | NO   |     | NULL    |       |\n| Packaging            | varchar(20)   | NO   |     | NULL    |       |\n| UnitPrice            | decimal(10,2) | NO   |     | NULL    |       |\n| StockQuantity        | int           | NO   |     | NULL    |       |\n| EstShipTime          | int           | NO   |     | NULL    |       |\n| LastUpdated          | timestamp     | NO   |     | NULL    |       |\n+----------------------+---------------+------+-----+---------+-------+\n9 rows in set (0.012 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE ShoppingCart;",
+  "response": "+---------------+--------------+------+-----+---------+-------+\n| Field         | Type         | Null | Key | Default | Extra |\n+---------------+--------------+------+-----+---------+-------+\n| CustomerEmail | varchar(254) | NO   | PRI | NULL    |       |\n| Date_created  | date         | NO   |     | NULL    |       |\n+---------------+--------------+------+-----+---------+-------+\n2 rows in set (0.005 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE BOM;",
+  "response": "+---------------+--------------+------+-----+---------+-------+\n| Field         | Type         | Null | Key | Default | Extra |\n+---------------+--------------+------+-----+---------+-------+\n| CustomerEmail | varchar(254) | NO   | PRI | NULL    |       |\n| BOM_name      | varchar(100) | NO   | PRI | NULL    |       |\n| Date_created  | date         | NO   |     | NULL    |       |\n+---------------+--------------+------+-----+---------+-------+\n3 rows in set (0.005 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE SharedProject;",
+  "response": "+---------------+---------------+------+-----+---------+-------+\n| Field         | Type          | Null | Key | Default | Extra |\n+---------------+---------------+------+-----+---------+-------+\n| CustomerEmail | varchar(254)  | NO   | PRI | NULL    |       |\n| BOM_name      | varchar(100)  | NO   | PRI | NULL    |       |\n| Title         | varchar(100)  | NO   |     | NULL    |       |\n| Description   | varchar(1000) | YES  |     | NULL    |       |\n| Date_shared   | date          | NO   |     | NULL    |       |\n+---------------+---------------+------+-----+---------+-------+\n5 rows in set (0.005 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE PartAlternative;",
+  "response": "+------------------------+-------------+------+-----+---------+-------+\n| Field                  | Type        | Null | Key | Default | Extra |\n+------------------------+-------------+------+-----+---------+-------+\n| Part1_ManufacturerName | varchar(60) | NO   | PRI | NULL    |       |\n| Part1_PartNum          | varchar(60) | NO   | PRI | NULL    |       |\n| Part2_ManufacturerName | varchar(60) | NO   | PRI | NULL    |       |\n| Part2_PartNum          | varchar(60) | NO   | PRI | NULL    |       |\n+------------------------+-------------+------+-----+---------+-------+\n4 rows in set (0.005 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE BOMLine;",
+  "response": "+----------------------+--------------+------+-----+---------+-------+\n| Field                | Type         | Null | Key | Default | Extra |\n+----------------------+--------------+------+-----+---------+-------+\n| CustomerEmail        | varchar(254) | NO   | PRI | NULL    |       |\n| BOM_name             | varchar(100) | NO   | PRI | NULL    |       |\n| ManufacturerName     | varchar(60)  | NO   | PRI | NULL    |       |\n| Manufacturer_PartNum | varchar(60)  | NO   | PRI | NULL    |       |\n| Quantity             | int          | NO   |     | NULL    |       |\n+----------------------+--------------+------+-----+---------+-------+\n5 rows in set (0.005 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE BOMSelection;",
+  "response": "+---------------------+--------------+------+-----+---------+-------+\n| Field               | Type         | Null | Key | Default | Extra |\n+---------------------+--------------+------+-----+---------+-------+\n| CustomerEmail       | varchar(254) | NO   | PRI | NULL    |       |\n| BOM_name            | varchar(100) | NO   | PRI | NULL    |       |\n| DistributorName     | varchar(60)  | NO   | PRI | NULL    |       |\n| Distributor_PartNum | varchar(60)  | NO   | PRI | NULL    |       |\n+---------------------+--------------+------+-----+---------+-------+\n4 rows in set (0.004 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE CartLine;",
+  "response": "+---------------------+--------------+------+-----+---------+-------+\n| Field               | Type         | Null | Key | Default | Extra |\n+---------------------+--------------+------+-----+---------+-------+\n| CustomerEmail       | varchar(254) | NO   | PRI | NULL    |       |\n| DistributorName     | varchar(60)  | NO   | PRI | NULL    |       |\n| Distributor_PartNum | varchar(60)  | NO   | PRI | NULL    |       |\n| Quantity            | int          | NO   |     | NULL    |       |\n+---------------------+--------------+------+-----+---------+-------+\n4 rows in set (0.004 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "DESCRIBE Review;",
+  "response": "+----------------------+---------------+------+-----+---------+-------+\n| Field                | Type          | Null | Key | Default | Extra |\n+----------------------+---------------+------+-----+---------+-------+\n| CustomerEmail        | varchar(254)  | NO   | PRI | NULL    |       |\n| ManufacturerName     | varchar(60)   | NO   | PRI | NULL    |       |\n| Manufacturer_PartNum | varchar(60)   | NO   | PRI | NULL    |       |\n| ReviewText           | varchar(2000) | YES  |     | NULL    |       |\n| StarRating           | int           | NO   |     | NULL    |       |\n+----------------------+---------------+------+-----+---------+-------+\n5 rows in set (0.004 sec)"
+ }
+]

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 319 62" width="319" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<defs><marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#000"/></marker></defs>
+<rect x="0" y="0" width="319" height="62" fill="#fff"/>
+<rect x="44.0" y="2" width="103.1" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="95.6" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">CustomerEmail</text>
+<rect x="147.1" y="2" width="69.6" height="26" fill="#dce9f7" stroke="#000" stroke-width="1.1"/>
+<text x="181.9" y="20.0" font-size="12" text-anchor="middle" font-weight="bold" font-style="normal" fill="#000" text-decoration="underline">BOM_name</text>
+<rect x="216.7" y="2" width="96.4" height="26" fill="#fff" stroke="#000" stroke-width="1.1"/>
+<text x="264.9" y="20.0" font-size="12" text-anchor="middle" font-weight="normal" font-style="normal" fill="#000">Date_created</text>
+<polyline points="95.6,28.0 95.6,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="95.6" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="181.9,28.0 181.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<circle cx="181.9" cy="29.0" r="3" fill="#0b4ea2"/>
+<polyline points="264.9,50.0 264.9,34.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<polygon points="264.9,29.0 261.4,37.0 268.4,37.0" fill="#0b4ea2"/>
+<polyline points="95.6,50.0 264.9,50.0" fill="none" stroke="#0b4ea2" stroke-width="1.3"/>
+<text x="4.0" y="54.0" font-size="12" text-anchor="start" font-weight="bold" font-style="normal" fill="#0b4ea2">FD1</text>
+</svg>

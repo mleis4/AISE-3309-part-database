@@ -1,0 +1,47 @@
+[
+ {
+  "comments": "-- task4.sql: Task 2, three types of INSERT\n-- ============================================================================\n-- Run order: SQL/task3.sql (empty schema), then THIS FILE, then\n-- SRC/load_data.sql. Running it on the empty schema keeps each SELECT * short\n-- enough to screenshot. Its keys (the task2 customer, the Espressif/Bosch/\n-- Murata parts below) never occur in the generated data, so load_data.sql\n-- still loads on top of these rows without a key clash.\n--\n-- Relation used for all three INSERTs: BOMLine (which parts a BOM needs, and\n-- how many). Every BOMLine row needs its BOM and its Part to exist first\n-- (two foreign keys), so the setup block creates those parent rows.\n-- ============================================================================\n\n-- ---------------------------------------------------------------------------\n-- Setup: parent rows the three INSERTs refer to\n-- ---------------------------------------------------------------------------",
+  "sql": "INSERT INTO Customer (Email, Username, Password, FirstName, LastName, HouseAddress,\n                      City, Province, Country, PostCode)\nVALUES ('task2.demo@example.com', 'task2demo',\n        '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',\n        'Robin', 'Demo', '1151 Richmond St', 'London', 'Ontario', 'Canada', 'N6A 3K7');",
+  "response": "Query OK, 1 row affected (0.014 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "INSERT INTO Part (ManufacturerName, Manufacturer_PartNum, Name, Category, Length, Width, Height)\nVALUES ('Espressif', 'ESP32-C3-MINI-1', 'ESP32-C3 Wi-Fi/BLE Module 4MB Flash', 'MCU', 13.20, 16.60, 2.40),\n       ('Bosch', 'BME280', 'Humidity, Pressure and Temperature Sensor', 'Sensor', 2.50, 2.50, 0.93),\n       ('Murata', 'GRM188R71C104KA01D', '100nF 0603 X7R Capacitor 16V', 'Capacitor', 1.60, 0.80, 0.80),\n       ('Wurth Elektronik', '61300411121', '4-Pin Male Header 2.54mm', 'Connector', 10.16, 2.54, 8.50);",
+  "response": "Query OK, 4 rows affected (0.011 sec)\nRecords: 4  Duplicates: 0  Warnings: 0"
+ },
+ {
+  "comments": "",
+  "sql": "INSERT INTO BOM (CustomerEmail, BOM_name, Date_created)\nVALUES ('task2.demo@example.com', 'Rover Rev A', DATE '2026-11-20'),\n       ('task2.demo@example.com', 'Rover Rev B', DATE '2026-11-24');",
+  "response": "Query OK, 2 rows affected (0.019 sec)\nRecords: 2  Duplicates: 0  Warnings: 0"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- INSERT 1: single row, VALUES with NO column list.\n-- Every column is given, in the order of CREATE TABLE BOMLine\n-- (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum, Quantity).\n-- Differs from 2 and 3: no column list, one tuple, all values are constants.\n-- ---------------------------------------------------------------------------",
+  "sql": "INSERT INTO BOMLine\nVALUES ('task2.demo@example.com', 'Rover Rev A', 'Espressif', 'ESP32-C3-MINI-1', 1);",
+  "response": "Query OK, 1 row affected (0.012 sec)"
+ },
+ {
+  "comments": "",
+  "sql": "SELECT * FROM BOMLine;",
+  "response": "+------------------------+-------------+------------------+----------------------+----------+\n| CustomerEmail          | BOM_name    | ManufacturerName | Manufacturer_PartNum | Quantity |\n+------------------------+-------------+------------------+----------------------+----------+\n| task2.demo@example.com | Rover Rev A | Espressif        | ESP32-C3-MINI-1      |        1 |\n+------------------------+-------------+------------------+----------------------+----------+\n1 row in set (0.001 sec)"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- INSERT 2: several rows in ONE statement, with an explicit column list in a\n-- DIFFERENT order from the table (Quantity first, the BOM key last).\n-- Differs from 1: names its columns, so the values are matched by name and\n-- not by position, and inserts three tuples at once (atomically: if one row\n-- broke a constraint, none of the three would be inserted).\n-- ---------------------------------------------------------------------------",
+  "sql": "INSERT INTO BOMLine (Quantity, ManufacturerName, Manufacturer_PartNum, CustomerEmail, BOM_name)\nVALUES (1,  'Bosch',            'BME280',             'task2.demo@example.com', 'Rover Rev A'),\n       (12, 'Murata',           'GRM188R71C104KA01D', 'task2.demo@example.com', 'Rover Rev A'),\n       (2,  'Wurth Elektronik', '61300411121',        'task2.demo@example.com', 'Rover Rev A');",
+  "response": "Query OK, 3 rows affected (0.008 sec)\nRecords: 3  Duplicates: 0  Warnings: 0"
+ },
+ {
+  "comments": "",
+  "sql": "SELECT * FROM BOMLine;",
+  "response": "+------------------------+-------------+------------------+----------------------+----------+\n| CustomerEmail          | BOM_name    | ManufacturerName | Manufacturer_PartNum | Quantity |\n+------------------------+-------------+------------------+----------------------+----------+\n| task2.demo@example.com | Rover Rev A | Bosch            | BME280               |        1 |\n| task2.demo@example.com | Rover Rev A | Espressif        | ESP32-C3-MINI-1      |        1 |\n| task2.demo@example.com | Rover Rev A | Murata           | GRM188R71C104KA01D   |       12 |\n| task2.demo@example.com | Rover Rev A | Wurth Elektronik | 61300411121          |        2 |\n+------------------------+-------------+------------------+----------------------+----------+\n4 rows in set (0.001 sec)"
+ },
+ {
+  "comments": "-- ---------------------------------------------------------------------------\n-- INSERT 3: INSERT ... SELECT. The new tuples are the RESULT OF A QUERY, not\n-- literals: Rev B of the rover starts as a copy of Rev A, with double the\n-- quantity of every part Rev A needs fewer than 10 of (the capacitors are\n-- already ordered in bulk, so that line is left out).\n-- Differs from 1 and 2: no VALUES clause at all; how many rows are inserted\n-- depends on the data (here 3 of Rev A's 4 lines qualify).\n-- ---------------------------------------------------------------------------",
+  "sql": "INSERT INTO BOMLine (CustomerEmail, BOM_name, ManufacturerName, Manufacturer_PartNum, Quantity)\nSELECT bl.CustomerEmail, 'Rover Rev B', bl.ManufacturerName, bl.Manufacturer_PartNum, bl.Quantity * 2\nFROM BOMLine bl\nWHERE bl.CustomerEmail = 'task2.demo@example.com'\n  AND bl.BOM_name = 'Rover Rev A'\n  AND bl.Quantity < 10;",
+  "response": "Query OK, 3 rows affected (0.010 sec)\nRecords: 3  Duplicates: 0  Warnings: 0"
+ },
+ {
+  "comments": "",
+  "sql": "SELECT * FROM BOMLine;",
+  "response": "+------------------------+-------------+------------------+----------------------+----------+\n| CustomerEmail          | BOM_name    | ManufacturerName | Manufacturer_PartNum | Quantity |\n+------------------------+-------------+------------------+----------------------+----------+\n| task2.demo@example.com | Rover Rev A | Bosch            | BME280               |        1 |\n| task2.demo@example.com | Rover Rev A | Espressif        | ESP32-C3-MINI-1      |        1 |\n| task2.demo@example.com | Rover Rev A | Murata           | GRM188R71C104KA01D   |       12 |\n| task2.demo@example.com | Rover Rev A | Wurth Elektronik | 61300411121          |        2 |\n| task2.demo@example.com | Rover Rev B | Bosch            | BME280               |        2 |\n| task2.demo@example.com | Rover Rev B | Espressif        | ESP32-C3-MINI-1      |        2 |\n| task2.demo@example.com | Rover Rev B | Wurth Elektronik | 61300411121          |        4 |\n+------------------------+-------------+------------------+----------------------+----------+\n7 rows in set (0.001 sec)"
+ }
+]

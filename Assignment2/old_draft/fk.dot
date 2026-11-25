@@ -1,0 +1,30 @@
+digraph S { rankdir=LR; node [shape=record, fontname="Helvetica", fontsize=10]; edge [fontsize=9];
+labelloc=t; label="Referential integrity: FK -> PK";
+"Customer" [label="{Customer|PK: Email|Username (AK)}"];
+"Part" [label="{Part|PK: Manufacturer_PartNum|}"];
+"Distributor" [label="{Distributor|PK: Name|Website (AK)}"];
+"SharedProject" [label="{SharedProject|PK: Title|CustomerEmail (FK)}"];
+"BOM" [label="{BOM|PK: CustomerEmail (FK), BOM_name|Date_created}"];
+"ShoppingCart" [label="{ShoppingCart|PK: CustomerEmail (FK)|Date_Added}"];
+"Listing" [label="{Listing|PK: DistributorName (FK), Distributor_PartNum|Manufacturer_PartNum (FK)
+AK: (DistributorName, Manufacturer_PartNum)}"];
+"PartAlternative" [label="{PartAlternative|PK: Part1_PartNum (FK), Part2_PartNum (FK)|}"];
+"BOMLine" [label="{BOMLine|PK: CustomerEmail, BOM_name (FK), Manufacturer_PartNum (FK)|Quantity}"];
+"CartLine" [label="{CartLine|PK: CustomerEmail (FK), DistributorName, Distributor_PartNum (FK)|Quantity}"];
+"Review" [label="{Review|PK: CustomerEmail (FK), DistributorName (FK)|ReviewText, StarRating}"];
+"ProjectPart" [label="{ProjectPart|PK: Title (FK), Manufacturer_PartNum (FK)|Quantity}"];
+"SharedProject" -> "Customer";
+"BOM" -> "Customer";
+"ShoppingCart" -> "Customer";
+"Listing" -> "Distributor";
+"Listing" -> "Part";
+"PartAlternative" -> "Part";
+"BOMLine" -> "BOM";
+"BOMLine" -> "Part";
+"CartLine" -> "ShoppingCart";
+"CartLine" -> "Listing";
+"Review" -> "Customer";
+"Review" -> "Distributor";
+"ProjectPart" -> "SharedProject";
+"ProjectPart" -> "Part";
+}
